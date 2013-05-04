@@ -1,0 +1,37 @@
+pkgname=${name}
+pkgname_conf=${nconf}
+pkgver=${version}
+pkgver_conf=${verconf}
+pkgrel=1
+pkgdesc="Utilities to work with and produce manuals, ASCII text, and on-line documentation from a single source file"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/texinfo/"
+license=('GPL3')
+groups=('base' 'base-devel')
+options=()
+makedepends=()
+depends=('ncurses' 'findutils' 'gzip' 'perl')
+#install='install'
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+  make TEXMF=${pkgdir}/usr/share/texmf install-tex
+}
+
+# vim:set ts=2 sw=2 et:

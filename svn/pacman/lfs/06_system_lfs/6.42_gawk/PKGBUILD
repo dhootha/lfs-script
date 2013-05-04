@@ -1,0 +1,31 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Gnu version of awk"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/directory/GNU/gawk.html"
+license=('GPL')
+groups=('base')
+depends=()
+makedepends=()
+options=(!makeflags)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --libexecdir=/usr/lib
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,26 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A terminal based program for viewing text files"
+arch=('i686' 'x86_64')
+url="http://www.greenwoodsoftware.com/less"
+license=('GPL3')
+groups=('base')
+depends=('ncurses')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

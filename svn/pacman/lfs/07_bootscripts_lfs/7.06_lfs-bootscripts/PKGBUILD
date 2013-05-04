@@ -1,0 +1,23 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc=""
+arch=('any')
+url="http://www.linuxfromscratch.org/lfs"
+license=('MIT')
+groups=('base')
+depends=()
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+#  sed -e '38 a chmod 1777 /run/shm' -i ./lfs/init.d/mountvirtfs
+  make DESTDIR=${pkgdir} install
+#  rm -rf ${pkgdir}/etc/sysconfig/rc.site
+}
+
+# vim:set ts=2 sw=2 et:

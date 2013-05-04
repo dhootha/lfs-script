@@ -1,0 +1,37 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A high-quality data compression program"
+arch=('i686' 'x86_64')
+url="http://sources.redhat.com/bzip2"
+license=('custom')
+groups=('base')
+depends=('glibc')
+makedepends=('binutils>=2.21')
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+  make -f Makefile-libbz2_so
+  make clean
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make PREFIX=${pkgdir}/usr install
+  mkdir -p ${pkgdir}/{,usr/}{bin,lib}
+  cp -v bzip2-shared ${pkgdir}/bin/bzip2
+  cp -av libbz2.so* ${pkgdir}/lib
+  ln -sv ../../lib/libbz2.so.1.0 ${pkgdir}/usr/lib/libbz2.so
+  rm -v ${pkgdir}/usr/bin/{bunzip2,bzcat,bzip2}
+  ln -sv bzip2 ${pkgdir}/bin/bunzip2
+  ln -sv bzip2 ${pkgdir}/bin/bzcat
+}
+
+# vim:set ts=2 sw=2 et:

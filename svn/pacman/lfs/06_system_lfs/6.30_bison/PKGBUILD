@@ -1,0 +1,32 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The GNU general-purpose parser generator"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/bison/bison.html"
+license=('GPL3')
+groups=('base-devel')
+depends=('glibc' 'm4')
+makedepends=()
+options=('')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  echo '#define YYENABLE_NLS 1' >> lib/config.h
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

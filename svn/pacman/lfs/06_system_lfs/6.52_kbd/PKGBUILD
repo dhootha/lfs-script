@@ -1,0 +1,47 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Keytable files and keyboard utilities"
+arch=('i686' 'x86_64')
+url="ftp://ftp.altlinux.org/pub/people/legion/kbd/"
+license=('GPL')
+groups=('base')
+depends=('glibc')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-backspace-1.patch
+
+  sed -i -e '326 s/if/while/' src/loadkeys.analyze.l
+
+  sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/g' configure
+  sed -i 's/resizecons.8 //' man/man8/Makefile.in
+
+  ./configure --prefix=/usr --disable-vlock
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/bin
+  mv -v ${pkgdir}/usr/bin/{kbd_mode,loadkeys,openvt,setfont} ${pkgdir}/bin
+
+  install -d ${pkgdir}/etc/sysconfig
+  cat > ${pkgdir}/etc/sysconfig/console << EOF
+# Begin /etc/sysconfig/console
+
+UNICODE="1"
+KEYMAP="ru4"
+FONT="cyr-sun16"
+
+# End /etc/sysconfig/console
+EOF
+}
+
+# vim:set ts=2 sw=2 et:

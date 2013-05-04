@@ -1,0 +1,37 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A utility for reading man pages"
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/man-db/"
+license=('GPL' 'LGPL')
+groups=('base')
+depends=('bash' 'gdbm' 'zlib' 'groff' 'libpipeline')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr			\
+	      --libexecdir=/usr/lib		\
+	      --sysconfdir=/etc			\
+	      --disable-setuid			\
+	      --with-browser=/usr/bin/lynx	\
+	      --with-vgrind=/usr/bin/vgrind	\
+	      --with-grap=/usr/bin/grap
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,51 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A library-based package manager with dependency support"
+arch=('i686' 'x86_64')
+url="http://www.archlinux.org/pacman/"
+license=('GPL')
+groups=('base')
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr                \
+              --sysconfdir=/etc            \
+              --localstatedir=/var         \
+              --disable-doc                \
+              --with-pkg-ext='.pkg.tar.xz' \
+              --with-src-ext='.src.tar.xz'
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${pkgname}-${pkgver}
+#
+#  make check
+#}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+
+  echo "
+PKGDEST=${LFS_PKG}
+SRCDEST=${LFS_SRC}" >> ${pkgdir}/etc/makepkg.conf
+
+  sed -e 's/OPTIONS=(strip docs libtool emptydirs zipman purge)/OPTIONS=(strip !docs libtool emptydirs zipman purge)/' \
+      -e 's/{man,info}/{man}/g' \
+      -e 's/{doc,/{doc,info,/g' \
+      -i ${pkgdir}/etc/makepkg.conf
+
+  # ++++++++++++++++++++++++++++++++
+  sed -e 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j'${J2_LFS_FLAG}'"/' \
+      -i ${pkgdir}/etc/makepkg.conf
+  # ++++++++++++++++++++++++++++++++
+}
+
+# vim:set ts=2 sw=2 et:

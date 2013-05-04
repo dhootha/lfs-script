@@ -1,0 +1,63 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="System V Release 4.0 curses emulation library"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/ncurses/"
+license=('MIT')
+groups=('base-devel')
+depends=('glibc')
+makedepends=()
+options=('!makeflags')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr           \
+              --mandir=/usr/share/man \
+              --with-shared           \
+              --without-debug         \
+              --enable-pc-files       \
+              --enable-widec
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install || return 1
+
+  install -d ${pkgdir}/{,usr/}lib
+
+  mv -v ${pkgdir}/usr/lib/libncursesw.so.5* ${pkgdir}/lib
+
+  ln -sfv ../../lib/libncursesw.so.5 ${pkgdir}/usr/lib/libncursesw.so
+
+  for lib in ncurses form panel menu ; do
+    rm -vf                    ${pkgdir}/usr/lib/lib${lib}.so
+    echo "INPUT(-l${lib}w)" > ${pkgdir}/usr/lib/lib${lib}.so
+    ln -sfv lib${lib}w.a      ${pkgdir}/usr/lib/lib${lib}.a
+    ln -sfv ${lib}w.pc        ${pkgdir}/usr/lib/pkgconfig/${lib}.pc
+  done
+
+  ln -sfv libncurses++w.a ${pkgdir}/usr/lib/libncurses++.a
+
+  rm -vf                     ${pkgdir}/usr/lib/libcursesw.so
+  echo "INPUT(-lncursesw)" > ${pkgdir}/usr/lib/libcursesw.so
+  ln -sfv libncurses.so      ${pkgdir}/usr/lib/libcurses.so
+  ln -sfv libncursesw.a      ${pkgdir}/usr/lib/libcursesw.a
+  ln -sfv libncurses.a       ${pkgdir}/usr/lib/libcurses.a
+
+  make distclean
+  ./configure --prefix=/usr    \
+              --with-shared    \
+              --without-normal \
+	      --without-debug  \
+              --without-cxx-binding
+  make sources libs
+  cp -av lib/lib*.so.5* ${pkgdir}/usr/lib
+}
+
+# vim:set ts=2 sw=2 et:

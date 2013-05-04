@@ -1,0 +1,119 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="GNU C Library"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/libc"
+license=('GPL' 'LGPL')
+groups=('base')
+install="install"
+depends=('linux-headers')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
+  ../${pkgname}-${pkgver}/configure	\
+	    --prefix=/usr               \
+	    --disable-profile		\
+	    --enable-kernel=2.6.25      \
+	    --libexecdir=/usr/lib/glibc
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-build
+
+  make -k check 2>&1 | tee glibc-check-log
+  if [ "$(grep 'Error' glibc-check-log)" == 'Error' ]; then
+    echo '---=== Error glibc-check-log ===---'
+    read
+  fi
+  touch /etc/ld.so.conf
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-build
+
+#  case `uname -m` in
+#    x86_64)
+#      for _lib in /lib /usr/lib
+#      do
+#        install -d ${pkgdir}${_lib}
+#        ln -s lib ${pkgdir}${_lib}64
+#      done
+#    ;;
+#  esac
+
+  make install_root=${pkgdir} install
+
+  install -d ${pkgdir}/usr/include/{rpc,rpcsvc}
+  cp -v ../${pkgname}-${pkgver}/sunrpc/rpc/*.h ${pkgdir}/usr/include/rpc
+  cp -v ../${pkgname}-${pkgver}/sunrpc/rpcsvc/*.h ${pkgdir}/usr/include/rpcsvc
+  cp -v ../${pkgname}-${pkgver}/nis/rpcsvc/*.h ${pkgdir}/usr/include/rpcsvc
+
+#  rm ${pkgdir}/etc/ld.so.{cache,conf}
+#  install -d ${pkgdir}/usr/lib/locale
+  install -m755 ${srcdir}/../locale-gen ${pkgdir}/usr/sbin
+  install -m644 ${srcdir}/../locale.gen.txt ${pkgdir}/etc/locale.gen
+  
+  cat > ${pkgdir}/etc/nsswitch.conf << "EOF"
+# Begin /etc/nsswitch.conf
+
+passwd: files
+group: files
+shadow: files
+
+hosts: files dns
+networks: files
+
+protocols: files
+services: files
+ethers: files
+rpc: files
+
+# End /etc/nsswitch.conf
+EOF
+
+  tar -xf ../${nconf}${verconf}.tar.gz
+
+  ZONEINFO=${pkgdir}/usr/share/zoneinfo
+  mkdir -pv ${ZONEINFO}/{posix,right}
+
+  for tz in etcetera southamerica northamerica europe africa antarctica \
+            asia australasia backward pacificnew solar87 solar88 solar89 systemv; do
+      zic -L /dev/null   -d ${ZONEINFO}       -y "sh yearistype.sh" ${tz}
+      zic -L /dev/null   -d ${ZONEINFO}/posix -y "sh yearistype.sh" ${tz}
+      zic -L leapseconds -d ${ZONEINFO}/right -y "sh yearistype.sh" ${tz}
+  done
+
+  cp -v zone.tab iso3166.tab ${ZONEINFO}
+  zic -d ${ZONEINFO} -p America/New_York
+  unset ZONEINFO
+
+  #tzselect
+  #read _localtime
+  #cp -v --remove-destination /usr/share/zoneinfo/${_localtime} /etc/localtime
+#  cp -v --remove-destination ${pkgdir}/usr/share/zoneinfo/Europe/Moscow ${pkgdir}/etc/localtime
+  rm -f ${pkgdir}/etc/localtime
+  ln -s /usr/share/zoneinfo/Europe/Moscow ${pkgdir}/etc/localtime
+
+  cat > ${pkgdir}/etc/ld.so.conf << "EOF"
+# Begin /etc/ld.so.conf
+
+/lib
+/usr/lib
+/usr/local/lib
+/opt/lib
+
+# Add an include directory
+include /etc/ld.so.conf.d/*.conf
+
+# End /etc/ld.so.conf
+EOF
+  mkdir ${pkgdir}/etc/ld.so.conf.d
+}
+
+# vim:set ts=2 sw=2 et:

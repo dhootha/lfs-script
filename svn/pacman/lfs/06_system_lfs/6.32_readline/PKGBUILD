@@ -1,0 +1,43 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="GNU readline library"
+arch=('i686' 'x86_64')
+url="http://tiswww.case.edu/php/chet/readline/rltop.html"
+license=('GPL')
+#groups=('base')
+depends=('glibc' 'ncurses')
+makedepends=()
+options=('')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  sed -i '/MV.*old/d' Makefile.in
+  sed -i '/{OLDSUFF}/c:' support/shlib-install
+  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-1.patch
+  ./configure --prefix=/usr --libdir=/lib
+  make SHLIB_LIBS=-lncurses
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/usr/lib
+  mv -v ${pkgdir}/lib/lib{readline,history}.a ${pkgdir}/usr/lib
+  rm -v ${pkgdir}/lib/lib{readline,history}.so
+  ln -sfv ../../lib/libreadline.so.6 ${pkgdir}/usr/lib/libreadline.so
+  ln -sfv ../../lib/libhistory.so.6 ${pkgdir}/usr/lib/libhistory.so
+
+  install -d ${pkgdir}/etc/profile.d
+  cat > ${pkgdir}/etc/profile.d/readline.sh << "EOF"
+# Setup the INPUTRC environment variable.
+if [ -z "$INPUTRC" -a ! -f "$HOME/.inputrc" ] ; then
+	INPUTRC=/etc/inputrc
+fi
+export INPUTRC
+EOF
+}
+
+# vim:set ts=2 sw=2 et:

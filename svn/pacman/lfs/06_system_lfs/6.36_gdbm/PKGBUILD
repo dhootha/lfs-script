@@ -1,0 +1,31 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="GNU database library"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/gdbm/gdbm.html"
+license=('GPL')
+#groups=('base')
+depends=('glibc')
+makedepends=()
+options=('!makeflags')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --enable-libgdbm-compat
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make prefix=${pkgdir}/usr install
+}
+
+

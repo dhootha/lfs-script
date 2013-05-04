@@ -1,0 +1,40 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc=""
+arch=('i686' 'x86_64')
+url="https://www.midnight-commander.org/"
+license=('GPL')
+groups=(${_groups})
+depends=(${_depends})
+makedepends=(${_makedepends})
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr     \
+              --enable-charset  \
+              --disable-static  \
+              --sysconfdir=/etc \
+              --libexecdir=/usr/lib \
+              --with-screen=ncurses
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+  cp -v doc/keybind-migration.txt ${pkgdir}/usr/share/mc
+}
+
+# vim:set ts=2 sw=2 et:

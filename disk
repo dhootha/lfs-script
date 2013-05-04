@@ -1,0 +1,3 @@
+/dev/sdb1:swap:swap
+/dev/sdb2:/:ext4
+/dev/sdb3:/usr:ext4

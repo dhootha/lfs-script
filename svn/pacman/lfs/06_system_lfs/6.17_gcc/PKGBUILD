@@ -1,0 +1,100 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The GNU Compiler Collection"
+arch=('i686' 'x86_64')
+url="http://gcc.gnu.org"
+license=('GPL' 'LGPL' 'custom')
+groups=('base')
+depends=()
+makedepends=('binutils>=2.21')
+options=(!libtool)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  case `uname -m` in
+    i?86) sed -e 's/^T_CFLAGS =$/& -fomit-frame-pointer/' -i gcc/Makefile.in ;;
+  esac
+
+  sed -e 's/install_to_$(INSTALL_DEST) //' \
+      -i libiberty/Makefile.in
+
+  sed -e /autogen/d \
+      -e /check.sh/d \
+      -i fixincludes/Makefile.in
+  mv -v libmudflap/testsuite/libmudflap.c++/pass41-frag.cxx{,.disable}
+
+  mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
+
+  ../${pkgname}-${pkgver}/configure --prefix=/usr               \
+                                    --libexecdir=/usr/lib       \
+                                    --enable-shared             \
+                                    --enable-threads=posix      \
+                                    --enable-__cxa_atexit       \
+                                    --enable-clocale=gnu        \
+                                    --enable-languages=c,c++    \
+                                    --disable-multilib          \
+                                    --disable-bootstrap         \
+                                    --disable-install-libiberty \
+                                    --with-system-zlib || return 1
+  make || return 1
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-build
+
+  ulimit -s 32768
+  make -k check || true
+  ../${pkgname}-${pkgver}/contrib/test_summary
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-build
+
+#  case `uname -m` in
+#    x86_64)
+#      for _lib in /lib /usr/lib
+#      do
+#        install -d ${pkgdir}${_lib}
+#        ln -s lib ${pkgdir}${_lib}64
+#      done
+#    ;;
+#  esac
+
+  make DESTDIR=${pkgdir} install || return 1
+
+  install -d ${pkgdir}/lib
+  ln -sv ../usr/bin/cpp ${pkgdir}/lib/
+
+  install -d ${pkgdir}/usr/bin
+  ln -sv gcc ${pkgdir}/usr/bin/cc
+
+  echo 'main(){}' > dummy.c
+  cc dummy.c -v -Wl,--verbose &> dummy.log
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  readelf -l a.out | grep ': /lib'
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  grep -B4 '^ /usr/include' dummy.log
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  grep "/lib.*/libc.so.6 " dummy.log
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  grep found dummy.log
+  echo '++++++++++++++++++++++++++++++++++++++++++++'
+  rm -v dummy.c a.out dummy.log
+
+  install -d ${pkgdir}/usr/share/gdb/auto-load/usr/lib
+  mv -v ${pkgdir}/usr/{lib,lib64}/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib/ || true
+#  case `uname -m` in
+#    x86_64 | amd64) mv -v ${pkgdir}/usr/lib64/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib ;;
+#    *) mv -v ${pkgdir}/usr/lib/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib ;;
+#  esac
+}
+
+# vim:set ts=2 sw=2 et:

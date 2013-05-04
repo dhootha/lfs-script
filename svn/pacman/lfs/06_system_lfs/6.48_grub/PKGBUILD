@@ -1,0 +1,32 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A GNU multiboot boot loader"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/grub/"
+license=('GPL')
+groups=('base')
+depends=()
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
+  ./configure --prefix=/usr          \
+              --sysconfdir=/etc      \
+              --disable-grub-emu-usb \
+              --disable-efiemu       \
+              --disable-werror
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

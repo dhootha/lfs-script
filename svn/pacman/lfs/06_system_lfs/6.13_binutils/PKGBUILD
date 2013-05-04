@@ -1,0 +1,47 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A set of programs to assemble and manipulate binary and object files"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/binutils/"
+license=('GPL')
+groups=('base')
+depends=('glibc>=2.13' 'zlib')
+options=('!libtool' '!distcc' '!ccache')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  expect -c "spawn ls"
+  rm -fv etc/standards.info
+  sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
+
+#  patch -Np1 -i ../${pkgname}-${pkgver}-testsuite_fix-1.patch
+
+  sed -i -e 's/@colophon/@@colophon/' \
+         -e 's/doc@cygnus.com/doc@@cygnus.com/' bfd/doc/bfd.texinfo
+
+  mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
+  ../${pkgname}-${pkgver}/configure --prefix=/usr --enable-shared
+  make tooldir=${pkgdir}/usr
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-build
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-build
+
+#  case `uname -m` in
+#    x86_64) install -d ${pkgdir}/usr/lib; ln -s lib ${pkgdir}/usr/lib64 ;;
+#  esac
+
+  make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install || return 1
+  cp -v ../${pkgname}-${pkgver}/include/libiberty.h ${pkgdir}/usr/include
+}
+
+# vim:set ts=2 sw=2 et:

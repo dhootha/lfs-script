@@ -1,0 +1,63 @@
+# This is a default template for a post-install scriptlet.
+# Uncomment only required functions and remove any functions
+# you don't need (and this header).
+
+## arg 1:  the new package version
+#pre_install() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+post_install() {
+  bash /bin/init-net-rules.sh
+
+  echo ======================================
+# 7.2.1
+  cat /etc/udev/rules.d/70-persistent-net.rules
+  echo ======================================
+# 7.5.1
+  udevadm test /sys/block/hdd
+  sed -e 's/"write_cd_rules"/"write_cd_rules mode"/' \
+      -i /etc/udev/rules.d/83-cdrom-symlinks.rules
+  echo ======================================
+# 7.5.2
+  udevadm info -a -p /sys/class/video4linux/video0
+  cat > /etc/udev/rules.d/83-duplicate_devs.rules << "EOF"
+
+# Persistent symlinks for webcam and tuner
+KERNEL=="video*", ATTRS{idProduct}=="1910", ATTRS{idVendor}=="0d81", \
+    SYMLINK+="webcam"
+KERNEL=="video*", ATTRS{device}=="0x036f", ATTRS{vendor}=="0x109e", \
+    SYMLINK+="tvtuner"
+
+EOF
+  echo ======================================
+
+  for NIC in /sys/class/net/* ; do
+    INTERFACE=${NIC##*/} udevadm test --action=add $NIC
+  done
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+#pre_upgrade() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+  post_install
+}
+
+## arg 1:  the old package version
+#pre_remove() {
+  # do something here
+#}
+
+## arg 1:  the old package version
+#post_remove() {
+  # do something here
+#}
+
+# vim:set ts=2 sw=2 et:

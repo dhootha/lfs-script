@@ -1,0 +1,35 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The GNU Portable Threads."
+arch=('i686' 'x86_64')
+url="http://www.pcre.org/"
+license=('LGPL')
+depends=(${_depends})
+options=('!libtool' '!makeflags')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
+  ./configure --prefix=/usr         \
+              --disable-static      \
+              --mandir=/usr/share/man
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make test
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

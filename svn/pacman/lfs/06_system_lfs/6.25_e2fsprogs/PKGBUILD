@@ -1,0 +1,41 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Ext2/3/4 filesystem utilities"
+arch=('i686' 'x86_64')
+url="http://e2fsprogs.sourceforge.net"
+license=('GPL' 'LGPL' 'MIT')
+groups=('base-devel')
+depends=('util-linux')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  mkdir -v build; cd build
+  ../configure --prefix=/usr          \
+               --with-root-prefix=""  \
+               --enable-elf-shlibs    \
+               --disable-libblkid     \
+               --disable-libuuid      \
+               --disable-uuidd        \
+               --disable-fsck
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}/build
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}/build
+  make DESTDIR=${pkgdir} install
+  make DESTDIR=${pkgdir} install-libs
+  chmod -v u+w ${pkgdir}/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+}
+
+# vim:set ts=2 sw=2 et:

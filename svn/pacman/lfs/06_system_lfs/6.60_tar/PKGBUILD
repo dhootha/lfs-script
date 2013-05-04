@@ -1,0 +1,35 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Linux System V Init"
+arch=('i686' 'x86_64')
+url="http://savannah.nongnu.org/projects/sysvinit"
+license=('custom')
+groups=('base')
+depends=('shadow' 'util-linux' 'coreutils' 'glibc' 'gawk')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  sed -i -e '/gets is a/d' gnu/stdio.in.h
+  FORCE_UNSAFE_CONFIGURE=1 \
+  ./configure --prefix=/usr \
+              --bindir=/bin \
+              --libexecdir=/usr/sbin
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

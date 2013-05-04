@@ -1,0 +1,17 @@
+post_install() {
+  dircolors -p > /etc/dircolors
+
+  # /etc/profile.d/tools.sh
+  if [ -d /tools ]; then
+    cat > /etc/profile.d/~tools.sh << "EOF"
+if [ -d /tools ] ; then
+	pathappend /tools/bin
+	pathappend /tools/sbin
+fi
+EOF
+  fi
+}
+
+post_upgrade() {
+  post_install
+}

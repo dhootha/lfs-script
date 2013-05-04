@@ -1,0 +1,8 @@
+build/
+output/
+svn/pacman/blfs/??_*/*.*/{pkg/,src/}
+svn/pacman/lfs/??_*/?.*/{pkg/,src/}
+svn/sources/
+*.log
+test.sh
+test[0-9].sh

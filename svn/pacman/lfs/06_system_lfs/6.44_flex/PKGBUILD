@@ -1,0 +1,48 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="GNU utilities to locate files"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/findutils"
+license=('GPL3')
+groups=('base')
+depends=('glibc')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-bison-2.6.1-1.patch
+
+  ./configure --prefix=/usr             \
+              --mandir=/usr/share/man   \
+              --infodir=/usr/share/info \
+              --docdir=/usr/share/doc/flex-${pkgver}
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/usr/{bin,lib}
+  ln -sv libfl.a ${pkgdir}/usr/lib/libl.a
+  cat > ${pkgdir}/usr/bin/lex << "EOF"
+#!/bin/sh
+# Begin /usr/bin/lex
+
+exec /usr/bin/flex -l "$@"
+
+# End /usr/bin/lex
+EOF
+  chmod -v 755 ${pkgdir}/usr/bin/lex
+}
+
+# vim:set ts=2 sw=2 et:

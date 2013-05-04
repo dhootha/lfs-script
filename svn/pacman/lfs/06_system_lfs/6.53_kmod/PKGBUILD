@@ -1,0 +1,49 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Linux kernel module handling"
+arch=('i686' 'x86_64')
+url="http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary"
+license=('GPL2')
+groups=('base')
+depends=('glibc' 'zlib')
+makedepends=()
+options=('!libtool')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+#  patch -Np1 -i ../${pkgname}-${pkgver}-testsuite-1.patch
+
+  ./configure --prefix=/usr       \
+              --bindir=/bin       \
+              --libdir=/lib       \
+              --sysconfdir=/etc   \
+              --disable-manpages  \
+              --with-xz           \
+              --with-zlib
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} pkgconfigdir=/usr/lib/pkgconfig install
+
+  install -d ${pkgdir}/sbin
+  for target in depmod insmod modinfo modprobe rmmod; do
+    ln -sv ../bin/kmod ${pkgdir}/sbin/${target}
+  done
+
+  install -d ${pkgdir}/bin
+  ln -sv kmod ${pkgdir}/bin/lsmod
+}
+
+# vim:set ts=2 sw=2 et:

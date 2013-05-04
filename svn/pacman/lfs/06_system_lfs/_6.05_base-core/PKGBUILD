@@ -1,0 +1,31 @@
+pkgname=base-core
+pkgver=0.1
+pkgrel=1
+pkgdesc=""
+arch=('any')
+url="http://www.linuxfromscratch.org/lfs/view/development/"
+license=('MIT')
+groups=('base')
+install="install"
+depends=()
+source=()
+md5sums=()
+
+package() {
+  cd ${srcdir}/
+  bash ../dir.sh ${pkgdir}
+  bash ../bashrc.sh ${pkgdir}
+  bash ../file-ln.sh ${pkgdir}
+  bash ../network.sh ${pkgdir}
+#  bash ../inittab.sh ${pkgdir}
+  bash ../hostname.sh ${pkgdir}
+  bash ../setclock.sh ${pkgdir}
+#  bash ../console.sh ${pkgdir}
+#  bash ../rc.site.sh ${pkgdir}
+  bash ../profile.sh ${pkgdir}
+  bash ../inputrc.sh ${pkgdir}
+#  bash ../fstab.sh ${pkgdir}
+  bash ../skel.sh ${pkgdir}
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,36 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="An URL retrieval utility and library"
+arch=('i686' 'x86_64')
+url="http://curl.haxx.se"
+license=('MIT')
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-upstream_fixes-1.patch
+  sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in
+  ./configure --prefix=/usr                 \
+              --disable-static              \
+              --enable-threaded-resolver    \
+              --with-ca-path=/etc/ssl/certs
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

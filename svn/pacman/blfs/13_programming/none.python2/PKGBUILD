@@ -1,0 +1,41 @@
+pkgname=${name}
+_pkgname=Python
+pkgver=${version}
+pkgrel=1
+pkgdesc="A high-level scripting language"
+arch=('i686' 'x86_64')
+url="http://www.python.org/"
+license=('PSF')
+groups=(${_groups})
+depends=(${_depends})
+options=('!makeflags')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
+  patch -Np1 -i ../${_pkgname}-${pkgver}-bsddb_fix-1.patch
+  ./configure --prefix=/usr       \
+              --enable-shared     \
+              --with-system-expat \
+              --with-system-ffi   \
+              --enable-unicode=ucs4
+  make
+}
+
+check() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make test
+}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+  chmod -v 755 ${pkgdir}/usr/lib/libpython2.7.so.1.0
+}
+
+# vim:set ts=2 sw=2 et:

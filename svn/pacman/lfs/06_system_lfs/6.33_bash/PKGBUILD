@@ -1,0 +1,49 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The GNU Bourne Again shell"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/bash/bash.html"
+license=('GPL')
+groups=('base')
+depends=('glibc' 'readline>=6.1')
+makedepends=()
+options=('')
+install="install"
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-12.patch
+  ./configure --prefix=/usr		\
+	      --bindir=/bin		\
+	      --without-bash-malloc	\
+	      --with-installed-readline
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  chown -Rv nobody .
+  su nobody -s /bin/bash -c "PATH=$PATH make tests"
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+
+  ln -sv bash ${pkgdir}/bin/sh
+
+#  install -d ${pkgdir}/etc
+#  cat > ${pkgdir}/etc/shells << "EOF"
+## Begin /etc/shells
+#
+#/bin/sh
+#/bin/bash
+#
+## End /etc/shells
+#EOF
+}
+
+# vim:set ts=2 sw=2 et:

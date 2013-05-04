@@ -1,0 +1,27 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The lsb_release script gives information about the Linux Standards Base (LSB) status of the distribution."
+arch=('any')
+url="http://www.linuxfoundation.org/collaborate/workgroups/lsb"
+license=()
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./help2man -N --include ./lsb_release.examples \
+                --alt_version_key=program_version ./lsb_release > lsb_release.1
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  install -d ${pkgdir}/usr/{bin,share/man/man1}
+  install -v -m 644 lsb_release.1 ${pkgdir}/usr/share/man/man1/lsb_release.1
+  install -v -m 755 lsb_release   ${pkgdir}/usr/bin/lsb_release
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,0 +1,71 @@
+#!/bin/bash
+################################################################################
+# Функция "packages_lfs"
+# Version: 0.1
+
+packages_lfs ()
+{
+local OLD_IFS="$IFS"
+IFS=$'\n'
+
+[ "${ERR_FLAG}" -gt 0 ] && return 1
+
+color-echo "packages_lfs" ${YELLOW}
+
+if [ ${PACKAGES_LFS_FLAG} -eq 0 ]; then
+        return 0
+fi
+
+local _log="${LFS_LOG}/packages.log"
+:> ${_log}
+
+for (( i=0; i <= ${#lfs_var_arr[@]} - 1; i++ ))
+do
+	pak="lfs_var_arr[${i}]"
+
+	local ${!pak}
+
+	# Проверка пакета на включение
+	if [ "${status}" -eq 0 ]; then
+		# Очистка переменных
+		clear_per "${!pak}"
+		# Продолжаем
+		continue
+	fi
+
+	if [ -n "${blfs}" ] && [ "${blfs}" != '' ]; then
+#		echo "${!pak}"
+#		echo ${depends}
+		# Очистка переменных
+		clear_per "${!pak}"
+		# Продолжаем
+		continue
+	fi
+
+	if [ "${url}" ]; then
+		local url=$(echo ${url} | sed -e "s@_version@${version}@g")
+		wgetrc || return ${?}
+	fi
+	unset url md5
+	if [ "${urlconf}" ]; then
+		local urlconf=$(echo ${urlconf} | sed -e "s@_version@${verconf}@g")
+		wgetrc "${urlconf}" "${md5conf}" || return ${?}
+	fi
+	for (( n=1; n <= 9; n++ ))
+	do
+		local urlpatch="urlpatch${n}"
+		if [ -n "${!urlpatch}" ]; then
+			local _urlpatch=$(echo ${!urlpatch} | sed -e "s@_version@${version}@g")
+			local md5patch="md5patch${n}"
+			wgetrc "${_urlpatch}" "${!md5patch}" || return ${?}
+		fi
+	done
+
+	# Очистка переменных
+	clear_per "${!pak} pak"
+done
+
+IFS="${OLD_IFS}"
+}
+
+################################################################################

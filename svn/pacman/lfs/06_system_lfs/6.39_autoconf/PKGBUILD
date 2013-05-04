@@ -1,0 +1,32 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A GNU tool for automatically configuring source code"
+arch=('any')
+url="http://www.gnu.org/software/autoconf"
+license=('GPL2' 'GPL3' 'custom')
+groups=('base-devel')
+depends=('m4' 'bash')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  echo "---=== ${MAKEFLAGS} ===---"
+  ./configure --prefix=/usr
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

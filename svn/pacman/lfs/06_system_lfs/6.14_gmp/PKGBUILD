@@ -1,0 +1,44 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A free library for arbitrary precision arithmetic"
+arch=('i686' 'x86_64')
+url="http://gmplib.org/"
+license=('LGPL3')
+groups=('base')
+depends=('glibc>=2.13')
+options=(!libtool)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  case `uname -m` in
+    i?86) echo 32; ./configure ABI=32 --prefix=/usr --enable-cxx ;;
+       *) echo 64; ./configure ABI=64 --prefix=/usr --enable-cxx --build=${CHOST} ;;
+  esac
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make check 2>&1 | tee gmp-check-log
+  local GMP_ERROR=`awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log`
+  echo ${GMP_ERROR}
+
+  if [ "${GMP_ERROR}" -ne 184 ]; then
+    echo '---=== Error gmp-check-log ===---'
+    read
+    exit 1
+  fi
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

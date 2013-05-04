@@ -1,0 +1,34 @@
+pkgname=${name}
+_pkgname=glib
+pkgver=${version}
+pkgrel=1
+pkgdesc="Common C routines used by GTK+ and other libs"
+arch=('i686' 'x86_64')
+url="http://www.gtk.org/"
+license=('LGPL')
+depends=(${_depends})
+makedepends=(${_makedepends})
+options=('!libtool' '!docs' '!emptydirs')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  ./configure --prefix=/usr --with-pcre=system
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${_pkgname}-${pkgver}
+#
+#  make check
+#}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

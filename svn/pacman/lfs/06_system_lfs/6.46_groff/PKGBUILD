@@ -1,0 +1,31 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="GNU troff text-formatting system"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/groff/groff.html"
+license=('GPL')
+groups=('base')
+depends=('perl')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i -e '163 s/$(DESTDIR)//' contrib/mom/Makefile.sub
+  PAGE=A4 ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  install -d ${pkgdir}/usr/share/doc/groff-1.22/pdf
+  make DESTDIR=${pkgdir} install
+  ln -sv eqn ${pkgdir}/usr/bin/geqn
+  ln -sv tbl ${pkgdir}/usr/bin/gtbl
+}
+
+# vim:set ts=2 sw=2 et:

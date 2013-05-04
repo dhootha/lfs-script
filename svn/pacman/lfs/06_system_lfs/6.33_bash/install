@@ -1,0 +1,21 @@
+post_install() {
+  sed -e '/^\/bin\/sh/a /bin/bash' \
+      -i /etc/shells
+}
+
+post_upgrade() {
+  if [ -z `grep '/bin/bash' /etc/shells` ]; then
+    post_install
+  fi
+}
+
+post_remove() {
+  sed -e '/^\/bin\/bash/d' \
+      -i /etc/shells
+
+  echo 'Recommended to change the default shell to /bin/sh for users:'
+  for _user in `grep '/bin/bash' /etc/passwd | cut -d: -f1`
+  do
+    echo "usermod -s /bin/sh ${_user}"
+  done
+}

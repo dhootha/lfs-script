@@ -1,0 +1,37 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
+arch=('i686' 'x86_64')
+url="https://www.openssl.org"
+license=('GPL' 'LGPL')
+depends=(${_depends})
+options=('!makeflags')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-fix_manpages-1.patch
+  ./config --prefix=/usr         \
+           --openssldir=/etc/ssl \
+           zlib-dynamic          \
+           shared
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${pkgname}-${pkgver}
+#
+#  make test
+#}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i 's# libcrypto.a##;s# libssl.a##' Makefile
+  make INSTALL_PREFIX=${pkgdir} MANDIR=/usr/share/man install
+}
+
+# vim:set ts=2 sw=2 et:

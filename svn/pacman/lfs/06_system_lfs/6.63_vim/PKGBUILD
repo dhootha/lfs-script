@@ -1,0 +1,84 @@
+pkgname=${name}
+pkgname_conf=${nconf}
+pkgver=${version}
+pkgver_conf=${verconf}
+pkgrel=1
+pkgdesc=""
+arch=('i686' 'x86_64')
+url="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+license=('custom')
+groups=('base')
+depends=()
+makedepends=()
+options=(strip !libtool emptydirs)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}${pkgver/./}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-524.patch
+
+  # Spell
+  for _spell in en.utf-8 ru.cp1251 ru.koi8-r ru.utf-8
+  do
+    rm -f ./runtime/spell/${_spell}.spl
+    curl ftp://ftp.vim.org/pub/vim/runtime/spell/${_spell}.spl \
+         -o ./runtime/spell/${_spell}.spl
+
+    rm -f ./runtime/spell/${_spell}.sug
+    curl ftp://ftp.vim.org/pub/vim/runtime/spell/${_spell}.sug \
+         -o ./runtime/spell/${_spell}.sug
+  done
+
+  echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+  echo '#define SYS_GVIMRC_FILE "/etc/gvimrc"' >> src/feature.h
+  ./configure --prefix=/usr        \
+              --with-features=huge \
+              --enable-multibyte
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${pkgname}${pkgver/./}
+#  make test
+#}
+
+package() {
+  cd ${srcdir}/${pkgname}${pkgver/./}
+
+  make DESTDIR=${pkgdir} install
+
+  # Spell
+#  for _spell in ru.cp1251 ru.koi8-r ru.utf-8
+#  do
+#    curl ftp://ftp.vim.org/pub/vim/runtime/spell/${_spell}.spl \
+#         -o ${pkgdir}/usr/share/vim/vim73/spell/${_spell}.spl
+#    curl ftp://ftp.vim.org/pub/vim/runtime/spell/${_spell}.sug \
+#         -o ${pkgdir}/usr/share/vim/vim73/spell/${_spell}.sug
+#  done
+
+  install -d ${pkgdir}/usr/bin ${pkgdir}/etc
+  ln -sv vim ${pkgdir}/usr/bin/vi
+  for L in  ${pkgdir}/usr/share/man/{,*/}man1/vim.1; do
+    ln -sv vim.1 $(dirname $L)/vi.1
+  done
+
+  cat > ${pkgdir}/etc/vimrc << "EOF"
+" Begin /etc/vimrc
+
+set spelllang=en,ru
+set spell
+
+set nocompatible
+set backspace=2
+syntax on
+if (&term == "iterm") || (&term == "putty")
+  set background=dark
+endif
+
+" End /etc/vimrc
+EOF
+}
+
+# vim:set ts=2 sw=2 et:

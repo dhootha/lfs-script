@@ -1,0 +1,36 @@
+pkgname=sqlite
+_pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A C library that implements an SQL database engine"
+arch=('i686' 'x86_64')
+url="http://www.sqlite.org/"
+license=('custom')
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-autoconf-${pkgver}
+
+  ./configure --prefix=/usr --disable-static        \
+              CFLAGS="-g -O2 -DSQLITE_ENABLE_FTS3=1 \
+              -DSQLITE_ENABLE_COLUMN_METADATA=1     \
+              -DSQLITE_ENABLE_UNLOCK_NOTIFY=1       \
+              -DSQLITE_SECURE_DELETE=1"
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${_pkgname}-autoconf-${pkgver}
+#
+#  make check
+#}
+
+package() {
+  cd ${srcdir}/${_pkgname}-autoconf-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

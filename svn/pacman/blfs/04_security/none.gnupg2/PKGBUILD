@@ -1,0 +1,34 @@
+pkgname=${name}
+_pkgname=gnupg
+pkgver=${version}
+pkgrel=1
+pkgdesc="Complete and free implementation of the OpenPGP standard"
+arch=('i686' 'x86_64')
+url="http://www.gnupg.org/related_software/gpgme/"
+license=('GPL')
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  ./configure --prefix=/usr         \
+              --libexecdir=/usr/lib/${pkgname} \
+              --docdir=/usr/share/doc/gnupg-${pkgver}
+  make
+}
+
+check() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

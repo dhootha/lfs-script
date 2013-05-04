@@ -1,0 +1,37 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Miscellaneous system utilities for Linux"
+arch=('i686' 'x86_64')
+url="http://userweb.kernel.org/~kzak/util-linux-ng/"
+license=('GPL2')
+groups=('base')
+depends=('ncurses>=5.7')
+makedepends=()
+options=(!libtool)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
+    -i $(grep -rl '/etc/adjtime' .)
+
+  mkdir -pv /var/lib/hwclock
+
+#  ./configure --enable-arch
+#              --enable-partx
+#              --enable-write
+  ./configure --disable-su      \
+              --disable-sulogin \
+              --disable-login
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

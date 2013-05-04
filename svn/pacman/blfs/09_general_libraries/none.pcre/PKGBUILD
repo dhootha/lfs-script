@@ -1,0 +1,42 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="A library that implements Perl 5-style regular expressions"
+arch=('i686' 'x86_64')
+url="http://www.pcre.org/"
+license=('BSD')
+depends=(${_depends})
+options=('!libtool')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr                                \
+              --docdir=/usr/share/doc/${pkgname}-${pkgver} \
+              --enable-utf                                 \
+              --enable-unicode-properties                  \
+              --enable-pcregrep-libz                       \
+              --enable-pcregrep-libbz2                     \
+              --disable-static
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libpcre.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/libpcre.so.1.2.0 ${pkgdir}/usr/lib/libpcre.so
+}
+
+# vim:set ts=2 sw=2 et:
