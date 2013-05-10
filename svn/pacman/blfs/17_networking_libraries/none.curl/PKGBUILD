@@ -12,7 +12,6 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  patch -Np1 -i ../${pkgname}-${pkgver}-upstream_fixes-1.patch
   sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in
   ./configure --prefix=/usr                 \
               --disable-static              \

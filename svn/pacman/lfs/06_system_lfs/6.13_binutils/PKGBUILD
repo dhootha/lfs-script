@@ -40,7 +40,7 @@ package() {
 #    x86_64) install -d ${pkgdir}/usr/lib; ln -s lib ${pkgdir}/usr/lib64 ;;
 #  esac
 
-  make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install || return 1
+  make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install
   cp -v ../${pkgname}-${pkgver}/include/libiberty.h ${pkgdir}/usr/include
 }
 

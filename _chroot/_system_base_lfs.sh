@@ -5,6 +5,8 @@
 
 _system_base_lfs ()
 {
+local LFS_FLAG='system-base-lfs'
+
 cd ${LFS_PWD}
 for _functions in ${LFS_PWD}/_functions/*.sh
 do
@@ -20,6 +22,8 @@ echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system_lfs.log"
 env >> "${LFS_LOG}/system_lfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system_lfs.log"
 
+ldconfig
+
 #if [ ! -f ${LFS_PKG}/*.pkg.tar.xz ]; then
 #	rm -Rf ${LFS_LOG}/06
 #fi
@@ -30,30 +34,13 @@ else
         cd ${LFS_PWD}/${PREFIX}/lfs/06_*/_6.05_*
 fi
 
-local _i=2
-while [ $(pwd | cut -d/ -f${_i}) ]
-do
-	local _file=$(pwd | cut -d/ -f${_i})
-	local _i=`expr ${_i} + 1`
-done
-if [ ! -f ${LFS_PKG}/$(echo ${_file} | cut -d_ -f3)*.pkg.tar.xz ]; then
-	rm -Rf ${_LOG}/06/${_file}
-	makepkg --asroot --clean --log -f
-	if [ ${?} -gt 0 ]; then
-		color-echo "error makepkg: $(basename ${LFS_PWD}/${PREFIX}/06_*/_6.05_*)" ${RED}
-		ERR_FLAG=1
-	fi
-	install -d ${_LOG}/06/${_file}
-	mv -f *.log ${_LOG}/06/${_file}/
-	rm -f *.pkg.tar.xz
-fi
-if [ -f ${LFS_PKG}/$(echo ${_file} | cut -d_ -f3)*.pkg.tar.xz ]; then
-	yes | pacman -Uf ${LFS_PKG}/$(echo ${_file} | cut -d_ -f3)*.pkg.tar.xz
-	if [ ${?} -gt 0 ]; then
-		color-echo "error pacman: $(basename ${LFS_PWD}/${PREFIX}/06_*/_6.05_*)" ${RED}
-		ERR_FLAG=1
-	fi
-fi
+local _dir=`basename $PWD`
+local _NAME=`echo ${_dir} | cut -d_ -f3`
+local _ID='06'
+
+makepkg_lfs ${_dir} '--log'
+pacman_lfs ${_dir}
+
 echo ${ERR_FLAG} > "${LFS_LOG}/system_base_lfs-flag"
 }
 

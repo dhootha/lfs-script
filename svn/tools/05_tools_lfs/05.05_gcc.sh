@@ -1,7 +1,7 @@
 #######################################
 
 pushd ${BUILD_DIR}
-unarch 'mpfr' 'gmp' 'mpc' || return 1
+unarch 'mpfr' 'gmp' 'mpc' || return ${?}
 cd ./${PACK}
 
 mv -v ../mpfr-* mpfr
@@ -48,9 +48,9 @@ mkdir -v ../${name}-build; cd ../${name}-build
 	--disable-libstdc++-v3     \
 	--enable-languages=c,c++   \
 	--with-mpfr-include=$(pwd)/../${PACK}/mpfr/src \
-	--with-mpfr-lib=$(pwd)/mpfr/src/.libs || return 1
-make || return 1
-make install || return 1
+	--with-mpfr-lib=$(pwd)/mpfr/src/.libs || return ${?}
+make || return ${?}
+make install || return ${?}
 ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
 popd
 

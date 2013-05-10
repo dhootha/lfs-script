@@ -1,5 +1,5 @@
 pkgname=linux-headers
-_pkgname=${name}
+_pkgname=linux
 pkgver=${version}
 pkgrel=1
 pkgdesc="Kernel headers sanitized for use in userspace"

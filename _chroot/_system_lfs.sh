@@ -5,6 +5,8 @@
 
 _system_lfs ()
 {
+local LFS_FLAG='system-lfs'
+
 cd ${LFS_PWD}
 #. ./${PREFIX}/packages-lfs.conf
 for _functions in ${LFS_PWD}/_functions/*.sh
@@ -12,20 +14,9 @@ do
 	. ${_functions}
 done
 
-# Назначение переменных (массивов) хроняших информацию о пакетах.
-unset lfs blfs pm
-if [ -d ./${PREFIX}/packages.conf ]; then
-	for _conf in ./${PREFIX}/packages.conf/*.conf
-	do
-		. ${_conf}
-	done
-else
-	. ./${PREFIX}/packages.conf
-fi
-
 local ERR_FLAG=0
 
-#hostname ${HOSTNAME}
+array_packages || ERR_FLAG=${?}
 
 echo 'system_lfs:' >> "${LFS_LOG}/system_lfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system_lfs.log"
@@ -45,7 +36,7 @@ if [ "${BLFS_FLAG}" -eq 0 ]; then
 	cp -f /etc/skel/{*,.*} /root/
 fi
 
-if [ "${ERR_FLAG}" -eq 0 ] && [ ${MOUNT_LFS_FLAG} -ne 0 ]; then
+if [ "${ERR_FLAG}" -eq 0 ] && [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
 	# fstab
 	echo "# Begin /etc/fstab
 

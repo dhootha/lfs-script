@@ -5,7 +5,7 @@
 
 unarch ()
 {
-if [ ${PWD} = ${BUILD_DIR} ]; then
+if [ "${PWD}" = "${BUILD_DIR}" ]; then
 	rm -Rf ./*
 else
 	ERR_FLAG=1

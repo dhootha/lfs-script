@@ -7,7 +7,7 @@ pushd ${BUILD_DIR}
 unarch || return ${?}
 cd ./${PACK}
 
-unset MAKEFLAGS
+#unset MAKEFLAGS
 
 sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in || return ${?}
 ./configure --prefix=/tools --disable-static --without-libssh2 || return ${?}
@@ -16,9 +16,9 @@ make || return ${?}
 make check || return ${?}
 make install || return ${?}
 
-if [ ${J2_LFS_FLAG} -ne 0 ]; then
-        export MAKEFLAGS="-j ${J2_LFS_FLAG}"
-fi
+#if [ ${J2_LFS_FLAG} -ne 0 ]; then
+#        export MAKEFLAGS="-j ${J2_LFS_FLAG}"
+#fi
 
 popd
 

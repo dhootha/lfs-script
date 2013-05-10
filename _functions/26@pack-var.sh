@@ -35,12 +35,15 @@ do
 	IFS=';'
 	for _ID_var in ${!_BOOK_PACK_VAR}
 	do
-		if [ "${_ID_var}" = "${_ID_PACK_VAR}" ] && \
-		   [ "${_NAME_PACK_VAR}" = "${name}" ]; then
-			IFS="${OLD_IFS}"
-			echo "${!pak}"
-			return
-		fi
+		for _NAME_var in ${name}
+		do
+			if [ "${_ID_var}" = "${_ID_PACK_VAR}" ] && \
+			   [ "${_NAME_var}" = "${_NAME_PACK_VAR}" ]; then
+				IFS="${OLD_IFS}"
+				echo "${!pak}"
+				return 0
+			fi
+		done
 	done
 	IFS=$'\n'
 

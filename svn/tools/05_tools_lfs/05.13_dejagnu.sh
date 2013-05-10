@@ -3,12 +3,12 @@
 #local _version=$(echo ${DEJAGNU_LFS} | cut -d\; -f3)
 
 pushd ${BUILD_DIR}
-unarch || return 1
+unarch || return ${?}
 cd ./${PACK}
 
-./configure --prefix=/tools || return 1
-make install || return 1
-make check || return 1
+./configure --prefix=/tools || return ${?}
+make install || return ${?}
+make check || return ${?}
 popd
 
 #######################################

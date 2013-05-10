@@ -15,8 +15,7 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${_pkgname}-${pkgver}
 
-  sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
-  patch -Np1 -i ../${_pkgname}-${pkgver}-bsddb_fix-1.patch
+  sed "s@\"\$CFLAGS -Werror\"@\"\$CFLAGS -Werror -Wformat\"@g" -i configure
   ./configure --prefix=/usr       \
               --enable-shared     \
               --with-system-expat \

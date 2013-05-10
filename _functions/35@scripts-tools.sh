@@ -5,7 +5,6 @@
 
 scripts_tools ()
 {
-#
 local _ID=${1:0:2}
 local _archive="${_ID}_$(uname -m)_lfs.tar.bz2"
 
@@ -20,8 +19,8 @@ color-echo "3 : ${3}" ${MAGENTA}
 
 # Проверка зависимостей
 if [ -n "${2}" ]; then
-	untar_lfs "${2}" || ERR_FLAG=${?}
-	[ ${ERR_FLAG} -gt 0 ] && return ${ERR_FLAG}
+	untar_lfs "${2}"
+#	[ ${ERR_FLAG} -gt 0 ] && return ${ERR_FLAG}
 fi
 
 echo "scripts_build: ${1}" >> "${_LOG}/${_ID}/${_ID}_lfs.log"
@@ -36,12 +35,6 @@ do
 	local _file=`basename "${_script}"`
 	local _NAME=`echo ${_file} | cut -d_ -f2 | cut -d. -f1`
 
-#echo ${_file}
-#ERR_FLAG=1
-#return ${ERR_FLAG}
-
-#	local _id=${_file:3:2}
-
 	local _log="${_LOG}/${_ID}/${_file}.log"
 	if [[ -f ${_log} ]]; then
 		rm -vf ${_log}
@@ -51,31 +44,15 @@ do
 	tee "${_log}" < "${logpipe}" &
 	local teepid=${!}
 
-#	for (( i=0; i <= ${#lfs[@]} - 1; i++ ))
-#	do
-#		pak="lfs[${i}]"
-#		local ${!pak}
-
-#		if [ "${status}" -eq 0 ]; then
-			# Очистка переменных
-#			clear_per "${!pak}"
-			# Продолжаем
-#			continue
-#		fi
-
-#		_paket="lfs${1:0:2}"
-#		if [ "${!_paket:0:2}" = "${_id}" ] || [ "${!_paket:3:2}" = "${_id}" ] || [ "${!_paket:6:2}" = "${_id}" ]; then
-
 	# Назначаем переменные пакета
 	_pack_var=`pack_var "lfs.${_ID}.${_NAME}"`
 	local ${_pack_var}
+	local name="${_NAME}"
 
 	while [ true ]
 	do
 		echo "${_ID}    ${name}    ${_file}"
-#		echo ${_script}
-		. ${_script} # &>"${logpipe}"
-		ERR_FLAG=${?}
+		. ${_script} || ERR_FLAG=${?}
 		if [ ${ERR_FLAG} -ne 0 ]; then
 			color-echo "ERROR: ${_file}" ${RED}
 			color-echo "Повторить - r" ${YELLOW}
@@ -87,7 +64,7 @@ do
 				'r')
 					ERR_FLAG=0
 					popd
-					[ -d ${BUILD_DIR} ] && rm -Rf ${BUILD_DIR}/* || return ${?}
+					[ -d ${BUILD_DIR} ] && rm -Rf ${BUILD_DIR}/*
 					echo '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
 					env
 					echo '++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
@@ -99,19 +76,14 @@ do
 					ERR_FLAG=0
 					local _flag=''
 				;;
-				*)  return ${ERR_FLAG} ;;
+				*)	return ${ERR_FLAG} ;;
 			esac
-#			break
 		fi
 		break
 	done &>"${logpipe}"
-#		fi
 
-		# Очистка переменных
-#		clear_per "${!pak}"
-#	done
 	[ ${ERR_FLAG} -ne 0 ] && break
-	[ -d ${BUILD_DIR} ] && rm -Rf ${BUILD_DIR}/* || return ${?}
+	[ -d ${BUILD_DIR} ] && rm -Rf ${BUILD_DIR}/*
 
 	wait ${teepid}
 	rm "${logpipe}"
@@ -129,36 +101,28 @@ else
 fi
 
 # clear
-strip --strip-debug /tools/lib/*
-strip --strip-unneeded /tools/{,s}bin/*
+strip --strip-debug /tools/lib/* || true
+strip --strip-unneeded /tools/{,s}bin/* || true
 rm -rf /tools/{,share}/{info,man,doc}
 
 color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
 find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
 find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
-
-
-echo "|$IFS|"
-
-
-
-pushd ${_LOG}
-	if [ "${_ID}" != '05' ]; then
-		color-echo 'Получаем переменную: "_raznost"' ${GREEN}
-		local _files=`diff -n "${_LOG}/05/05-files" "${_LOG}/${_ID}/${_ID}-files" | grep '^/tools'`
-#		diff -n "${_LOG}/05/05-files" "${_LOG}/${_ID}/${_ID}-files" | grep '^/tools' > ${_LOG}/tar_files.log
-	else
-		local _files='/tools'
-#		cat ${_LOG}/${_ID}/${_ID}-files > ${_LOG}/tar_files.log
-	fi
-popd
+#pushd ${_LOG}
+if [ "${_ID}" != '05' ]; then
+	color-echo 'Получаем переменную: "_raznost"' ${GREEN}
+	local _files=`diff -n "${_LOG}/05/05-files" "${_LOG}/${_ID}/${_ID}-files" | grep '^/tools'`
+else
+	local _files=`cat ${_LOG}/${_ID}/${_ID}-files`
+fi
+#popd
 
 pushd ${LFS}
 	color-echo "Создание архива: \"${_archive}\"" ${GREEN}
-	tar -cjf ${_archive} ${_files} || ERR_FLAG=${?}
+	tar -cjf ${_archive} ${_files}
 
-	mv -v ./${_archive} ${LFS_OUT}/ || ERR_FLAG=${?}
+	mv -v ./${_archive} ${LFS_OUT}/
 popd
 
 date >> "${_LOG}/${_ID}/${_ID}_lfs.log"

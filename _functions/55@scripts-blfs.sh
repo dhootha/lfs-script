@@ -28,9 +28,10 @@ else
 fi
 
 # Проверяем на необходимость собрать группу пакетов
-for (( i=0; i < ${#PACKAGE_GROUPS[@]}; i++ ))
+local PACKAGE_GROUPS=( ${PACKAGE_GROUPS[*]} )
+for (( i=0; ${i} < ${#PACKAGE_GROUPS[@]}; i++ ))
 do
-	if [ "${1:3}" == "${PACKAGE_GROUPS[${i}]}" ]; then
+	if [ "${PACKAGE_GROUPS[${i}]}" = "${1:3}" ]; then
 		# если собираем группу пакетов
 		local _groups_flag=1
 		break

@@ -39,8 +39,8 @@ build() {
                                     --disable-multilib          \
                                     --disable-bootstrap         \
                                     --disable-install-libiberty \
-                                    --with-system-zlib || return 1
-  make || return 1
+                                    --with-system-zlib
+  make
 }
 
 check() {
@@ -64,7 +64,7 @@ package() {
 #    ;;
 #  esac
 
-  make DESTDIR=${pkgdir} install || return 1
+  make DESTDIR=${pkgdir} install
 
   install -d ${pkgdir}/lib
   ln -sv ../usr/bin/cpp ${pkgdir}/lib/

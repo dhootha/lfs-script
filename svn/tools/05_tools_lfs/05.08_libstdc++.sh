@@ -1,8 +1,9 @@
 #######################################
 
 pushd ${BUILD_DIR}
-unarch || return 1
+unarch || return ${?}
 cd ./${PACK}
+name=`echo ${PACK} | cut -d- -f1`
 
 mkdir -v ../${name}-build; cd ../${name}-build
 ../${PACK}/libstdc++-v3/configure   \
@@ -13,9 +14,9 @@ mkdir -v ../${name}-build; cd ../${name}-build
 	--disable-nls               \
 	--disable-libstdcxx-threads \
 	--disable-libstdcxx-pch     \
-	--with-gxx-include-dir=/tools/$LFS_TGT/include/c++/${version} || return 1
-make || return 1
-make install || return 1
+	--with-gxx-include-dir=/tools/$LFS_TGT/include/c++/${version} || return ${?}
+make || return ${?}
+make install || return ${?}
 
 popd
 

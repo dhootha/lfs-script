@@ -13,17 +13,17 @@ _array_packages () {
 	source "${1}" || return ${?}
 	for (( i=0; i < ${#array[@]}; i++ ))
 	do
-		lfs_var_arr[${#lfs_var_arr[@]}]="${array[${i}]}" || return ${?}
+		lfs_var_arr[${#lfs_var_arr[@]}]="${array[${i}]}"
 	done
 }
 
 if [ -d ${LFS_PWD}/${PREFIX}/packages.conf ]; then
 	for _conf in ${LFS_PWD}/${PREFIX}/packages.conf/*.conf
 	do
-		_array_packages "${_conf}" || return ${?}
+		_array_packages "${_conf}"
 	done
 else
-	_array_packages "${LFS_PWD}/${PREFIX}/packages.conf" || return ${?}
+	_array_packages "${LFS_PWD}/${PREFIX}/packages.conf"
 fi
 
 unset array

@@ -14,9 +14,7 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   patch -Np1 -i ../${pkgname}-${pkgver}-includedir-1.patch
-  ./configure --prefix=/usr    \
-              --disable-static \
-              --libdir=/usr/lib
+  ./configure --prefix=/usr --disable-static
   make
 }
 

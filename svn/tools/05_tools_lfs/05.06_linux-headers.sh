@@ -3,13 +3,13 @@
 #local _version=$(echo ${LINUX_LFS} | cut -d\; -f3)
 
 pushd ${BUILD_DIR}
-unarch || return 1
+unarch || return ${?}
 cd ./${PACK}
 
-make mrproper || return 1
-make headers_check || return 1
-make INSTALL_HDR_PATH=dest headers_install || return 1
-cp -rv dest/include/* /tools/include || return 1
+make mrproper || return ${?}
+make headers_check || return ${?}
+make INSTALL_HDR_PATH=dest headers_install || return ${?}
+cp -rv dest/include/* /tools/include || return ${?}
 popd
 
 #######################################

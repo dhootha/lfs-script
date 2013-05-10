@@ -3,19 +3,19 @@
 #local _version=$(echo ${TCL_LFS} | cut -d\; -f3)
 
 pushd ${BUILD_DIR}
-#unarch "${name}${version}" || return 1
-unarch || return 1
+#unarch "${name}${version}" || return ${?}
+unarch || return ${?}
 local version=$(echo ${version} | cut -d- -f1)
 local PACK="${name}${version}"
 cd ./${PACK}/unix
 
 sed -i s/500/5000/ ../unix/generic/regc_nfa.c
-./configure --prefix=/tools || return 1
-make || return 1
-TZ=UTC make test || return 1
-make install || return 1
-chmod -v u+w /tools/lib/libtcl8.6.so || return 1
-make install-private-headers || return 1
+./configure --prefix=/tools || return ${?}
+make || return ${?}
+TZ=UTC make test || return ${?}
+make install || return ${?}
+chmod -v u+w /tools/lib/libtcl8.6.so || return ${?}
+make install-private-headers || return ${?}
 ln -sv tclsh8.6 /tools/bin/tclsh
 popd
 

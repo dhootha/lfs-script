@@ -5,6 +5,8 @@
 
 _beyond_lfs ()
 {
+local LFS_FLAG='blfs'
+
 cd ${LFS_PWD}
 #. ./${PREFIX}/packages-lfs.conf
 for _functions in ${LFS_PWD}/_functions/*.sh
@@ -12,18 +14,20 @@ do
 	. ${_functions}
 done
 
-# Назначение переменных (массивов) хроняших информацию о пакетах.
-unset lfs blfs pm
-if [ -d ./${PREFIX}/packages.conf ]; then
-	for _conf in ./${PREFIX}/packages.conf/*.conf
-	do
-		. ${_conf}
-	done
-else
-	. ./${PREFIX}/packages.conf
-fi
-
 local ERR_FLAG=0
+
+# Назначение переменных (массивов) хроняших информацию о пакетах.
+#unset lfs blfs pm
+#if [ -d ./${PREFIX}/packages.conf ]; then
+#	for _conf in ./${PREFIX}/packages.conf/*.conf
+#	do
+#		. ${_conf}
+#	done
+#else
+#	. ./${PREFIX}/packages.conf
+#fi
+
+array_packages || ERR_FLAG=${?}
 
 #hostname ${HOSTNAME}
 

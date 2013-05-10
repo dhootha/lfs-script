@@ -9,16 +9,17 @@ build_pkg_pacman_blfs ()
 
 # Назначение переменных
 local pkg_blfs="${1}"
-local _dir=$(basename "${pkg_blfs}")
-local _group="$(echo ${_dir} | cut -d. -f1)"
-local _NAME="$(echo ${_dir} | cut -d. -f2)"
+local _dir=`basename "${pkg_blfs}"`
+local _group=`echo ${_dir} | cut -d. -f1`
+local _NAME=`echo ${_dir} | cut -d. -f2`
 
 local depends=''
 local makedepends=''
 
 # Назначаем переменные пакета
-_pack_var="$(pack_var blfs.${_ID}.${_NAME})"
+local _pack_var=`pack_var "blfs.${_ID}.${_NAME}"`
 local ${_pack_var}
+name="${_NAME}"
 
 # Проверка зависимостей пакета
 _depends_pkg ()
@@ -46,12 +47,14 @@ _depends_pkg "${depends}" "${_pack_var}"
 # Назначаем переменные пакета
 #_pack_var="$(pack_var blfs.${_ID}.${_NAME})"
 local ${_pack_var}
+local name="${_NAME}"
 
 _depends_pkg "${makedepends}" "${_pack_var}"
 
 # Назначаем переменные пакета
 #_pack_var="$(pack_var blfs.${_ID}.${_NAME})"
 local ${_pack_var}
+local name="${_NAME}"
 
 # Компоновка переменной зависимостей пакета
 local _depends=''
@@ -100,13 +103,6 @@ do
 	unset ${urlpatch} ${md5patch} _urlpatch _md5patch
 done
 
-# Проверка на udev-config
-#if [ "${nconf}" ]; then
-#	_url="${_url}"$'\n'$(echo ${urlconf} | sed -e "s/_version/${verconf}/g")
-#	md5="${md5}"$'\n'${md5conf}
-#	export nconf verconf
-#fi
-
 # Установка переменной группы пакета
 for (( i=0; i < ${#PACKAGE_GROUPS[@]}; i++ ))
 do
@@ -118,26 +114,13 @@ done
 
 export name version _url md5 _depends _makedepends
 
-#echo =========================
-#echo ${pkg_blfs}
-#echo ${_dir}
-#echo ${_ID}
-#echo ${_name}
-#echo -------------------------
-#echo ${name}
-#echo ${version}
-#echo ${_url}
-#echo ${md5}
-#echo ${_depends}
-#echo =========================
-
 pushd ${pkg_blfs} || error-popd
 	if [ -n "${md5}" ]; then
-		makepkg_lfs ${2} || return ${?}
+		makepkg_lfs ${_dir} ${2}
 	else
-		makepkg --asroot -g || return ${?}
+		makepkg --asroot -g
 	fi
-	pacman_lfs || return ${?}
+	pacman_lfs ${_dir}
 popd
 
 clear_per ${_pack_var}

@@ -12,6 +12,8 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
+  patch -Np1 -i ../0001-mtree-fix-line-filename-length-calculation.patch
+
   ./configure --prefix=/usr    \
               --disable-static \
               --without-xml2

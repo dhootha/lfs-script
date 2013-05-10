@@ -8,7 +8,7 @@ unarch || return ${?}
 cd ./${PACK}
 
 unset MAKEFLAGS
-sed -i 's/ifdef _LARGEFILE64_SOURCE/ifndef _LARGEFILE64_SOURCE/' zlib.h
+sed -i 's/ifdef _LARGEFILE64_SOURCE/ifndef _LARGEFILE64_SOURCE/' zlib.h || return ${?}
 CFLAGS='-mstackrealign -fPIC -O3' ./configure --prefix=/tools || return ${?}
 make || return ${?}
 make check || return ${?}

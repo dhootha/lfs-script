@@ -5,19 +5,21 @@
 
 tools_lfs ()
 {
-[ "${ERR_FLAG}" -gt 0 ] && return ${?}
+local LFS_FLAG='tools-lfs'
+
+[ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
 color-echo "tools_lfs" ${YELLOW}
 
 date > "${LFS_LOG}/tools_lfs.log"
 
 # Основные каталоги и ссылки
-install -dv "${LFS}/tools" ${LFS_SRC} || return ${?}
-ln -sv "${LFS}/tools" / || return ${?}
+install -dv "${LFS}/tools" ${LFS_SRC}
+ln -sv "${LFS}/tools" /
 
 # Очистка сборочной папки
-rm -Rf ${BUILD_DIR} || return ${?}
+rm -Rf ${BUILD_DIR}
 install -dv ${LFS}${BUILD_DIR} ${BUILD_DIR}
-mount --bind ${LFS}${BUILD_DIR} ${BUILD_DIR} || return ${?}
+mount --bind ${LFS}${BUILD_DIR} ${BUILD_DIR}
 
 # Устанавливаем нужное окружение для сборки статической системы
 set +h
@@ -41,7 +43,7 @@ if [ ${J2_LFS_FLAG} -gt 0 ]; then
 	export MAKEFLAGS="-j ${J2_LFS_FLAG}"
 fi
 
-chmod -R a+wt ${LFS_SRC} || return ${?}
+chmod -R a+wt ${LFS_SRC}
 
 echo 'tools_lfs:' >> "${LFS_LOG}/tools_lfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
@@ -54,27 +56,27 @@ install -d ${_LOG}
 
 case ${TOOLS_LFS_FLAG} in
 	3)	# 11
-		scripts_tools '05.Constructing Cross-Compile Tools' || return ${?}	#-1
-		scripts_tools 'pm.Pacman' || return ${?}		#1-
+		scripts_tools '05.Constructing Cross-Compile Tools'	#-1
+		scripts_tools 'pm.Pacman'	#1-
 		;;
 	2)	# 10
-		scripts_tools 'pm.Pacman' '05.Constructing Cross-Compile Tools' || return ${?}	#1-
+		scripts_tools 'pm.Pacman' '05.Constructing Cross-Compile Tools'	#1-
 		;;
 	1)	# -1
-		scripts_tools '05.Constructing Cross-Compile Tools' || return ${?}		#-1
+		scripts_tools '05.Constructing Cross-Compile Tools'		#-1
 		;;
 	0)	# 00
 		if [ "${CHROOT_FLAG}" -gt 0 ] || [ "${SYSTEM_LFS_FLAG}" -gt 0 ] || [ "${BLFS_FLAG}" -gt 0 ]; then
-			untar_lfs 'pm.Pacman' '05.Constructing Cross-Compile Tools' || return ${?}	#1-
+			untar_lfs 'pm.Pacman' '05.Constructing Cross-Compile Tools'	#1-
 		fi
 		;;
-	*) echo 'Не верный параметер константы "TOOLS_LFS_FLAG"' && return 1 ;;
+	*) echo 'Не верный параметер константы "TOOLS_LFS_FLAG"' ;;
 esac
 
 # Возврашяем PATH
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
-umount -v ${BUILD_DIR} || return ${?}
+umount -v ${BUILD_DIR}
 rm -Rf ${LFS}${BUILD_DIR} ${BUILD_DIR}
 
 date >> "${LFS_LOG}/tools_lfs.log"

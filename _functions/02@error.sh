@@ -1,15 +1,19 @@
 #!/bin/bash
 ################################################################################
-# Функция "repo-add"
+# Функция "_ERROR"
 # Version: 0.1
 
-repo-add_lfs ()
+_ERROR ()
 {
-pushd ${LFS_PKG}
-	rm -f ./core.*
-	repo-add -s ./core.db.tar.xz *.pkg.tar.xz | tee ${LFS_LOG}/repo-add.log
-#	[ "${?}" -ne 0 ] && return ${?}
-popd
+local _ERR=${?}
+
+color-echo "Ошибка № ${_ERR} в ${LFS_FLAG} !!!" ${RED}
+
+case "${LFS_FLAG}" in
+	lfs | tools-lfs) umount_lfs ;;
+esac
+
+exit ${_ERR}
 }
 
 ################################################################################

@@ -38,16 +38,16 @@ else
 		case "${_mount_point}" in
 		    'swap' )
 			color-echo "Форматированние: ${_section} в ${_type}" ${CYAN}
-			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ( mkswap ${_section} || return 1 )
+			[ ${MOUNT_LFS_FLAG} -ne 0 ] && mkswap ${_section}
 			color-echo "Монтирование: ${_section} в ${_mount_point}" ${CYAN}
-			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ( swapon -v ${_section} || return 1 )
+			[ ${MOUNT_LFS_FLAG} -ne 0 ] && swapon -v ${_section}
 			;;
 		    * )
-			install -dv "${LFS}${_mount_point}" || return 1
+			install -dv "${LFS}${_mount_point}"
 			color-echo "Форматированние: ${_section} в ${_type}" ${CYAN}
-			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ( ${_mke2fs} ${_section} || return 1 )
+			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ${_mke2fs} ${_section}
 			color-echo "Монтирование: ${_section} в ${_mount_point}" ${CYAN}
-			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ( ${_mount} ${_section} "${LFS}${_mount_point}" || return 1 )
+			[ ${MOUNT_LFS_FLAG} -ne 0 ] && ${_mount} ${_section} "${LFS}${_mount_point}"
 			;;
 		esac
 	done
