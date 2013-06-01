@@ -6,11 +6,9 @@
 beyond_lfs ()
 {
 [ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
-color-echo "!!! BLFS !!!" ${YELLOW}
+[ "${BLFS_FLAG}" -eq 0 ] && return 0
 
-if [ "${BLFS_FLAG}" -eq 0 ]; then
-	return 0
-fi
+color-echo "!!! BLFS !!!" ${YELLOW}
 
 if [ ! -f ${LFS_LOG}/system_lfs-flag ] || [ "$(cat ${LFS_LOG}/system_lfs-flag)" -gt 0 ]; then
 	color-echo "ERROR: system_lfs_flag" ${RED}

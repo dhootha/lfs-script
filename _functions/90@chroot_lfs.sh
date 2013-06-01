@@ -8,8 +8,12 @@ chroot_lfs ()
 [ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
 
 if [ -z "${1}" ]; then
-	color-echo "!!! CHROOT !!!" ${YELLOW}
-	date > "${LFS_LOG}/chroot.log"
+	if [ "${CHROOT_FLAG}" -gt 0 ]; then
+		color-echo "!!! CHROOT !!!" ${YELLOW}
+		date > "${LFS_LOG}/chroot.log"
+	else
+		return 0
+	fi
 fi
 
 if [ -f ${LFS}/usr/bin/env ]

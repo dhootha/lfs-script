@@ -6,11 +6,6 @@
 system_lfs ()
 {
 [ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
-color-echo "system_lfs" ${YELLOW}
-
-if [ "$(mount | grep ${LFS}${BUILD_DIR})" ]; then
-	umount -v ${BUILD_DIR}
-fi
 
 local BASE_CORE_FLAG=0
 local SYSTEM_FLAG=0
@@ -35,6 +30,12 @@ case ${SYSTEM_LFS_FLAG} in
 		color-echo 'Не верный параметер константы "SYSTEM_LFS_FLAG"' ${RED} && exit 1
 		;;
 esac
+
+color-echo "system_lfs" ${YELLOW}
+
+if [ "$(mount | grep ${LFS}${BUILD_DIR})" ]; then
+	umount -v ${BUILD_DIR}
+fi
 
 #if [ "$(cat ${LFS_LOG}/tools_lfs-flag)" -gt 0 ]; then
 #	color-echo "ERROR: 0p_flag" ${RED}
