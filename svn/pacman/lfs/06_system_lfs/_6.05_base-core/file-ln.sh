@@ -8,8 +8,10 @@ ln -sv /tools/lib/libstdc++.so{,.6} ${1}/usr/lib
 sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la
 ln -sv bash ${1}/bin/sh
 
+ln -sv /proc/self/mounts ${1}/etc/mtab
+
 install -d ${1}/etc
-touch ${1}/etc/mtab
+#touch ${1}/etc/mtab
 #cat /etc/mtab | grep /mnt/lfs | sed -e 's/\/mnt\/lfs//g' > ${1}/etc/mtab
 
 cat > ${1}/etc/passwd << "EOF"

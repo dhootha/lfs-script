@@ -71,7 +71,10 @@ ln -sv /tools/bin/{bash,cat,echo,pwd,stty} ${LFS}/bin
 ln -sv /tools/bin/{perl,du,strip} ${LFS}/usr/bin
 ln -sv /tools/lib/{libgcc_s.so{,.1},libstdc++.so{,.6}} ${LFS}/usr/lib
 #ln -sv /tools/lib/libstdc++.so{,.6} ${LFS}/usr/lib
+sed 's/tools/usr/' /tools/lib/libstdc++.la > ${LFS}/usr/lib/libstdc++.la
 ln -sv bash ${LFS}/bin/sh
+
+ln -sv /proc/self/mounts ${LFS}/etc/mtab
 # ++++++++++++++++++++++++++++++++
 mkdir -p ${LFS_PKG}
 echo "
@@ -96,10 +99,10 @@ CacheDir    = /var/cache/pacman/pkg/
 LogFile     = /var/log/pacman.log' >> /tools/etc/pacman.conf
 # ++++++++++++++++++++++++++++++++
 
-cat /etc/mtab | grep "${LFS}" | sed -e "s@${LFS}@@g" > ${LFS_LOG}/mtab
-install -d /mnt/lfs/etc
-cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
-echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
+#cat /etc/mtab | grep "${LFS}" | sed -e "s@${LFS}@@g" > ${LFS_LOG}/mtab
+#install -d /mnt/lfs/etc
+#cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
+#echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
 
 # Каталог для хронения лог-файлов system
 local _LOG="${LFS_LOG}/system"

@@ -7,6 +7,8 @@ _lfs ()
 {
 # constants
 
+ntpdate 0.europe.pool.ntp.org
+
 local LFS_PWD=`echo "${0}" | sed -e s@/$(basename "${0}")@@g`
 [ "${LFS_PWD}" == '.' ] && local LFS_PWD=`pwd`
 local PREFIX='svn'
@@ -34,7 +36,7 @@ local J2_LFS_FLAG="$(( `grep -c '^processor' /proc/cpuinfo` + 1 ))"
 local PACKAGE_MANAGER_FLAG=1
 local MOUNT_LFS_FLAG=0
 local PACKAGES_LFS_FLAG=1
-local TOOLS_LFS_FLAG=3		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
+local TOOLS_LFS_FLAG=0		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
 local SYSTEM_LFS_FLAG=0		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
 local BLFS_FLAG=0
 local ERR_FLAG=0

@@ -11,7 +11,7 @@ cd ./${PACK}
             --disable-gpgsm-test \
             --disable-static || return ${?}
 make || return ${?}
-#make check || return ${?}
+make check || return ${?}
 make install || return ${?}
 popd
 

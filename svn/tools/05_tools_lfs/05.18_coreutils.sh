@@ -14,7 +14,7 @@ FORCE_UNSAFE_CONFIGURE=1 ./configure    \
 make || return ${?}
 make RUN_EXPENSIVE_TESTS=yes check || return ${?}
 make install || return ${?}
-cp -v src/su /tools/bin/
+#cp -v src/su /tools/bin/
 
 # чтобы не сбивалось время в логе
 export TZ=/etc/localtime

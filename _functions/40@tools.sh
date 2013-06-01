@@ -18,8 +18,9 @@ ln -sv "${LFS}/tools" /
 
 # Очистка сборочной папки
 rm -Rf ${BUILD_DIR}
-install -dv ${LFS}${BUILD_DIR} ${BUILD_DIR}
-mount --bind ${LFS}${BUILD_DIR} ${BUILD_DIR}
+install -dv ${BUILD_DIR}
+#install -dv ${LFS}${BUILD_DIR}
+#mount --bind ${LFS}${BUILD_DIR} ${BUILD_DIR}
 
 # Устанавливаем нужное окружение для сборки статической системы
 set +h
@@ -76,8 +77,10 @@ esac
 # Возврашяем PATH
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
-umount -v ${BUILD_DIR}
-rm -Rf ${LFS}${BUILD_DIR} ${BUILD_DIR}
+if [ -n "$(mount | grep ${BUILD_DIR})" ]; then
+	umount -v ${BUILD_DIR}
+	rm -Rf ${LFS}${BUILD_DIR} ${BUILD_DIR}
+fi
 
 date >> "${LFS_LOG}/tools_lfs.log"
 }
