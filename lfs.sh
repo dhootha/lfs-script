@@ -59,6 +59,9 @@ do
 		-c | --chroot)
 			CHROOT_FLAG=1
 		;;
+		-d | --download)
+			PACKAGES_LFS_FLAG=1
+		;;
 		--clean)
 			if [ -z "$(fgrep "${LFS}" /proc/mounts)" ]; then
 				rm -Rfv ${BUILD_DIR} /tools ${LFS}
@@ -83,6 +86,8 @@ do
 
 --clean		Очистка логов и результируюших пакетов
 EOF
+
+			exit 0
 		;;
 	esac
 done
