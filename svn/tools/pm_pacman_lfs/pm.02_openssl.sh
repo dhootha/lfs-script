@@ -9,7 +9,7 @@ cd ./${PACK}
 
 unset MAKEFLAGS
 
-patch -Np1 -i ${LFS_SRC}/${name}-${version}-fix_manpages-1.patch || return ${?}
+patch -Np1 -i ${LFS_SRC}/${name}-${version}-fix_parallel_build-1.patch || return ${?}
 ./config --prefix=/tools shared zlib-dynamic || return ${?}
 make || return ${?}
 

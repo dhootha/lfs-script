@@ -41,6 +41,52 @@ local SYSTEM_LFS_FLAG=0		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
 local BLFS_FLAG=0
 local ERR_FLAG=0
 
+for _ARG in $*
+do
+	case "${_ARG}" in
+		-m | --mount)
+			MOUNT_LFS_FLAG=1
+		;;
+		-t | --tools)
+			TOOLS_LFS_FLAG=3
+		;;
+		-s | --system)
+			SYSTEM_LFS_FLAG=3
+		;;
+		-b | --blfs)
+			BLFS_FLAG=1
+		;;
+		-c | --chroot)
+			CHROOT_FLAG=1
+		;;
+		--clean)
+			if [ -z "$(fgrep "${LFS}" /proc/mounts)" ]; then
+				rm -Rfv ${BUILD_DIR} /tools ${LFS}
+			else
+				color-echo 'Остались смонтированвми ФС!' ${RED}
+				exit 1
+			fi
+			exit
+		;;
+		*)
+			cat << EOF
+./lfs.sh [ Опции ]
+
+Опции:
+-t | --tools	Сборка пакетов из раздела "5. Constructing a Temporary System" книги LFS
+-s | --system	Сборка пакетов из раздела "6. Installing Basic System Software",
+		"7. Setting Up System Bootscripts" и "8. Making the LFS System Bootable" книги LFS
+-b | --blfs	Сборка пакетов из книги BLFS
+
+-m | --mount	Смонтировать разделы из файла ./disk для новой системы
+-c | --chroot	По завершению установки войти в систему с chroot
+
+--clean		Очистка логов и результируюших пакетов
+EOF
+		;;
+	esac
+done
+
 [ -n "$(grep ^i: /etc/passwd 2> /dev/null)" ] && chown i:i -R ${LFS_PWD}
 
 #. ${LFS_PWD}/${PREFIX}/packages-lfs.conf
@@ -92,6 +138,6 @@ set +Ee
 }
 
 setterm -blank 0
-_lfs
+_lfs "$*"
 
 #######################################

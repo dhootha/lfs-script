@@ -9,6 +9,8 @@ local LFS_FLAG='tools-lfs'
 
 [ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
 
+local _LOG
+
 _training_tools () {
 	color-echo "tools_lfs" ${YELLOW}
 
@@ -49,12 +51,15 @@ _training_tools () {
 	chmod -R a+wt ${LFS_SRC}
 
 	echo 'tools_lfs:' >> "${LFS_LOG}/tools_lfs.log"
-	echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+	echo '+++++++++++++++++env+++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
 	env >> "${LFS_LOG}/tools_lfs.log"
+	echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+	echo '++++++++++++++++local++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+	local >> "${LFS_LOG}/tools_lfs.log"
 	echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
 
 	# Каталог для хронения лог-файлов tools
-	local _LOG="${LFS_LOG}/tools"
+	_LOG="${LFS_LOG}/tools"
 	install -d ${_LOG}
 }
 

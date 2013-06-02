@@ -6,6 +6,8 @@
 umount_lfs ()
 {
 
+PATH='/usr/sbin:/usr/bin:/sbin:/bin'
+
 local _log=${LFS_LOG}/umount.log
 
 install -d ${LFS_LOG}

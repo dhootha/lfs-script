@@ -27,16 +27,26 @@ untar_lfs ()
 			color-echo "Распаковка: \"${_archive}\"" ${CYAN}
 			echo "untar: ${1}" > "${_log}"
 			date >> "${_log}"
+			echo '+++++++++++++++++env+++++++++++++++++++' >> "${_log}"
+			env >> "${_log}"
+			echo '+++++++++++++++++++++++++++++++++++++++' >> "${_log}"
+			echo '++++++++++++++++local++++++++++++++++++' >> "${_log}"
+			local >> "${_log}"
+			echo '+++++++++++++++++++++++++++++++++++++++' >> "${_log}"
+
+			local _find=`which find`
+			local _date=`which date`
+
 			pushd ${LFS} > /dev/null
 				tar -xf "${LFS_OUT}/${_archive}"
 			popd > /dev/null
 
 			color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
-			find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
-			find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
+			${_find} /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
+			${_find} /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
 			echo ${ERR_FLAG} > ${_LOG}/${_ID}/${_ID}_flag
-			date >> "${_log}"
+			${_date} >> "${_log}"
 		else
 			scripts_tools "${1}"
 		fi

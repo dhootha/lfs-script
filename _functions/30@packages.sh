@@ -5,6 +5,8 @@
 
 packages_lfs ()
 {
+local LFS_FLAG='packages-lfs'
+
 local OLD_IFS="$IFS"
 IFS=$'\n'
 
