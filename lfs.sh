@@ -48,7 +48,7 @@ do
 			MOUNT_LFS_FLAG=1
 		;;
 		-t | --tools)
-			TOOLS_LFS_FLAG=3
+			TOOLS_LFS_FLAG=2
 		;;
 		-s | --system)
 			SYSTEM_LFS_FLAG=3

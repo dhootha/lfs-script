@@ -114,8 +114,10 @@ strip --strip-unneeded /tools/{,s}bin/* || true
 rm -rf /tools/{,share}/{info,man,doc}
 
 color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
-find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
+find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-files
 find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
+#find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
+#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
 #pushd ${_LOG}
 if [ "${_ID}" != '05' ]; then

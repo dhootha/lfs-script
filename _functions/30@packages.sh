@@ -46,12 +46,12 @@ do
 
 	if [ "${url}" ]; then
 		local url=$(echo ${url} | sed -e "s@_version@${version}@g")
-		wgetrc
+		download
 	fi
 	unset url md5
 	if [ "${urlconf}" ]; then
 		local urlconf=$(echo ${urlconf} | sed -e "s@_version@${verconf}@g")
-		wgetrc "${urlconf}" "${md5conf}"
+		download "${urlconf}" "${md5conf}"
 	fi
 	for (( n=1; n <= 9; n++ ))
 	do
@@ -59,7 +59,7 @@ do
 		if [ -n "${!urlpatch}" ]; then
 			local _urlpatch=$(echo ${!urlpatch} | sed -e "s@_version@${version}@g")
 			local md5patch="md5patch${n}"
-			wgetrc "${_urlpatch}" "${!md5patch}"
+			download "${_urlpatch}" "${!md5patch}"
 		fi
 	done
 

@@ -16,7 +16,7 @@ mkdir -v ../${name}-build; cd ../${name}-build
 	--host=$LFS_TGT                            \
 	--build=$(../${PACK}/scripts/config.guess) \
 	--disable-profile                          \
-	--enable-kernel=2.6.25                     \
+	--enable-kernel=2.6.34                     \
 	--with-headers=/tools/include              \
 	libc_cv_forced_unwind=yes                  \
 	libc_cv_ctors_header=yes                   \
