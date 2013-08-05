@@ -9,37 +9,36 @@ _lfs ()
 
 which ntpdate && ntpdate 0.europe.pool.ntp.org
 
-local LFS_PWD=`echo "${0}" | sed -e s@/$(basename "${0}")@@g`
+local LFS_PWD=`dirname "${0}"`
 [ "${LFS_PWD}" == '.' ] && local LFS_PWD=`pwd`
-local PREFIX='svn'
-local LFS='/mnt/lfs'
-local LFS_SRC="${LFS_PWD}/${PREFIX}/sources"
-local LFS_OUT="${LFS_PWD}/output"
-local LFS_PKG="${LFS_OUT}/pkg"
-local LFS_LOG="${LFS_OUT}/log"
-local BUILD_DIR="${LFS_PWD}/build"
 
-local PACKAGE_MANAGER='pacman'
+#. ${LFS_PWD}/${PREFIX}/packages-lfs.conf
+for _function in ${LFS_PWD}/_functions/*.sh
+do
+	source ${_function}
+done
 
-local PACKAGE_GROUPS=('base' 'base-devel')
-local PACKAGE_FORCE=('base-core' 'glibc' 'binutils' 'gcc' 'shadow' 'coreutils' 'bash' 'perl' 'bash-completion')
+# Должен быть хотя бы один аргумент.
+if [ "$#" -eq 0 ]; then
+	cat << EOF
+./lfs.sh [ Опции ]
 
-local HOSTNAME='inet'
-local ns1_IP='8.8.4.4'
-local ns2_IP='8.8.8.8'
-local PATH_CHROOT='/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:/tools/sbin'
+Опции:
+-t | --tools	Сборка пакетов из раздела "5. Constructing a Temporary System" книги LFS.
+-s | --system	Сборка пакетов из раздела "6. Installing Basic System Software",
+		"7. Setting Up System Bootscripts" и
+		"8. Making the LFS System Bootable" книги LFS.
+-b | --blfs	Сборка пакетов из книги BLFS.
 
-# flags
-local LFS_FLAG='lfs'
-local CHROOT_FLAG=0
-local J2_LFS_FLAG="$(( `grep -c '^processor' /proc/cpuinfo` + 1 ))"
-local PACKAGE_MANAGER_FLAG=1
-local MOUNT_LFS_FLAG=0
-local PACKAGES_LFS_FLAG=0
-local TOOLS_LFS_FLAG=0		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
-local SYSTEM_LFS_FLAG=0		# 0 = 00; 1 = -1; 2 = 10; 3 = 11.
-local BLFS_FLAG=0
-local ERR_FLAG=0
+-m | --mount	Смонтировать разделы из файла ./disk для новой системы.
+-d | --download	Загрузка пакетов.
+-c | --chroot	По завершению установки войти в систему с chroot.
+
+--clean		Очистка логов и результируюших пакетов.
+EOF
+
+	exit 0
+fi
 
 for _ARG in $*
 do
@@ -66,39 +65,15 @@ do
 			if [ -z "$(fgrep "${LFS}" /proc/mounts)" ]; then
 				rm -Rfv ${BUILD_DIR} /tools ${LFS}
 			else
-				color-echo 'Остались смонтированвми ФС!' ${RED}
+				color-echo 'Остались смонтироваными ФС!' ${RED}
 				exit 1
 			fi
 			exit
-		;;
-		*)
-			cat << EOF
-./lfs.sh [ Опции ]
-
-Опции:
--t | --tools	Сборка пакетов из раздела "5. Constructing a Temporary System" книги LFS
--s | --system	Сборка пакетов из раздела "6. Installing Basic System Software",
-		"7. Setting Up System Bootscripts" и "8. Making the LFS System Bootable" книги LFS
--b | --blfs	Сборка пакетов из книги BLFS
-
--m | --mount	Смонтировать разделы из файла ./disk для новой системы
--c | --chroot	По завершению установки войти в систему с chroot
-
---clean		Очистка логов и результируюших пакетов
-EOF
-
-			exit 0
 		;;
 	esac
 done
 
 [ -n "$(grep ^i: /etc/passwd 2> /dev/null)" ] && chown i:i -R ${LFS_PWD}
-
-#. ${LFS_PWD}/${PREFIX}/packages-lfs.conf
-for _functions in ${LFS_PWD}/_functions/*.sh
-do
-	source ${_functions}
-done
 
 # Размонтирование разделов.
 umount_lfs || exit ${?}
@@ -123,8 +98,6 @@ packages_lfs
 # Создание необходимых каталогов и сборка временной системы.
 tools_lfs
 
-#echo ${ERR_FLAG} > ${LFS_LOG}/tools_lfs-flag
-
 # Сборка основной системы.
 system_lfs
 
@@ -143,6 +116,6 @@ set +Ee
 }
 
 setterm -blank 0
-_lfs "$*"
+_lfs $*
 
 #######################################
