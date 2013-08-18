@@ -8,7 +8,6 @@ _system_lfs ()
 local LFS_FLAG='system-lfs'
 
 cd ${LFS_PWD}
-#. ./${PREFIX}/packages-lfs.conf
 for _functions in ${LFS_PWD}/_functions/*.sh
 do
 	. ${_functions}

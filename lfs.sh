@@ -5,14 +5,14 @@
 
 _lfs ()
 {
-# constants
+# Устанавливаем точное время.
+which ntpdate 2>& /dev/null && ntpdate 0.europe.pool.ntp.org
 
-which ntpdate && ntpdate 0.europe.pool.ntp.org
-
+# Определяем основную переменную.
 local LFS_PWD=`dirname "${0}"`
 [ "${LFS_PWD}" == '.' ] && local LFS_PWD=`pwd`
 
-#. ${LFS_PWD}/${PREFIX}/packages-lfs.conf
+# Определяем все переменные и функции.
 for _function in ${LFS_PWD}/_functions/*.sh
 do
 	source ${_function}
@@ -40,6 +40,7 @@ EOF
 	exit 0
 fi
 
+# Проверяем входные аргументы.
 for _ARG in $*
 do
 	case "${_ARG}" in
@@ -73,11 +74,13 @@ do
 	esac
 done
 
+# Сменяем права доступа на скрипты если имеется пользователь i.
 [ -n "$(grep ^i: /etc/passwd 2> /dev/null)" ] && chown i:i -R ${LFS_PWD}
 
 # Размонтирование разделов.
 umount_lfs || exit ${?}
 
+# Перехватываем ошибки.
 local restoretrap
 
 set -eE
@@ -110,8 +113,10 @@ chroot_lfs
 # Размонтирование разделов и очистка системы.
 umount_lfs
 
+# Сменяем права доступа на скрипты если имеется пользователь i.
 [ -n "$(grep ^i: /etc/passwd 2> /dev/null)" ] && chown i:i -R ${LFS_PWD}
 
+# Прекрашяем перехватывать ошибки.
 set +Ee
 }
 
