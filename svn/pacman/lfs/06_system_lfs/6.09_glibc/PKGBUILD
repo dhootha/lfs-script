@@ -14,11 +14,12 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
+  sed -i -e 's/static __m128i/inline &/' sysdeps/x86_64/multiarch/strstr.c
   mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
   ../${pkgname}-${pkgver}/configure	\
 	    --prefix=/usr               \
 	    --disable-profile		\
-	    --enable-kernel=2.6.34      \
+	    --enable-kernel=2.6.32      \
 	    --libexecdir=/usr/lib/glibc
   make
 }
@@ -36,16 +37,6 @@ check() {
 
 package() {
   cd ${srcdir}/${pkgname}-build
-
-#  case `uname -m` in
-#    x86_64)
-#      for _lib in /lib /usr/lib
-#      do
-#        install -d ${pkgdir}${_lib}
-#        ln -s lib ${pkgdir}${_lib}64
-#      done
-#    ;;
-#  esac
 
   make install_root=${pkgdir} install
 

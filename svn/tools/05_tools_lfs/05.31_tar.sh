@@ -7,7 +7,8 @@ unarch || return ${?}
 cd ./${PACK}
 
 sed -i -e '/gets is a/d' gnu/stdio.in.h
-FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/tools || return ${?}
+#FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/tools || return ${?}
+./configure --prefix=/tools || return ${?}
 make || return ${?}
 make check || return ${?}
 make install || return ${?}

@@ -9,6 +9,8 @@ if [ ! -r /usr/include/rpc/types.h ]; then
   su -c 'cp -v sunrpc/rpc/*.h /usr/include/rpc' || return ${?}
 fi
 
+sed -i -e 's/static __m128i/inline &/' sysdeps/x86_64/multiarch/strstr.c
+
 mkdir -v ../${name}-build; cd ../${name}-build
 
 ../${PACK}/configure                               \
@@ -16,7 +18,7 @@ mkdir -v ../${name}-build; cd ../${name}-build
 	--host=$LFS_TGT                            \
 	--build=$(../${PACK}/scripts/config.guess) \
 	--disable-profile                          \
-	--enable-kernel=2.6.34                     \
+	--enable-kernel=2.6.32                     \
 	--with-headers=/tools/include              \
 	libc_cv_forced_unwind=yes                  \
 	libc_cv_ctors_header=yes                   \

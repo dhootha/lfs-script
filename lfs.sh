@@ -6,7 +6,7 @@
 _lfs ()
 {
 # Устанавливаем точное время.
-which ntpdate 2>& /dev/null && ntpdate 0.europe.pool.ntp.org
+which ntpdate 2> /dev/null && ntpdate 0.europe.pool.ntp.org
 
 # Определяем основную переменную.
 local LFS_PWD=`dirname "${0}"`
