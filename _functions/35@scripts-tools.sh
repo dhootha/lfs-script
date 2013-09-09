@@ -114,25 +114,23 @@ strip --strip-unneeded /tools/{,s}bin/* || true
 rm -rf /tools/{,share}/{info,man,doc}
 
 color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
-find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-files
-find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
+find /tools/ | sed -e '1d' > ${_LOG}/${_ID}/${_ID}-files
+#find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-files
+#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 #find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
 #find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
-#pushd ${_LOG}
 if [ "${_ID}" != '05' ]; then
 	color-echo 'Получаем переменную: "_raznost"' ${GREEN}
 	local _files=`diff -n "${_LOG}/05/05-files" "${_LOG}/${_ID}/${_ID}-files" | grep '^/tools'`
 else
 	local _files=`cat ${_LOG}/${_ID}/${_ID}-files`
 fi
-#popd
 
-pushd ${LFS}
+pushd ${LFS_OUT}
 	color-echo "Создание архива: \"${_archive}\"" ${GREEN}
 	tar -cjf ${_archive} ${_files}
-
-	mv -v ./${_archive} ${LFS_OUT}/
+	bzip2 -t ${_archive}
 popd
 
 date >> "${_LOG}/${_ID}/${_ID}_lfs.log"

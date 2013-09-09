@@ -6,6 +6,8 @@ pushd ${BUILD_DIR}
 unarch || return ${?}
 cd ./${PACK}
 
+patch -Np1 -i ${LFS_SRC}/${name}-${version}-test-1.patch || return ${?}
+
 ./configure --prefix=/tools || return ${?}
 make || return ${?}
 make check || return ${?}

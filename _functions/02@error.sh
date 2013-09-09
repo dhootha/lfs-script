@@ -13,6 +13,7 @@ read
 
 case "${LFS_FLAG}" in
 	lfs | tools-lfs) umount_lfs ;;
+	_tools-lfs) rm -f "${logpipe}" ;;
 esac
 
 exit ${_ERR}

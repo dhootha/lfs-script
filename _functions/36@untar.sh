@@ -39,8 +39,7 @@ untar_lfs ()
 			popd > /dev/null
 
 			color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
-			find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-files
-			find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-directory
+			find /tools/ | sed -e '1d' > ${_LOG}/${_ID}/${_ID}-files
 			#find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
 			#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
