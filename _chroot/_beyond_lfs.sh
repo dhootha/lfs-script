@@ -57,8 +57,7 @@ scripts_blfs '04_gnupg2' '--log'
 repo-add_lfs
 
 # Дефаултные конфиги для рута
-[ -f '/etc/skel/*' ] || [ -d '/etc/skel/*' ] && cp -f /etc/skel/* /root/
-[ -f '/etc/skel/.*' ] || [ -d '/etc/skel/.*' ] && cp -f /etc/skel/.* /root/
+cp -rf `find /etc/skel/ | sed -e '1d'` /root/
 
 echo ${ERR_FLAG} > "${LFS_LOG}/blfs-flag"
 

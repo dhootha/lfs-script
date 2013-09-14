@@ -41,8 +41,7 @@ if [ "${BLFS_FLAG}" -eq 0 ]; then
 	repo-add_lfs
 
 	# Дефаултные конфиги для рута
-	[ -f '/etc/skel/*' ] || [ -d '/etc/skel/*' ] && cp -f /etc/skel/* /root/
-	[ -f '/etc/skel/.*' ] || [ -d '/etc/skel/.*' ] && cp -f /etc/skel/.* /root/
+	cp -rf `find /etc/skel/ | sed -e '1d'` /root/
 fi
 
 if [ "${ERR_FLAG}" -eq 0 ] && [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
