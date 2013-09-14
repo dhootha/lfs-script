@@ -13,6 +13,11 @@ done
 
 local LFS_FLAG='_tools-lfs'
 
+local TOOLS_LFS_FLAG=${1}
+local SYSTEM_LFS_FLAG=${2}
+local BLFS_FLAG=${3}
+local CHROOT_FLAG=${4}
+
 # Перехватываем ошибки.
 local restoretrap
 
@@ -34,7 +39,7 @@ array_packages
 _LOG="${LFS_LOG}/tools"
 install -d ${_LOG}
 
-case ${1} in
+case ${TOOLS_LFS_FLAG} in
 	3)	# 11
 		scripts_tools '05.Constructing Cross-Compile Tools'	#-1
 		scripts_tools 'pm.Pacman'	#1-

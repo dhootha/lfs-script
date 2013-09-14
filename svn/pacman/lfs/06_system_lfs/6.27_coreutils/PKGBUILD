@@ -28,13 +28,11 @@ build() {
 check() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make NON_ROOT_USERNAME=nobody check-root
-  echo "dummy:x:1000:nobody" >> /etc/group
-  chown -Rv nobody .
-  sed -i '/^rootfs/d' /etc/mtab
-  su nobody -s /bin/bash \
-            -c "PATH=$PATH make RUN_EXPENSIVE_TESTS=yes check"
-  sed -i '/dummy/d' /etc/group
-  echo 'rootfs / rootfs rw 0 0' >> /etc/mtab
+#  echo "dummy:x:1000:nobody" >> /etc/group
+#  chown -Rv nobody .
+#  su nobody -s /bin/bash \
+#            -c "PATH=$PATH make RUN_EXPENSIVE_TESTS=yes check"
+#  sed -i '/dummy/d' /etc/group
 }
 
 package() {

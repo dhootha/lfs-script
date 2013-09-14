@@ -15,7 +15,8 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  patch -Np1 -i ../${pkgname}-${pkgver}-bison-2.6.1-1.patch
+#  patch -Np1 -i ../${pkgname}-${pkgver}-bison-2.6.1-1.patch
+  sed -i -e '/test-bison/d' tests/Makefile.in
 
   ./configure --prefix=/usr             \
               --mandir=/usr/share/man   \

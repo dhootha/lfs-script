@@ -28,7 +28,7 @@ check() {
   local GMP_ERROR=`awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log`
   echo ${GMP_ERROR}
 
-  if [ "${GMP_ERROR}" -ne 184 ]; then
+  if [ "${GMP_ERROR}" -ne 185 ]; then
     echo '---=== Error gmp-check-log ===---'
     read
     exit 1

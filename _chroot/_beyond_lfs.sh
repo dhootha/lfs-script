@@ -5,15 +5,24 @@
 
 _beyond_lfs ()
 {
-local LFS_FLAG='blfs'
-
 cd ${LFS_PWD}
 for _functions in ${LFS_PWD}/_functions/*.sh
 do
 	. ${_functions}
 done
 
+local LFS_FLAG='blfs'
+
 local ERR_FLAG=0
+
+# Перехватываем ошибки.
+local restoretrap
+
+set -eE
+
+restoretrap=`trap -p ERR`
+trap '_ERROR' ERR
+eval $restoretrap
 
 # Назначение переменных (массивов) хроняших информацию о пакетах.
 #unset lfs blfs pm
@@ -48,9 +57,12 @@ scripts_blfs '04_gnupg2' '--log'
 repo-add_lfs
 
 # Дефаултные конфиги для рута
-cp -f /etc/skel/{*,.*} /root/
+[ -f '/etc/skel/*' ] || [ -d '/etc/skel/*' ] && cp -f /etc/skel/* /root/
+[ -f '/etc/skel/.*' ] || [ -d '/etc/skel/.*' ] && cp -f /etc/skel/.* /root/
 
 echo ${ERR_FLAG} > "${LFS_LOG}/blfs-flag"
+
+set +Ee
 }
 
 _beyond_lfs

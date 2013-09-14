@@ -21,4 +21,6 @@
 #  A list of supported locales is included in this file.
 #  Uncomment the ones you need.
 #
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
 ru_RU.UTF-8 UTF-8

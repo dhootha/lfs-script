@@ -75,6 +75,7 @@ ln -sv /tools/lib/{libgcc_s.so{,.1},libstdc++.so{,.6}} ${LFS}/usr/lib
 sed 's/tools/usr/' /tools/lib/libstdc++.la > ${LFS}/usr/lib/libstdc++.la
 ln -sv bash ${LFS}/bin/sh
 
+install -d ${LFS}/etc
 ln -sv /proc/self/mounts ${LFS}/etc/mtab
 # ++++++++++++++++++++++++++++++++
 mkdir -p ${LFS_PKG}
@@ -100,10 +101,10 @@ CacheDir    = /var/cache/pacman/pkg/
 LogFile     = /var/log/pacman.log' >> /tools/etc/pacman.conf
 # ++++++++++++++++++++++++++++++++
 
-#cat /etc/mtab | grep "${LFS}" | sed -e "s@${LFS}@@g" > ${LFS_LOG}/mtab
-#install -d /mnt/lfs/etc
-#cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
-#echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
+#!cat /etc/mtab | grep "${LFS}" | sed -e "s@${LFS}@@g" > ${LFS_LOG}/mtab
+#!install -d /mnt/lfs/etc
+#!cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
+#!echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
 
 # Каталог для хронения лог-файлов system
 local _LOG="${LFS_LOG}/system"
@@ -117,8 +118,8 @@ else
 fi
 [[ `cat "${LFS_LOG}/system_base_lfs-flag"` -eq 0 ]] || return `cat "${LFS_LOG}/system_base_lfs-flag"`
 
-cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
-echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
+#!cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
+#!echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
 
 # chroot
 if [ "${CHROOT_FLAG}" -gt 0 ]; then

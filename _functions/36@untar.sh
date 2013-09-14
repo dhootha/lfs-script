@@ -43,7 +43,7 @@ untar_lfs ()
 			#find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
 			#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
 
-			echo ${ERR_FLAG} > ${_LOG}/${_ID}/${_ID}_flag
+#			echo ${ERR_FLAG} > ${_LOG}/${_ID}/${_ID}_flag
 			date >> "${_log}"
 		else
 			scripts_tools "${1}"

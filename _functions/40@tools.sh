@@ -63,7 +63,7 @@ cat >> /home/lfs/.bashrc << EOF
 LFS_PWD="${LFS_PWD}"
 export LFS_PWD
 
-${LFS_PWD}/_su/_tools.sh ${TOOLS_LFS_FLAG}
+${LFS_PWD}/_su/_tools.sh ${TOOLS_LFS_FLAG} ${SYSTEM_LFS_FLAG} ${BLFS_FLAG} ${CHROOT_FLAG}
 exit \${?}
 EOF
 

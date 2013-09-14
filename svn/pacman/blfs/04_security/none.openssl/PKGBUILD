@@ -14,6 +14,7 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   patch -Np1 -i ../${pkgname}-${pkgver}-fix_parallel_build-1.patch
+  patch -Np1 -i ../${pkgname}-${pkgver}-fix_pod_syntax-1.patch
   ./config --prefix=/usr         \
            --openssldir=/etc/ssl \
            zlib-dynamic          \
@@ -21,17 +22,17 @@ build() {
   make
 }
 
-#check() {
-#  cd ${srcdir}/${pkgname}-${pkgver}
-#
-#  make test
-#}
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make test
+}
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   sed -i 's# libcrypto.a##;s# libssl.a##' Makefile
-  make INSTALL_PREFIX=${pkgdir} MANDIR=/usr/share/man install
+  make INSTALL_PREFIX=${pkgdir} MANDIR=/usr/share/man MANSUFFIX=ssl install
 }
 
 # vim:set ts=2 sw=2 et:

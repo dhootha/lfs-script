@@ -17,7 +17,7 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}${pkgver/./}
 
-  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-524.patch
+#  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-524.patch
 
   # Spell
   for _spell in en.utf-8 ru.cp1251 ru.koi8-r ru.utf-8
@@ -39,10 +39,10 @@ build() {
   make
 }
 
-#check() {
-#  cd ${srcdir}/${pkgname}${pkgver/./}
+check() {
+  cd ${srcdir}/${pkgname}${pkgver/./}
 #  make test
-#}
+}
 
 package() {
   cd ${srcdir}/${pkgname}${pkgver/./}

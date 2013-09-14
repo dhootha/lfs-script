@@ -98,8 +98,6 @@ else
 	color-echo "ERROR: ${1}" ${RED} & return ${ERR_FLAG}
 fi
 
-#ldconfig
-
 date >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 }
 

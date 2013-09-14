@@ -21,8 +21,7 @@ done
 
 if [ -f ${LFS_PKG}/${_NAME}-${version}*.pkg.tar.xz ]; then
 	install -d ${_LOG}/${_ID}/${1}
-	( yes | pacman -U ${_pacman_flags} ${LFS_PKG}/${_NAME}-${version}*.pkg.tar.xz || ERR_FLAG=${?} ) \
-		2>&1 | tee ${_LOG}/${_ID}/${1}/pacman.log
+	yes | pacman -U ${_pacman_flags} ${LFS_PKG}/${_NAME}-${version}*.pkg.tar.xz || ERR_FLAG=${?}
 	if [ ${ERR_FLAG} -gt 0 ]; then
 		color-echo "error pacman: ${1}" ${RED}
 		return ${ERR_FLAG}

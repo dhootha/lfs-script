@@ -5,15 +5,24 @@
 
 _system_lfs ()
 {
-local LFS_FLAG='system-lfs'
-
 cd ${LFS_PWD}
 for _functions in ${LFS_PWD}/_functions/*.sh
 do
 	. ${_functions}
 done
 
+local LFS_FLAG='system-lfs'
+
 local ERR_FLAG=0
+
+# Перехватываем ошибки.
+local restoretrap
+
+set -eE
+
+restoretrap=`trap -p ERR`
+trap '_ERROR' ERR
+eval $restoretrap
 
 array_packages || ERR_FLAG=${?}
 
@@ -32,7 +41,8 @@ if [ "${BLFS_FLAG}" -eq 0 ]; then
 	repo-add_lfs
 
 	# Дефаултные конфиги для рута
-	cp -f /etc/skel/{*,.*} /root/
+	[ -f '/etc/skel/*' ] || [ -d '/etc/skel/*' ] && cp -f /etc/skel/* /root/
+	[ -f '/etc/skel/.*' ] || [ -d '/etc/skel/.*' ] && cp -f /etc/skel/.* /root/
 fi
 
 if [ "${ERR_FLAG}" -eq 0 ] && [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
@@ -100,6 +110,8 @@ DISTRIB_DESCRIPTION="Linux From Scratch"
 EOF
 
 echo ${ERR_FLAG} > "${LFS_LOG}/system_lfs-flag"
+
+set +Ee
 }
 
 _system_lfs
