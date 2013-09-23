@@ -6,6 +6,7 @@ arch=('i686' 'x86_64')
 url="http://www.gnupg.org/related_software/gpgme/"
 license=('GPL')
 depends=(${_depends})
+install='install'
 source=(${_url})
 md5sums=(${md5})
 

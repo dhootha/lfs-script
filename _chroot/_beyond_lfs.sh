@@ -24,17 +24,6 @@ restoretrap=`trap -p ERR`
 trap '_ERROR' ERR
 eval $restoretrap
 
-# Назначение переменных (массивов) хроняших информацию о пакетах.
-#unset lfs blfs pm
-#if [ -d ./${PREFIX}/packages.conf ]; then
-#	for _conf in ./${PREFIX}/packages.conf/*.conf
-#	do
-#		. ${_conf}
-#	done
-#else
-#	. ./${PREFIX}/packages.conf
-#fi
-
 array_packages || ERR_FLAG=${?}
 
 #hostname ${HOSTNAME}
@@ -50,9 +39,10 @@ fi
 [ -d /tools ] && rm -Rf /tools
 scripts_blfs 'my_base'   '--log'
 scripts_blfs '03_base'   '--log'
-scripts_blfs '12_mc'     '--log'
-scripts_blfs '04_gnupg'  '--log'
-scripts_blfs '04_gnupg2' '--log'
+scripts_blfs '12_base'   '--log'
+#scripts_blfs '14_base'   '--log'
+#scripts_blfs '04_gnupg'  '--log'
+#scripts_blfs '04_gnupg2' '--log'
 
 repo-add_lfs
 

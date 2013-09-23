@@ -29,7 +29,8 @@ package() {
   cd ${srcdir}/${_pkgname}-${pkgver}
 
   make DESTDIR=${pkgdir} install
-  rm -f ${pkgdir}/usr/share/man/man1/gpg-zip.1
+  ln -s gpg2 ${pkgdir}/usr/bin/gpg
+#  rm -f ${pkgdir}/usr/share/man/man1/gpg-zip.1
 }
 
 # vim:set ts=2 sw=2 et:
