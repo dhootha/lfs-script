@@ -15,6 +15,7 @@ local _NAME=`echo ${_dir} | cut -d. -f2`
 
 local depends=''
 local makedepends=''
+local blfs_bootscripts=''
 
 # Назначаем переменные пакета
 local _pack_var=`pack_var "blfs.${_ID}.${_NAME}"`
@@ -89,10 +90,10 @@ do
 	local urlpatch="urlpatch${n}"
 	if [ -n "${!urlpatch}" ]; then
 		_urlpatch=`echo ${!urlpatch} | sed -e "s/_version/${version}/g"`
-		_url="${_url}"$'\n'${_urlpatch}
+		_url="${_url}"$'\n'"${_urlpatch}"
 		local md5patch="md5patch${n}"
 		if [ -n "${!md5patch}" ]; then
-			md5="${md5}"$'\n'${!md5patch}
+			md5="${md5}"$'\n'"${!md5patch}"
 		else
 			local _md5patch="$(curl ${_urlpatch} | md5sum | cut -d' ' -f1)"
 			md5="${md5}"$'\n'"${_md5patch}"
@@ -111,6 +112,23 @@ do
 	else	unset _groups
 	fi
 done
+
+# Проверка на необходимость установки blfs-bootscripts
+if [ "${blfs_bootscripts}" = '02' ]; then
+	for blfs_bootscripts_per in `pack_var blfs.02.blfs-bootscripts`
+	do
+		case `echo ${blfs_bootscripts_per} | cut -d= -f1` in
+			'md5')
+				local _md5blfs="$(echo ${blfs_bootscripts_per} | cut -d= -f2)"
+				md5="${md5}"$'\n'"${_md5blfs}"
+			;;
+			'url') 
+				local _urlblfs="$(echo ${blfs_bootscripts_per} | cut -d= -f2)"
+				_url="${_url}"$'\n'"${_urlblfs}"
+			;;
+		esac
+	done
+fi
 
 export name version _url md5 _depends _makedepends
 

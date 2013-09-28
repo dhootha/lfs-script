@@ -40,6 +40,7 @@ fi
 scripts_blfs 'my_base'   '--log'
 scripts_blfs '03_base'   '--log'
 scripts_blfs '12_base'   '--log'
+scripts_blfs '04_openssh'   '--log'
 #scripts_blfs '14_base'   '--log'
 #scripts_blfs '04_gnupg'  '--log'
 #scripts_blfs '04_gnupg2' '--log'

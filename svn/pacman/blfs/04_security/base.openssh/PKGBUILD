@@ -1,0 +1,77 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Free version of the SSH connectivity tools"
+arch=('i686' 'x86_64')
+url="http://www.openssh.org/portable.html"
+license=('custom:BSD')
+depends=(${_depends})
+makedepends=(${_makedepends})
+options=()
+install='install'
+source=(${_url}
+	'install')
+md5sums=(${md5}
+	'1c3dbf7e1e245cdee9467a53b67fc15d')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+# ----------------------------------
+  install -v -m700 -d /var/lib/sshd
+  chown   -v root:sys /var/lib/sshd
+
+  groupadd -g 50 sshd
+  useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 50 sshd
+# ----------------------------------
+
+  ./configure --prefix=/usr                     \
+              --libexecdir=/usr/lib/openssh     \
+              --sysconfdir=/etc/ssh             \
+              --datadir=/usr/share/sshd         \
+              --with-md5-passwords              \
+              --with-privsep-path=/var/lib/sshd
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  cp ./scp /usr/bin/
+  make tests
+  rm -f /usr/bin/scp
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+
+  install -v -d ${pkgdir}/usr/{bin,share/man/man1}
+  install -v -m755 contrib/ssh-copy-id ${pkgdir}/usr/bin
+  install -v -m644 contrib/ssh-copy-id.1 ${pkgdir}/usr/share/man/man1
+  install -v -m755 -d ${pkgdir}/usr/share/doc/openssh-6.3p1
+  install -v -m644 INSTALL LICENCE OVERVIEW README* ${pkgdir}/usr/share/doc/openssh-6.3p1
+
+  install -v -d ${pkgdir}/etc/{ssh,pam.d}
+  echo "PermitRootLogin no" >> ${pkgdir}/etc/ssh/sshd_config
+  echo "PasswordAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
+  echo "ChallengeResponseAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
+#  sed 's@d/login@d/sshd@g' /etc/pam.d/login > ${pkgdir}/etc/pam.d/sshd
+#  chmod 644 ${pkgdir}/etc/pam.d/sshd
+  echo "UsePAM yes" >> ${pkgdir}/etc/ssh/sshd_config
+
+  cd ../blfs-bootscripts-*
+  make DESTDIR=${pkgdir} install-sshd
+
+  install -v -m700 -d ${pkgdir}/var/lib/sshd
+  chown   -v root:sys ${pkgdir}/var/lib/sshd
+
+# ----------------------------------
+  userdel sshd
+#  groupdel sshd
+  rm -rf /var/lib/sshd
+# ----------------------------------
+}
+
+# vim:set ts=2 sw=2 et:
