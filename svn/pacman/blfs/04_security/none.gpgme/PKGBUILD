@@ -12,9 +12,7 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  ./configure --prefix=/usr         \
-              --libexecdir=/usr/lib \
-              --without-g13
+  ./configure --prefix=/usr --disable-fd-passing
   make
 }
 

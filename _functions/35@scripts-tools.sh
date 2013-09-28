@@ -25,12 +25,12 @@ fi
 
 echo "scripts_build: ${1}" >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 date >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++env+++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+echo '+++++++++++++++++env+++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 env >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
-echo '++++++++++++++++local++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
+echo '++++++++++++++++local++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 local >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/tools_lfs.log"
+echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 
 unset _pack_var
 
@@ -70,12 +70,6 @@ do
 					ERR_FLAG=0
 					popd
 					[ -d ${BUILD_DIR} ] && rm -Rf ${BUILD_DIR}/*
-					echo '+++++++++++++++++env+++++++++++++++++++'
-					env
-					echo '+++++++++++++++++++++++++++++++++++++++'
-					echo '++++++++++++++++local++++++++++++++++++'
-					local
-					echo '+++++++++++++++++++++++++++++++++++++++'
 					local _flag=''
 					continue
 				;;

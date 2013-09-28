@@ -40,6 +40,9 @@ build() {
                                     --disable-bootstrap         \
                                     --disable-install-libiberty \
                                     --with-system-zlib
+#                                    --with-mpc=/usr             \
+#                                    --with-mpfr=/usr            \
+#                                    --with-gmc=/usr
   make
 }
 

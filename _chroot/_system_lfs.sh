@@ -46,11 +46,12 @@ fi
 
 if [ "${ERR_FLAG}" -eq 0 ] && [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
 	# fstab
-	echo "# Begin /etc/fstab
+	cat > /etc/fstab << EOF
+# Begin /etc/fstab
 
 # file system  mount-point  type   options         dump  fsck
 #                                                        order
-" > /etc/fstab
+EOF
 	local _disk
 	for _disk in `cat ${LFS_PWD}/disk`
 	do
@@ -64,24 +65,18 @@ if [ "${ERR_FLAG}" -eq 0 ] && [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
 		    * )	     echo "${_section}      ${_mount_point}         ${_type}   defaults        0     0" >> /etc/fstab ;;
 		esac
 	done
-	echo "proc           /proc        proc     nosuid,noexec,nodev 0     0
+	cat >> /etc/fstab << EOF
+proc           /proc        proc     nosuid,noexec,nodev 0     0
 sysfs          /sys         sysfs    nosuid,noexec,nodev 0     0
 devpts         /dev/pts     devpts   gid=5,mode=620      0     0
 tmpfs          /run         tmpfs    defaults            0     0
 devtmpfs       /dev         devtmpfs mode=0755,nosuid    0     0
 
-# End /etc/fstab" >> /etc/fstab
+# End /etc/fstab
+EOF
 
-#	install -d /boot/grub
-#	grub-mkdevicemap --device-map=/boot/grub/device.map
-#echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#	cat /boot/grub/device.map
-#echo '+++++++++++++++++++++++++++++++++++++++++++++++++++++++'
-#	rm -fv /dev/root
-#	ln -sv ${_ROOT} /dev/root
 	if [ "${MOUNT_LFS_FLAG}" -ne 0 ]; then
-		grub-install ${_ROOT:0:8} || ERR_FLAG=${?}
-#		grub-install "(hd0)" || ERR_FLAG=${?}
+		grub-install ${_ROOT:0:8}
 	fi
 
 	cat > /boot/grub/grub.cfg << EOF

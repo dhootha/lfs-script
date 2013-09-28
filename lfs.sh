@@ -64,7 +64,7 @@ do
 		;;
 		--clean)
 			if [ -z "$(fgrep "${LFS}" /proc/mounts)" ]; then
-				rm -Rfv ${BUILD_DIR} /tools ${LFS}
+				rm -Rfv ${BUILD_DIR} /tools ${LFS} ${LFS_OUT}
 			else
 				color-echo 'Остались смонтироваными ФС!' ${RED}
 				exit 1

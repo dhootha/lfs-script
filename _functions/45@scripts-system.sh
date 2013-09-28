@@ -21,7 +21,9 @@ color-echo "scripts_system: ${1}" ${MAGENTA}
 
 echo "scripts_system: ${1}" > "${_LOG}/${_ID}/${_ID}_lfs.log"
 date >> "${_LOG}/${_ID}/${_ID}_lfs.log"
+echo '+++++++++++++++++env+++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 env >> "${_LOG}/${_ID}/${_ID}_lfs.log"
+echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 
 if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
 	local _PKGBUILD="${LFS_PWD}/${PREFIX}/${PACKAGE_MANAGER}"
