@@ -92,7 +92,7 @@ menuentry "GNU/Linux, Linux lfs-`head -n 1 ${LFS_PWD}/Changelog | cut -d' ' -f2`
 }
 EOF
 
-	yes 'toor' | passwd
+	yes 'toor' | passwd root
 fi
 
 # Инфо о релизе

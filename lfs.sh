@@ -1,6 +1,6 @@
 #!/bin/bash
 #######################################
-# Cross-LFS
+# LFS
 # Version: test
 
 _lfs ()

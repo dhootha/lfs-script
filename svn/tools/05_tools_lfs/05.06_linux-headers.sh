@@ -8,8 +8,8 @@ cd ./${PACK}
 
 make mrproper || return ${?}
 make headers_check || return ${?}
-make INSTALL_HDR_PATH=dest headers_install || return ${?}
-cp -rv dest/include/* /tools/include || return ${?}
+make INSTALL_HDR_PATH=/tools/include headers_install || return ${?}
+#cp -rv dest/include/* /tools/include || return ${?}
 popd
 
 #######################################

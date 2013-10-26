@@ -7,7 +7,7 @@ unarch || return ${?}
 cd ./${PACK}
 
 #unset MAKEFLAGS
-./configure --prefix=/tools || return ${?}
+./configure --prefix=/tools --without-guile || return ${?}
 make || return ${?}
 make check || return ${?}
 make install || return ${?}

@@ -7,8 +7,8 @@ packages_lfs ()
 {
 local LFS_FLAG='packages-lfs'
 
-local OLD_IFS="$IFS"
-IFS=$'\n'
+#local OLD_IFS="$IFS"
+#IFS=$'\n'
 
 #[ "${ERR_FLAG}" -gt 0 ] && return 1
 
@@ -28,21 +28,20 @@ do
 	local ${!pak}
 
 	# Проверка пакета на включение
-	if [ "${status}" -eq 0 ]; then
+	if [ "${status}" -eq 0 ] || \
+	   [ -z "${lfs}" ] && [ -n "${blfs}" ] && [ "${blfs}" != '' ]; then
 		# Очистка переменных
 		clear_per "${!pak}"
 		# Продолжаем
 		continue
 	fi
 
-	if [ -z "${lfs}" ] && [ -n "${blfs}" ] && [ "${blfs}" != '' ]; then
-#		echo "${!pak}"
-#		echo ${depends}
-		# Очистка переменных
-		clear_per "${!pak}"
-		# Продолжаем
-		continue
-	fi
+#	if [ -z "${lfs}" ] && [ -n "${blfs}" ] && [ "${blfs}" != '' ]; then
+#		# Очистка переменных
+#		clear_per "${!pak}"
+#		# Продолжаем
+#		continue
+#	fi
 
 	if [ "${url}" ]; then
 		local url=$(echo ${url} | sed -e "s@_version@${version}@g")
@@ -67,7 +66,7 @@ do
 	clear_per "${!pak} pak"
 done
 
-IFS="${OLD_IFS}"
+#IFS="${OLD_IFS}"
 }
 
 ################################################################################

@@ -3,9 +3,9 @@
 # config
 # Version: test
 
-local PREFIX='svn'
+local PREFIX_LFS='svn'
 local LFS='/mnt/lfs'
-local LFS_SRC="${LFS_PWD}/${PREFIX}/sources"
+local LFS_SRC="${LFS_PWD}/${PREFIX_LFS}/sources"
 local LFS_OUT="${LFS_PWD}/output"
 local LFS_PKG="${LFS_OUT}/pkg"
 local LFS_LOG="${LFS_OUT}/log"

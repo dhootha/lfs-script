@@ -22,9 +22,9 @@ date >> "${_LOG}/${_ID}/${_ID}_blfs.log"
 env >> "${_LOG}/${_ID}/${_ID}_blfs.log"
 
 if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
-	local _PKGBUILD="${LFS_PWD}/${PREFIX}/${PACKAGE_MANAGER}/blfs"
+	local _PKGBUILD="${LFS_PWD}/${PREFIX_LFS}/${PACKAGE_MANAGER}/blfs"
 else
-	local _PKGBUILD="${LFS_PWD}/${PREFIX}/blfs"
+	local _PKGBUILD="${LFS_PWD}/${PREFIX_LFS}/blfs"
 fi
 
 # Проверяем на необходимость собрать группу пакетов

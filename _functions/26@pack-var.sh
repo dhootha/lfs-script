@@ -5,8 +5,8 @@
 
 pack_var ()
 {
-local OLD_IFS="$IFS"
-IFS=$'\n'
+#local OLD_IFS="$IFS"
+#IFS=$'\n'
 
 local _BOOK_PACK_VAR=`echo ${1} | cut -d. -f1`
 local _ID_PACK_VAR=`echo ${1} | cut -d. -f2`
@@ -32,6 +32,7 @@ do
 		continue
 	fi
 
+	local OLD_IFS="$IFS"
 	IFS=';'
 	for _ID_var in ${!_BOOK_PACK_VAR}
 	do
@@ -45,13 +46,13 @@ do
 			fi
 		done
 	done
-	IFS=$'\n'
+	IFS="${OLD_IFS}"
 
 	# Очистка переменных
 	clear_per "${!pak}"
 done
 
-IFS="${OLD_IFS}"
+#IFS="${OLD_IFS}"
 
 return 1
 }

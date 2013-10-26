@@ -35,7 +35,7 @@ echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log
 unset _pack_var
 
 local _script
-for _script in ${LFS_PWD}/${PREFIX}/tools/${_ID}_*/${_ID}.[0-9][0-9]*.sh
+for _script in ${LFS_PWD}/${PREFIX_LFS}/tools/${_ID}_*/${_ID}.[0-9][0-9]*.sh
 do
 	local _file=`basename "${_script}"`
 	local _NAME=`echo ${_file} | cut -d_ -f2 | cut -d. -f1`

@@ -32,9 +32,9 @@ env >> "${LFS_LOG}/system_lfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system_lfs.log"
 
 if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
-        cd ${LFS_PWD}/${PREFIX}/${PACKAGE_MANAGER}/lfs/06_*/_6.05_*
+        cd ${LFS_PWD}/${PREFIX_LFS}/${PACKAGE_MANAGER}/lfs/06_*/_6.05_*
 else
-        cd ${LFS_PWD}/${PREFIX}/lfs/06_*/_6.05_*
+        cd ${LFS_PWD}/${PREFIX_LFS}/lfs/06_*/_6.05_*
 fi
 
 local _dir=`basename $PWD`

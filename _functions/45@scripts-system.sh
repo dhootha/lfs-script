@@ -26,9 +26,9 @@ env >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
 
 if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
-	local _PKGBUILD="${LFS_PWD}/${PREFIX}/${PACKAGE_MANAGER}"
+	local _PKGBUILD="${LFS_PWD}/${PREFIX_LFS}/${PACKAGE_MANAGER}"
 else
-	local _PKGBUILD="${LFS_PWD}/${PREFIX}"
+	local _PKGBUILD="${LFS_PWD}/${PREFIX_LFS}"
 fi
 
 local pkg_lfs

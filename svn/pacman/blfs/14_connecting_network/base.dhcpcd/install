@@ -1,0 +1,46 @@
+# This is a default template for a post-install scriptlet.
+# Uncomment only required functions and remove any functions
+# you don't need (and this header).
+
+## arg 1:  the new package version
+#pre_install() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+post_install() {
+  for interface in `ip a | fgrep BROADCAST | cut -d: -f2`
+  do
+    cat > /etc/sysconfig/ifconfig.${interface} << EOF
+ONBOOT="yes"
+IFACE="${interface}"
+SERVICE="dhcpcd"
+#DHCP_START="-b -q <insert appropriate start options here>"
+#DHCP_STOP="-k <insert additional stop options here>"
+EOF
+  done
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+#pre_upgrade() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+  post_install
+}
+
+## arg 1:  the old package version
+#pre_remove() {
+  # do something here
+#}
+
+## arg 1:  the old package version
+#post_remove() {
+  # do something here
+#}
+
+# vim:set ts=2 sw=2 et:

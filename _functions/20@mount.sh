@@ -53,7 +53,8 @@ else
 	done
 fi
 
-install -d ${LFS_LOG}
+install -d ${LFS_LOG} ${LFS_SRC}
+chmod -v a+wt ${LFS_SRC}
 }
 
 #####################################Z###########################################
