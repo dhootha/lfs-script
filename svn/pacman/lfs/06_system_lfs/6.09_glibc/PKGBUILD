@@ -15,6 +15,7 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   sed -i -e 's/static __m128i/inline &/' sysdeps/x86_64/multiarch/strstr.c
+  sed -r -i 's/(3..89..)/\1 | 4.*/' configure
   mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
   ../${pkgname}-${pkgver}/configure	\
 	    --prefix=/usr               \

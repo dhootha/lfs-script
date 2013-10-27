@@ -19,11 +19,11 @@ wgetrc ()
 
 download ()
 {
-	if [ -f ${LFS_SRC}/$(url-to-file ${1:-$url}) ]; then
-		echo $(url-to-file ${1:-$url}) >> ${_log}
+	if [ -f ${LFS_SRC}/`basename ${1:-$url}` ]; then
+		basename ${1:-$url} >> ${_log}
 		md5sum_lfs "${1:-$url}" "${2}"
 	else
-		echo $(url-to-file ${1:-$url}) >> ${_log}
+		basename ${1:-$url} >> ${_log}
 		date >> ${_log}
 
 		if [ -n "$(which wget)" ]; then

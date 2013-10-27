@@ -17,7 +17,10 @@ date
 
 url=$(echo ${url} | sed -e "s@_version@${version}@g")
 
-local _archname=$(url-to-file)
+local _archname=`basename ${url}`
+
+#[ ! -f ${LFS_SRC}/${_archname} ] && download
+
 echo
 color-echo "EXTRACT ARCHIVE: ${_archname}" ${WHITE}
 echo
@@ -37,7 +40,10 @@ if [ "${#}" -ne 0 ]; then
 		date
 
 		url=$(echo ${url} | sed -e "s@_version@${version}@g")
-		local _archname=$(url-to-file)
+		local _archname=`basename ${url}`
+
+#		[ ! -f ${LFS_SRC}/${_archname} ] && download
+
 		echo
 		color-echo "EXTRACT ARCHIVE: ${_archname}" ${WHITE}
 		echo
