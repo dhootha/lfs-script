@@ -5,6 +5,7 @@ pkgdesc="A general purpose crypto library based on the code used"
 arch=('i686' 'x86_64')
 url="http://www.gnupg.org"
 license=('LGPL')
+groups=(${_groups})
 depends=(${_depends})
 options=('!libtool' '!emptydirs')
 source=(${_url})

@@ -5,6 +5,7 @@ pkgdesc="The lsb_release script gives information about the Linux Standards Base
 arch=('any')
 url="http://www.linuxfoundation.org/collaborate/workgroups/lsb"
 license=()
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})

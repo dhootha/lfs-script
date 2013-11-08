@@ -26,6 +26,8 @@ local default_msg='Нет сообщения.'
 local message="${1:-$default_msg}"
 local color=${2:-$NC}
 
+[ -n "${LOG_DIR}" ] && echo ${message} >> "${LOG_DIR}/build.log"
+
 echo -e "${color}${message}${NC}"
 }
 

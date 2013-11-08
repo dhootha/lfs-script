@@ -5,6 +5,7 @@ pkgdesc="An XML parser library"
 arch=('i686' 'x86_64')
 url="http://expat.sourceforge.net/"
 license=('custom')
+groups=(${_groups})
 depends=(${_depends})
 options=('!libtool')
 source=(${_url})

@@ -41,7 +41,7 @@ package() {
 # Begin /etc/sysconfig/console
 
 UNICODE="1"
-KEYMAP="ru4"
+KEYMAP="ruwin_ct_sh-UTF-8"
 FONT="cyr-sun16"
 
 # End /etc/sysconfig/console

@@ -102,13 +102,13 @@ packages_lfs
 tools_lfs
 
 # Сборка основной системы.
-system_lfs
+f_system
 
 # Сборка BLFS.
-beyond_lfs
+f_beyond
 
 # Входим в chroot
-chroot_lfs
+f_chroot
 
 # Размонтирование разделов и очистка системы.
 umount_lfs

@@ -19,10 +19,18 @@ post_install() {
   else  usermod -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 50 sshd
   fi
 
-  ssh-keygen
-  public_key="$(cat ~/.ssh/id_rsa.pub)"
-  ssh REMOTE_HOSTNAME "echo ${public_key} >> ~/.ssh/authorized_keys"
-  unset public_key
+  # Protocol 1
+  [ -f /etc/ssh/ssh_host_key ] || yes '' | ssh-keygen -t rsa1 -f /etc/ssh/ssh_host_key
+
+  # Protokol 2
+  [ -f /etc/ssh/ssh_host_rsa_key ] || yes '' | ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+  [ -f /etc/ssh/ssh_host_dsa_key ] || yes '' | ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+  [ -f /etc/ssh/ssh_host_ecdsa_key ] || yes '' | ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+
+#  ssh-keygen
+#  public_key="$(cat ~/.ssh/id_rsa.pub)"
+#  ssh REMOTE_HOSTNAME "echo ${public_key} >> ~/.ssh/authorized_keys"
+#  unset public_key
 }
 
 ## arg 1:  the new package version

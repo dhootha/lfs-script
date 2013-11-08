@@ -5,6 +5,7 @@ pkgdesc="An URL retrieval utility and library"
 arch=('i686' 'x86_64')
 url="http://curl.haxx.se"
 license=('MIT')
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})

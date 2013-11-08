@@ -5,6 +5,7 @@ pkgdesc="A IPC library used by some GnuPG related software"
 arch=('i686' 'x86_64')
 url="http://www.gnupg.org/related_software/libassuan"
 license=('GPL')
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})

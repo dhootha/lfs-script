@@ -67,17 +67,103 @@ package() {
   cat > ${pkgdir}/etc/vimrc << "EOF"
 " Begin /etc/vimrc
 
+colorscheme elflord " Цветовая схема
+
 set spelllang=en,ru
 set spell
 
 set nocompatible
 set backspace=2
-syntax on
+syntax on " Подсветка синтаксиса
 if (&term == "iterm") || (&term == "putty")
   set background=dark
 endif
 
-" End /etc/vimrc
+" Включаем строку состояния
+set laststatus=2
+" Формат строки состояния
+set statusline=%<%f%h%m%r\ \ %{&encoding}\ [FORMAT=%{&ff}]\ %=\ %l,%c\ \ %P
+" Выключаем линейку
+set noruler
+
+" Порядок применения кодировок и формата файла
+"set ffs=unix,dos,mac
+"set fencs=utf-8,cp1251,koi8-r,ucs-2,cp866
+
+set nobackup " Не создавать резервные копии файлов
+set number " Нумеровать строки
+set colorcolumn=80 " Полоса ширины текста
+
+set wildmenu " Автодополнение
+
+" Начало <настройки отступов>
+set softtabstop=4 " Размер 'мягкой' табуляции
+set tabstop=4 " Размер табуляции
+set shiftwidth=4 " Размер отступов
+set expandtab "Пробелы вместо табуляции
+set smartindent "Умные отступы
+set smarttab
+set list "Включить подсветку табуляции и пробелов в конце строки
+set listchars=tab:>.,trail:. "Установить символы которыми будет осуществляться подсветка
+set et " Авто замена по умолчанию
+" Конец
+
+"Начало <Настройки горячих клавиш>
+    "Начало <Сохранить (F2)>
+        nmap <F2> :w<cr>
+        vmap <F2> <esc>:w<cr>
+        imap <F2> <esc>:w<cr>
+    "Конец
+    "Начало <Снять выделение после поиска (F3)>
+        nmap <F3> :nohlsearch<cr>
+        imap <F3> <esc>:nohlsearch<cr>
+        vmap <F3> <esc> :nohlsearch<cr>
+    "Конец
+    "Начало <Выйти из редактора (F10)>
+        nmap <F10> :q<cr>
+        vmap <F10> <esc>:q<cr>
+        imap <F10> <esc>:q<cr>
+    "Конец
+    "Начало <Выйти из редактора без сохранения (Ctrl-F10)>
+        nmap <C-F10> :q!<cr>
+        vmap <C-F10> <esc>:q!<cr>
+        imap <C-F10> <esc>:q!<cr>
+    "Конец
+    "Начало <Меню изменения кодировки чтения из файла (F8)>
+        set wildmenu
+        set wcm=<Tab>
+        menu Encoding.Read.CP1251   :e ++enc=cp1251<CR>
+        menu Encoding.Read.CP866    :e ++enc=cp866<CR>
+        menu Encoding.Read.KOI8-U   :e ++enc=koi8-u<CR>
+        menu Encoding.Read.UTF-8    :e ++enc=utf-8<CR>
+        map <F8> :emenu Encoding.Read.<TAB>
+    "Конец
+    "Начало <Меню изменения кодировки записи в файл (Ctrl-F8)>
+        set wildmenu
+        set wcm=<Tab>
+        menu Encoding.Write.CP1251    :set fenc=cp1251<CR>
+        menu Encoding.Write.CP866     :set fenc=cp866<CR>
+        menu Encoding.Write.KOI8-U    :set fenc=koi8-u<CR>
+        menu Encoding.Write.UTF-8     :set fenc=utf-8<CR>
+        map <C-F8> :emenu Encoding.Write.<TAB>
+    "Конец
+    "Начало <Меню изменения конца строки у файла (Shift-F8)>
+        set wildmenu
+        set wcm=<Tab>
+        menu File.Format.DOS    :set fileformat=dos<CR>
+        menu File.Format.MAC    :set fileformat=mac<CR>
+        menu File.Format.UNIX   :set fileformat=unix<CR>
+        map <S-F8> :emenu File.Format.<TAB>
+    "Конец
+"Конец
+
+"Начало <Запоминать позицию курсора при выходе>
+"if has("autocmd")
+"    set viewoptions=cursor,folds
+"    au BufWinLeave * mkview
+"    au BufWinEnter * silent loadview
+"endif
+"Конец
 EOF
 }
 

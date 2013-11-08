@@ -5,6 +5,7 @@ pkgdesc="A C wrapper library for GnuPG"
 arch=('i686' 'x86_64')
 url="http://www.gnupg.org/related_software/gpgme/"
 license=('GPL')
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})

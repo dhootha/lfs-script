@@ -5,6 +5,7 @@ pkgdesc="The GNU Portable Threads."
 arch=('i686' 'x86_64')
 url="http://www.pcre.org/"
 license=('LGPL')
+groups=(${_groups})
 depends=(${_depends})
 options=('!libtool' '!makeflags')
 source=(${_url})

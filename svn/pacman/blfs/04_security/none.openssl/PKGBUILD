@@ -5,6 +5,7 @@ pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Se
 arch=('i686' 'x86_64')
 url="https://www.openssl.org"
 license=('GPL' 'LGPL')
+groups=(${_groups})
 depends=(${_depends})
 options=('!makeflags')
 source=(${_url})

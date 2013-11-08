@@ -5,6 +5,7 @@ pkgdesc="Complete and free implementation of the OpenPGP standard"
 arch=('i686' 'x86_64')
 url="http://www.gnupg.org/related_software/gpgme/"
 license=('GPL')
+groups=(${_groups})
 depends=(${_depends})
 install='install'
 source=(${_url})

@@ -1,0 +1,63 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="PAM (Pluggable Authentication Modules) library"
+arch=('i686' 'x86_64')
+url="http://www.openssh.org/portable.html"
+license=('GPL2')
+groups=(${_groups})
+depends=(${_depends})
+makedepends=(${_makedepends})
+options=('!libtool' '!emptydirs')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --docdir=/usr/share/doc/${pkgname}-${pkgver} \
+              --disable-nis
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  install -v -m755 -d /etc/pam.d
+
+  cat > /etc/pam.d/other << "EOF"
+auth     required       pam_deny.so
+account  required       pam_deny.so
+password required       pam_deny.so
+session  required       pam_deny.so
+EOF
+
+  make check
+
+  rm -rfv /etc/pam.d
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+
+  chmod -v 4755 ${pkgdir}/sbin/unix_chkpwd
+
+  install -d ${pkgdir}/etc/pam.d/
+
+  cat > ${pkgdir}/etc/pam.d/other << 'EOF'
+# Begin /etc/pam.d/other
+
+auth            required        pam_unix.so     nullok
+account         required        pam_unix.so
+session         required        pam_unix.so
+password        required        pam_unix.so     nullok
+
+# End /etc/pam.d/other
+EOF
+}
+
+# vim:set ts=2 sw=2 et:

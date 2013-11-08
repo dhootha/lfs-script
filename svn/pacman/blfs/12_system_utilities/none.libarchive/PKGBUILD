@@ -5,6 +5,7 @@ pkgdesc="library that can create and read several streaming archive formats"
 arch=('i686' 'x86_64')
 url="http://libarchive.googlecode.com/"
 license=('BSD')
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})

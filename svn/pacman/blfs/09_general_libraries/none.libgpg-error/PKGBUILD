@@ -5,6 +5,7 @@ pkgdesc="Support library for libgcrypt"
 arch=('i686' 'x86_64')
 url="http://www.gnupg.org"
 license=('LGPL')
+groups=(${_groups})
 depends=(${_depends})
 options=(!libtool)
 source=(${_url})

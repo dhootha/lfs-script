@@ -5,6 +5,7 @@ pkgdesc="Free version of the SSH connectivity tools"
 arch=('i686' 'x86_64')
 url="http://www.openssh.org/portable.html"
 license=('custom:BSD')
+groups=(${_groups})
 depends=(${_depends})
 makedepends=(${_makedepends})
 options=()
@@ -12,7 +13,7 @@ install='install'
 source=(${_url}
 	'install')
 md5sums=(${md5}
-	'1c3dbf7e1e245cdee9467a53b67fc15d')
+	'56d8b69785ba4581a4f072b699bf0c16')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -50,16 +51,16 @@ package() {
   install -v -d ${pkgdir}/usr/{bin,share/man/man1}
   install -v -m755 contrib/ssh-copy-id ${pkgdir}/usr/bin
   install -v -m644 contrib/ssh-copy-id.1 ${pkgdir}/usr/share/man/man1
-  install -v -m755 -d ${pkgdir}/usr/share/doc/openssh-6.3p1
-  install -v -m644 INSTALL LICENCE OVERVIEW README* ${pkgdir}/usr/share/doc/openssh-6.3p1
+  install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+  install -v -m644 INSTALL LICENCE OVERVIEW README* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
 
   install -v -d ${pkgdir}/etc/{ssh,pam.d}
-  echo "PermitRootLogin no" >> ${pkgdir}/etc/ssh/sshd_config
-  echo "PasswordAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
-  echo "ChallengeResponseAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
+#  echo "PermitRootLogin no" >> ${pkgdir}/etc/ssh/sshd_config
+#  echo "PasswordAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
+#  echo "ChallengeResponseAuthentication no" >> ${pkgdir}/etc/ssh/sshd_config
 #  sed 's@d/login@d/sshd@g' /etc/pam.d/login > ${pkgdir}/etc/pam.d/sshd
 #  chmod 644 ${pkgdir}/etc/pam.d/sshd
-  echo "UsePAM yes" >> ${pkgdir}/etc/ssh/sshd_config
+#  echo "UsePAM yes" >> ${pkgdir}/etc/ssh/sshd_config
 
   cd ../blfs-bootscripts-*
   make DESTDIR=${pkgdir} install-sshd

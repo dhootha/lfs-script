@@ -28,7 +28,7 @@ package() {
 
   install -d ${pkgdir}/bin
   cp ${pkgname_conf}-${pkgver_conf}/init-net-rules.sh ${pkgdir}/bin
-  chmod +x ${pkgdir}/bin
+  chmod +x ${pkgdir}/bin/init-net-rules.sh
 
   cat > ${pkgdir}/etc/udev/rules.d/83-duplicate_devs.rules << "EOF"
 

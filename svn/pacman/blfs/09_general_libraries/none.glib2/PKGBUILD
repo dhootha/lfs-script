@@ -6,6 +6,7 @@ pkgdesc="Common C routines used by GTK+ and other libs"
 arch=('i686' 'x86_64')
 url="http://www.gtk.org/"
 license=('LGPL')
+groups=(${_groups})
 depends=(${_depends})
 makedepends=(${_makedepends})
 options=('!libtool' '!docs' '!emptydirs')

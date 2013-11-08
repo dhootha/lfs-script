@@ -5,6 +5,7 @@ pkgdesc="A CMS and X.509 access library"
 arch=('i686' 'x86_64')
 url="ftp://ftp.gnupg.org/gcrypt/alpha/libksba"
 license=('GPL')
+groups=(${_groups})
 depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})
