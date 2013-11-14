@@ -1,0 +1,35 @@
+pkgname=${name}
+_pkgname=gnupg
+pkgver=${version}
+pkgrel=1
+pkgdesc="A low-level cryptographic library"
+arch=('i686' 'x86_64')
+url="http://gnutls.org/"
+license=('GPL2')
+groups=(${_groups})
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  ./configure --prefix=/usr
+  make
+}
+
+check() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  sed -i '/^install-here/ s/install-static//' Makefile
+  make DESTDIR=${pkgdir} install
+  chmod -v 755 /usr/lib/libhogweed.so.2.5 /usr/lib/libnettle.so.4.7
+}
+
+# vim:set ts=2 sw=2 et:

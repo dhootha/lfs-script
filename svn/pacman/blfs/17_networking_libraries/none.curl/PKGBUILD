@@ -13,18 +13,18 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in
-  ./configure --prefix=/usr                 \
-              --disable-static              \
-              --enable-threaded-resolver    \
-              --with-ca-path=/etc/ssl/certs
+#  sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in
+  ./configure --prefix=/usr              \
+              --disable-static           \
+              --enable-threaded-resolver
+#              --with-ca-path=/etc/ssl/certs
   make
 }
 
 check() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  make check
+  make test
 }
 
 package() {

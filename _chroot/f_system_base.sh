@@ -24,6 +24,8 @@ restoretrap=`trap -p ERR`
 trap '_ERROR' ERR
 eval $restoretrap
 
+array_packages
+
 hostname ${HOSTNAME}
 
 echo 'f_system_base:' >> "${LFS_LOG}/system.log"

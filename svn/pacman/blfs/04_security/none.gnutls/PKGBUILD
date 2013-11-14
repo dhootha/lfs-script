@@ -1,0 +1,36 @@
+pkgname=${name}
+_pkgname=gnupg
+pkgver=${version}
+pkgrel=1
+pkgdesc="A library which provides a secure layer over a reliable transport layer"
+arch=('i686' 'x86_64')
+url="http://gnutls.org/"
+license=('GPL3' 'LGPL2.1')
+groups=(${_groups})
+depends=(${_depends})
+options=('!libtool')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  ./configure --prefix=/usr    \
+              --disable-static \
+              --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
+  make
+}
+
+check() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make check
+}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

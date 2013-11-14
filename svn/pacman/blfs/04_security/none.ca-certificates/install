@@ -1,0 +1,54 @@
+# This is a default template for a post-install scriptlet.
+# Uncomment only required functions and remove any functions
+# you don't need (and this header).
+
+## arg 1:  the new package version
+#pre_install() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+post_install() {
+  certhost='http://mxr.mozilla.org'
+  certdir='/mozilla/source/security/nss/lib/ckfw/builtins'
+  url="${certhost}${certdir}/certdata.txt?raw=1"
+
+  curl -C - -L -o certdata.txt ${url} &&
+  unset certhost certdir url          &&
+  make-ca.sh                          &&
+  remove-expired-certs.sh certs
+
+  SSLDIR=/etc/ssl                                             &&
+  install -d ${SSLDIR}/certs                                  &&
+  cp -v certs/*.pem ${SSLDIR}/certs                           &&
+  c_rehash                                                    &&
+  install BLFS-ca-bundle*.crt ${SSLDIR}/ca-bundle.crt         &&
+  ln -sv ../ca-bundle.crt ${SSLDIR}/certs/ca-certificates.crt &&
+  unset SSLDIR
+
+  rm -r certs BLFS-ca-bundle*
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+#pre_upgrade() {
+  # do something here
+#}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+  post_install
+}
+
+## arg 1:  the old package version
+#pre_remove() {
+  # do something here
+#}
+
+## arg 1:  the old package version
+#post_remove() {
+  # do something here
+#}
+
+# vim:set ts=2 sw=2 et:

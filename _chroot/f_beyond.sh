@@ -24,7 +24,7 @@ restoretrap=`trap -p ERR`
 trap '_ERROR' ERR
 eval $restoretrap
 
-array_packages || ERR_FLAG=${?}
+array_packages
 
 #hostname ${HOSTNAME}
 

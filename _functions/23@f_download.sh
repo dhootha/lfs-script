@@ -3,7 +3,7 @@
 # Функция "f_download"
 # Version: 0.1
 
-_curlrc ()
+_f_curlrc ()
 {
 	pushd ${LFS_SRC} > /dev/null
 		color-echo "curl -C - -L -O ${1}" ${WHITE}
@@ -11,13 +11,13 @@ _curlrc ()
 	popd > /dev/null
 }
 
-_wgetrc ()
+_f_wgetrc ()
 {
 	color-echo "wget -P ${LFS_SRC} -c ${1}" ${WHITE}
 	wget -P ${LFS_SRC} -c ${1}
 }
 
-_gitrc ()
+_f_gitrc ()
 {
 	pushd ${LFS_SRC} > /dev/null
 		if [ -d ${_pack_name/.git} ]; then
@@ -41,7 +41,7 @@ f_download ()
 	if [ "${_pack_url:0:3}" = 'git' ]; then
 		date >> ${_log}
 		if [ -n "$(which git)" ]; then
-			gitrc ${_pack_url}
+			_f_gitrc ${_pack_url}
 		else
 			color-echo 'Отсутствует программа (git) для скачивания пакетов!' ${RED}
 			return 1
@@ -51,20 +51,20 @@ f_download ()
 	fi
 
 	if [ -f ${LFS_SRC}/${_pack_name} ]; then
-		md5sum_clfs "${_pack_url}" "${2}"
+		md5sum_lfs "${_pack_url}" "${2}"
 	else
 		date >> ${_log}
 
 		if [ -n "$(which wget)" ]; then
-			wgetrc ${_pack_url}
+			_f_wgetrc ${_pack_url}
 		elif [ -n "$(which curl)" ]; then
-			curlrc ${_pack_url}
+			_f_curlrc ${_pack_url}
 		else
 			color-echo 'Отсутствует программа (curl|wget) для скачивания пакетов!' ${RED}
 			return 1
 		fi
 
-		md5sum_clfs "${_pack_url}" "${2}"
+		md5sum_lfs "${_pack_url}" "${2}"
 		date >> ${_log}
 	fi
 }

@@ -69,7 +69,9 @@ rpc: files
 # End /etc/nsswitch.conf
 EOF
 
-  tar -xf ../${nconf}${verconf}.tar.gz
+#  tar -xf ../${nconf}${verconf}.tar.gz
+
+  cp -rv ../${nconf}${verconf} ./
 
   ZONEINFO=${pkgdir}/usr/share/zoneinfo
   mkdir -pv ${ZONEINFO}/{posix,right}

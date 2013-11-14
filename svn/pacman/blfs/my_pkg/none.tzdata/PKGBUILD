@@ -1,0 +1,19 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Sources for time zone and daylight saving time data"
+arch=('any')
+url="http://www.iana.org/time-zones"
+license=('')
+groups=(${_groups})
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+package() {
+  cd ${srcdir}/${pkgname}${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

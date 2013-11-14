@@ -9,11 +9,11 @@ cd ./${PACK}
 
 #unset MAKEFLAGS
 
-sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in || return ${?}
-./configure --prefix=/tools --disable-static --without-libssh2 || return ${?}
-#./configure --prefix=/tools --disable-static || return ${?}
+#sed -i '/--static-libs)/{N;s#echo .*#echo #;}' curl-config.in || return ${?}
+#./configure --prefix=/tools --disable-static --without-libssh2 || return ${?}
+./configure --prefix=/tools --disable-static --enable-threaded-resolver || return ${?}
 make || return ${?}
-make check || return ${?}
+#make test || return ${?}
 make install || return ${?}
 
 #if [ ${J2_LFS_FLAG} -ne 0 ]; then

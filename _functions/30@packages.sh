@@ -43,14 +43,14 @@ do
 #		continue
 #	fi
 
-	if [ "${url}" ]; then
+	if [ "${url}" ] && [ "${url}" != 'NONE' ] ; then
 		local url=$(echo ${url} | sed -e "s@_version@${version}@g")
-		download
+		f_download
 	fi
 	unset url md5
 	if [ "${urlconf}" ]; then
 		local urlconf=$(echo ${urlconf} | sed -e "s@_version@${verconf}@g")
-		download "${urlconf}" "${md5conf}"
+		f_download "${urlconf}" "${md5conf}"
 	fi
 	for (( n=1; n <= 9; n++ ))
 	do
@@ -58,7 +58,7 @@ do
 		if [ -n "${!urlpatch}" ]; then
 			local _urlpatch=$(echo ${!urlpatch} | sed -e "s@_version@${version}@g")
 			local md5patch="md5patch${n}"
-			download "${_urlpatch}" "${!md5patch}"
+			f_download "${_urlpatch}" "${!md5patch}"
 		fi
 	done
 

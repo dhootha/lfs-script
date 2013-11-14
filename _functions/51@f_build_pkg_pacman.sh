@@ -30,7 +30,7 @@ fi
 # Назначение директории пакета
 case "${BOOK}" in
 	'blfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/*.${PACKAGE_NAME} ;;
-	'lfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/*.[0-9][0-9]_${PACKAGE_NAME} ;;
+	'lfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/[6-8].[0-9][0-9]_${PACKAGE_NAME} ;;
 esac
 
 local _group=`basename ${PACKAGE_DIR} | cut -d. -f1`
@@ -47,11 +47,12 @@ local name="${PACKAGE_NAME}"
 # Функция для проверки зависимостей пакета
 _f_depends_pkg ()
 {
-clear_per "${2}"
+#clear_per "${2}"
 
 local _c=1
 while [ -n "$(echo ${1}: | cut -d: -f${_c})" ]
 do
+	clear_per "${2}"
 	f_build_pkg_pacman `echo ${1}: | cut -d: -f${_c} | cut -d'>' -f1` '--log'
 	(( _c++ ))
 done
@@ -121,6 +122,13 @@ do
 	unset ${urlpatch} ${md5patch} _urlpatch _md5patch
 done
 
+# Проверка на udev-config
+if [ "${nconf}" ]; then
+	_url="${_url}"$'\n'$(echo ${urlconf} | sed -e "s/_version/${verconf}/g")
+	md5="${md5}"$'\n'${md5conf}
+	export nconf verconf
+fi
+
 # Установка переменной группы пакета
 for (( i=0; i < ${#PACKAGE_GROUPS[@]}; i++ ))
 do
@@ -151,9 +159,10 @@ export name version _url md5 _depends _makedepends
 
 pushd ${PACKAGE_DIR} || error-popd
 	if [ -n "${md5}" ]; then
+		[ "${_url}" = 'NONE' ] && export _url=''
 		[ "${md5}" = 'NONE' ] && export md5=''
 		# Сборка пакета
-		f_makepkg ${PACKAGE_NAME} ${2} >> "${LOG_DIR}/build.log"
+		f_makepkg ${PACKAGE_NAME} ${2}
 	else
 		# Подсчет md5 суммы
 		makepkg --asroot -g

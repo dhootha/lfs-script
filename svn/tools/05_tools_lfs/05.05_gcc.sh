@@ -9,7 +9,7 @@ mv -v ../gmp-* gmp
 mv -v ../mpc-* mpc
 
 for file in \
- $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+  $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
 do
   cp -uv $file{,.orig}
   sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
@@ -51,7 +51,7 @@ mkdir -v ../${name}-build; cd ../${name}-build
 	--with-mpfr-lib=$(pwd)/mpfr/src/.libs || return ${?}
 make || return ${?}
 make install || return ${?}
-ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
+ln -sv libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
 popd
 
 #######################################
