@@ -167,6 +167,7 @@ pushd ${PACKAGE_DIR} || error-popd
 		# Подсчет md5 суммы
 		makepkg --asroot -g
 	fi
+	[ "${name}" = 'test-ld' ] && return 0
 	# Установка пакета
 	f_pacman ${PACKAGE_NAME}
 popd

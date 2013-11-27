@@ -6,7 +6,7 @@ pushd ${BUILD_DIR}
 unarch || return ${?}
 cd ./${PACK}
 
-./configure --prefix=/tools || return ${?}
+PKG_CONFIG= ./configure --prefix=/tools || return ${?}
 make || return ${?}
 make check || return ${?}
 make install || return ${?}

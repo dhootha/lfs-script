@@ -110,6 +110,10 @@ LogFile     = /var/log/pacman.log' >> /tools/etc/pacman.conf
 local _LOG="${LFS_LOG}/system"
 install -d ${_LOG}
 
+# Настройка DNS
+install -d ${LFS}/etc
+cp -v /etc/resolv.conf ${LFS}/etc/
+
 # base-core
 if [ "${BASE_CORE_FLAG}" -gt 0 ] || [ "${SYSTEM_FLAG}" -gt 0 ] || [ "${BLFS_FLAG}" -gt 0 ]; then
 	chroot_lfs "${LFS_PWD}/_chroot/f_system_base.sh"

@@ -10,10 +10,20 @@ depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})
 
-package() {
-  cd ${srcdir}/${pkgname}${pkgver}
+timezones=('africa' 'antarctica' 'asia' 'australasia'
+           'europe' 'northamerica' 'southamerica'
+           'pacificnew' 'etcetera' 'backward'
+           'systemv' 'factory'
+           'solar87' 'solar88' 'solar89')
 
-  make DESTDIR=${pkgdir} install
+package() {
+  cd ${srcdir}
+
+  zic -y ./yearistype -d ${pkgdir}/usr/share/zoneinfo ${timezones[@]}
+  zic -y ./yearistype -d ${pkgdir}/usr/share/zoneinfo/posix ${timezones[@]}
+  zic -y ./yearistype -d ${pkgdir}/usr/share/zoneinfo/right -L leapseconds ${timezones[@]}
+  zic -y ./yearistype -d ${pkgdir}/usr/share/zoneinfo -p America/New_York
+  install -m444 -t ${pkgdir}/usr/share/zoneinfo iso3166.tab zone.tab
 }
 
 # vim:set ts=2 sw=2 et:

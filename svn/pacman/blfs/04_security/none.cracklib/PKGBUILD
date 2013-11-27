@@ -1,0 +1,36 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Password Checking Library"
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/projects/cracklib"
+license=('GPL')
+groups=(${_groups})
+depends=(${_depends})
+makedepends=(${_makedepends})
+install='install'
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr \
+              --with-default-dict=/lib/cracklib/pw_dict \
+              --disable-static
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libcrack.so.2* ${pkgdir}/lib
+  ln -v -sf ../../lib/libcrack.so.${pkgver} ${pkgdir}/usr/lib/libcrack.so
+
+  install -d ${pkgdir}/usr/share/dict
+  install -v -m644 -D ../cracklib-words-20080507 ${pkgdir}/usr/share/dict/cracklib-words
+}
+
+# vim:set ts=2 sw=2 et:

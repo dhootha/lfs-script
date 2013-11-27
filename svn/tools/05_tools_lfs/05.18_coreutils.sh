@@ -8,9 +8,7 @@ cd ./${PACK}
 
 #patch -Np1 -i ${LFS_SRC}/${name}-${version}-test_fixes-1.patch || return ${?}
 
-FORCE_UNSAFE_CONFIGURE=1 ./configure    \
-	--prefix=/tools			\
-	--enable-install-program=hostname || return ${?}
+./configure --prefix=/tools --enable-install-program=hostname || return ${?}
 make || return ${?}
 make RUN_EXPENSIVE_TESTS=yes check || return ${?}
 make install || return ${?}

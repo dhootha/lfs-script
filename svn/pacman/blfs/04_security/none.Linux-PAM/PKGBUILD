@@ -8,7 +8,7 @@ license=('GPL2')
 groups=(${_groups})
 depends=(${_depends})
 makedepends=(${_makedepends})
-options=('!libtool' '!emptydirs')
+options=('!emptydirs')
 source=(${_url})
 md5sums=(${md5})
 
