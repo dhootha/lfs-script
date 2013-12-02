@@ -101,29 +101,18 @@ CacheDir    = /var/cache/pacman/pkg/
 LogFile     = /var/log/pacman.log' >> /tools/etc/pacman.conf
 # ++++++++++++++++++++++++++++++++
 
-#!cat /etc/mtab | grep "${LFS}" | sed -e "s@${LFS}@@g" > ${LFS_LOG}/mtab
-#!install -d /mnt/lfs/etc
-#!cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
-#!echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
-
-# Каталог для хронения лог-файлов system
-local _LOG="${LFS_LOG}/system"
-install -d ${_LOG}
-
-# Настройка DNS
-install -d ${LFS}/etc
-cp -v /etc/resolv.conf ${LFS}/etc/
-
 # base-core
 if [ "${BASE_CORE_FLAG}" -gt 0 ] || [ "${SYSTEM_FLAG}" -gt 0 ] || [ "${BLFS_FLAG}" -gt 0 ]; then
-	chroot_lfs "${LFS_PWD}/_chroot/f_system_base.sh"
+	f_chroot "${LFS_PWD}/_chroot/f_system_base.sh"
 else
 	echo ${BASE_CORE_FLAG} > "${LFS_LOG}/system_base-flag"
 fi
 [[ `cat "${LFS_LOG}/system_base-flag"` -eq 0 ]] || return `cat "${LFS_LOG}/system_base-flag"`
 
-#!cat ${LFS_LOG}/mtab > /mnt/lfs/etc/mtab
-#!echo 'rootfs / rootfs rw 0 0' >> /mnt/lfs/etc/mtab
+# Настройка DNS
+install -d ${LFS}/etc
+cp -v /etc/{resolv.conf,hosts} ${LFS}/etc/
+cp -v /etc/{resolv.conf,hosts} /tools/etc/
 
 # chroot
 if [ "${CHROOT_FLAG}" -gt 0 ]; then

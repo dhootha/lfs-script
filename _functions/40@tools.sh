@@ -9,7 +9,19 @@ local LFS_FLAG='tools-lfs'
 
 [ "${ERR_FLAG}" -gt 0 ] && return ${ERR_FLAG}
 
-local _LOG
+case ${TOOLS_LFS_FLAG} in
+	3) rm -fv ${LFS_OUT}/??_$(uname -m)_lfs.tar.bz2 ;;
+	2) rm -fv ${LFS_OUT}/pm_$(uname -m)_lfs.tar.bz2 ;;
+	1) rm -fv ${LFS_OUT}/05_$(uname -m)_lfs.tar.bz2 ;;
+	0)
+		if [ "${CHROOT_FLAG}" -eq 0 ] && \
+		   [ "${SYSTEM_LFS_FLAG}" -eq 0 ] && \
+		   [ "${BLFS_FLAG}" -eq 0 ]; then
+			return 0
+		fi
+	;;
+	*) echo 'Не верный параметер константы "TOOLS_LFS_FLAG"' ;;
+esac
 
 color-echo "tools_lfs" ${YELLOW}
 
@@ -63,7 +75,7 @@ cat >> /home/lfs/.bashrc << EOF
 LFS_PWD="${LFS_PWD}"
 export LFS_PWD
 
-${LFS_PWD}/_su/_tools.sh ${TOOLS_LFS_FLAG} ${SYSTEM_LFS_FLAG} ${BLFS_FLAG} ${CHROOT_FLAG}
+${LFS_PWD}/_su/_tools.sh
 exit \${?}
 EOF
 

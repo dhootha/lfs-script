@@ -1,0 +1,42 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Transport Independent RPC library (SunRPC replacement)"
+arch=('i686' 'x86_64')
+url="http://curl.haxx.se"
+license=('BSD')
+groups=(${_groups})
+depends=(${_depends})
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-${pkgver}-remove_nis-1.patch
+  sed "s@AM_CONFIG_HEADER@AC_CONFIG_HEADERS@g" -i configure.ac
+#  autoreconf -fi
+
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              CFLAGS="-fPIC" \
+              --disable-static
+  make
+}
+
+#check() {
+#  cd ${srcdir}/${pkgname}-${pkgver}
+
+#  make test
+#}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libtirpc.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/libtirpc.so.1.0.10 ${pkgdir}/usr/lib/libtirpc.so
+}
+
+# vim:set ts=2 sw=2 et:

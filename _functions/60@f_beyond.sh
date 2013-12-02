@@ -22,8 +22,8 @@ fi
 date > "${LFS_LOG}/blfs.log"
 
 # Каталог для хронения лог-файлов blfs
-local _LOG="${LFS_LOG}/blfs"
-install -d ${_LOG}
+#local _LOG="${LFS_LOG}/blfs"
+#install -d ${_LOG}
 
 # blfs
 chroot_lfs "${LFS_PWD}/_chroot/f_beyond.sh"

@@ -16,16 +16,23 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+  sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
   make -f Makefile-libbz2_so
   make clean
   make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make test
 }
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   make PREFIX=${pkgdir}/usr install
-  mkdir -p ${pkgdir}/{,usr/}{bin,lib}
+  install -dv ${pkgdir}/{,usr/}{bin,lib}
   cp -v bzip2-shared ${pkgdir}/bin/bzip2
   cp -av libbz2.so* ${pkgdir}/lib
   ln -sv ../../lib/libbz2.so.1.0 ${pkgdir}/usr/lib/libbz2.so

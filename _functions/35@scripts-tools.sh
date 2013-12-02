@@ -5,58 +5,91 @@
 
 scripts_tools ()
 {
-local _ID=${1:0:2}
-local _archive="${_ID}_$(uname -m)_lfs.tar.bz2"
-
-# clear
-rm -Rf ${_LOG}/${_ID} ${LFS_SRC}/${_archive}
-install -dv ${_LOG}/${_ID}
-
 color-echo 'scripts-tools.sh' ${MAGENTA}
-color-echo "1 : ${1}" ${MAGENTA}
-color-echo "2 : ${2}" ${MAGENTA}
-color-echo "3 : ${3}" ${MAGENTA}
+color-echo "1: ${1}" ${MAGENTA}
+color-echo "2: ${2}" ${MAGENTA}
+color-echo "3: ${3}" ${MAGENTA}
+
+local ID=${1:0:2}
+local archive="${ID}_$(uname -m)_lfs.tar.bz2"
+local LOG_FILE="${LOG_DIR}/${ID}/${ID}_lfs.log"
 
 # Проверка зависимостей
 if [ -n "${2}" ]; then
-	untar_lfs "${2}"
-#	[ ${ERR_FLAG} -gt 0 ] && return ${ERR_FLAG}
+	scripts_tools "${2}"
 fi
 
-echo "scripts_build: ${1}" >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-date >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++env+++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-env >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '++++++++++++++++local++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-local >> "${_LOG}/${_ID}/${_ID}_lfs.log"
-echo '+++++++++++++++++++++++++++++++++++++++' >> "${_LOG}/${_ID}/${_ID}_lfs.log"
+if [ -f ${LFS_OUT}/${archive} ] && [ $(cat ${LOG_DIR}/${ID}/${ID}_flag) -eq 0 ]; then
+	echo "untar: ${1}" >> "${LOG_FILE}"
+	date >> "${LOG_FILE}"
+	echo '+++++++++++++++++env+++++++++++++++++++' >> "${LOG_FILE}"
+	env >> "${LOG_FILE}"
+	echo '+++++++++++++++++++++++++++++++++++++++' >> "${LOG_FILE}"
+	echo '++++++++++++++++local++++++++++++++++++' >> "${LOG_FILE}"
+	local >> "${LOG_FILE}"
+	echo '+++++++++++++++++++++++++++++++++++++++' >> "${LOG_FILE}"
+
+	color-echo "Проверка архива: \"${archive}\"" ${CYAN}
+	bzip2 -t "${LFS_OUT}/${archive}"
+
+	color-echo "Распаковка архива: \"${archive}\"" ${CYAN}
+	pushd ${LFS} > /dev/null
+		tar -xf "${LFS_OUT}/${archive}" || ERR_FLAG=${?}
+	popd > /dev/null
+
+	color-echo "Создание файла: \"${ID}-files\"" ${GREEN}
+	find /tools/ | sed -e '1d' > ${LOG_DIR}/${ID}/${ID}-files
+
+	echo ${ERR_FLAG} > ${LOG_DIR}/${ID}/${ID}_flag
+	if [ ${ERR_FLAG} -eq 0 ]; then
+		color-echo "OK: ${1}" ${GREEN}
+	else
+		color-echo "ERROR: ${1}" ${RED} & return ${?}
+	fi
+
+	date >> "${LOG_FILE}"
+
+	return ${ERR_FLAG}
+fi
+
+# clear log
+rm -Rf ${LOG_DIR}/${ID} ${LFS_SRC}/${archive}
+install -dv ${LOG_DIR}/${ID}
+
+echo "scripts_build: ${1}" >> ${LOG_FILE}
+date >> ${LOG_FILE}
+echo '+++++++++++++++++env+++++++++++++++++++' >> ${LOG_FILE}
+env >> ${LOG_FILE}
+echo '+++++++++++++++++++++++++++++++++++++++' >> ${LOG_FILE}
+echo '++++++++++++++++local++++++++++++++++++' >> ${LOG_FILE}
+local >> ${LOG_FILE}
+echo '+++++++++++++++++++++++++++++++++++++++' >> ${LOG_FILE}
 
 unset _pack_var
 
 local _script
-for _script in ${LFS_PWD}/${PREFIX_LFS}/tools/${_ID}_*/${_ID}.[0-9][0-9]*.sh
+for _script in ${LFS_PWD}/${PREFIX_LFS}/tools/${ID}_*/${ID}.[0-9][0-9]*.sh
 do
 	local _file=`basename "${_script}"`
 	local _NAME=`echo ${_file} | cut -d_ -f2 | cut -d. -f1`
 
-	local _log="${_LOG}/${_ID}/${_file}.log"
+	local _log="${LOG_DIR}/${ID}/${file}.log"
 	if [[ -f ${_log} ]]; then
 		rm -vf ${_log}
 	fi
-	local logpipe=$(mktemp -u "${_LOG}/${_ID}/logpipe.XXXXXXXX")
+	local logpipe=$(mktemp -u "${LOG_DIR}/${ID}/logpipe.XXXXXXXX")
 	mkfifo "${logpipe}"
 	tee "${_log}" < "${logpipe}" &
 	local teepid=${!}
 
 	# Назначаем переменные пакета
-	_pack_var=`pack_var "lfs.${_ID}.${_NAME}"`
+	_pack_var=`pack_var "lfs.${ID}.${_NAME}"`
 	local ${_pack_var}
 	local name="${_NAME}"
 
 	while [ true ]
 	do
-		echo "${_ID}    ${name}    ${_file}"
+		echo "${ID}    ${name}    ${_file}"
 		. ${_script} || ERR_FLAG=${?}
 		if [ ${ERR_FLAG} -ne 0 ]; then
 			color-echo "ERROR: ${_file}" ${RED}
@@ -95,7 +128,7 @@ do
 	date >> ${_log}
 done
 
-echo ${ERR_FLAG} > ${_LOG}/${_ID}/${_ID}_flag
+echo ${ERR_FLAG} > ${LOG_DIR}/${ID}/${ID}_flag
 if [ ${ERR_FLAG} -eq 0 ]; then
 	color-echo "OK: ${1}" ${GREEN}
 else
@@ -107,27 +140,25 @@ strip --strip-debug /tools/lib/* || true
 strip --strip-unneeded /tools/{,s}bin/* || true
 rm -rf /tools/{,share}/{info,man,doc}
 
-color-echo "Создание файла: \"${_ID}-files\"" ${GREEN}
-find /tools/ | sed -e '1d' > ${_LOG}/${_ID}/${_ID}-files
-#find /tools/ -not -type d > ${_LOG}/${_ID}/${_ID}-files
-#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
-#find /tools/ -type f > ${_LOG}/${_ID}/${_ID}-files
-#find /tools/ -type d > ${_LOG}/${_ID}/${_ID}-directory
+color-echo "Создание файла: \"${ID}-files\"" ${GREEN}
+find /tools/ | sed -e '1d' > ${LOG_DIR}/${ID}/${ID}-files
 
-if [ "${_ID}" != '05' ]; then
+if [ "${ID}" != '05' ]; then
 	color-echo 'Получаем переменную: "_raznost"' ${GREEN}
-	local _files=`diff -n "${_LOG}/05/05-files" "${_LOG}/${_ID}/${_ID}-files" | grep '^/tools'`
+	local _files=`diff -n "${LOG_DIR}/05/05-files" "${LOG_DIR}/${ID}/${ID}-files" | grep '^/tools'`
 else
-	local _files=`cat ${_LOG}/${_ID}/${_ID}-files`
+	local _files=`cat ${LOG_DIR}/${ID}/${ID}-files`
 fi
 
 pushd ${LFS_OUT}
-	color-echo "Создание архива: \"${_archive}\"" ${GREEN}
-	tar -cjf ${_archive} ${_files}
-	bzip2 -t ${_archive}
+	color-echo "Создание архива: \"${archive}\"" ${GREEN}
+	tar -cjf ${archive} ${_files}
+
+	color-echo "Проверка архива: \"${archive}\"" ${CYAN}
+	bzip2 -t ${archive}
 popd
 
-date >> "${_LOG}/${_ID}/${_ID}_lfs.log"
+date >> ${LOG_FILE}
 }
 
 ################################################################################

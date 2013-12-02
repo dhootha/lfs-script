@@ -33,7 +33,7 @@ echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system.log"
 
 f_build_book 'lfs.06.all' '--log'; rm  -Rf ${LFS_PKG}/test-ld-*
 f_build_book 'lfs.07.all' '--log'
-f_build_book 'lfs.08.all' '--log'
+f_build_book 'lfs.08.all'
 
 if [ "${BLFS_FLAG}" -eq 0 ]; then
 	# Журналируем пакеты репозитория
