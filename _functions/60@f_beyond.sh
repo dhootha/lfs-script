@@ -26,7 +26,7 @@ date > "${LFS_LOG}/blfs.log"
 #install -d ${_LOG}
 
 # blfs
-chroot_lfs "${LFS_PWD}/_chroot/f_beyond.sh"
+f_chroot "${LFS_PWD}/_chroot/f_beyond.sh"
 
 if [ ! -f ${LFS_LOG}/blfs-flag ] || [ "$(cat ${LFS_LOG}/blfs-flag)" -gt 0 ]; then
 	return 1

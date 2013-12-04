@@ -78,7 +78,7 @@ ln -sv bash ${LFS}/bin/sh
 install -d ${LFS}/etc
 ln -sv /proc/self/mounts ${LFS}/etc/mtab
 # ++++++++++++++++++++++++++++++++
-mkdir -p ${LFS_PKG}
+install -d ${LFS_PKG}
 echo "
 PKGDEST=${LFS_PKG}
 SRCDEST=${LFS_SRC}" >> /tools/etc/makepkg.conf

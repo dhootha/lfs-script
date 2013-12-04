@@ -16,9 +16,11 @@ md5sums=(${md5}
 	'bb12dbaf9ca335096fe2e336e0dcb6ed')
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+#  cd ${srcdir}/${pkgname}-${pkgver}
 
-  make DESTDIR=${pkgdir} install
+#  make DESTDIR=${pkgdir} install
+
+  install -d ${pkgdir}/bin
 
   cat > ${pkgdir}/bin/make-cert.pl << "EOF"
 #!/usr/bin/perl -w

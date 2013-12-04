@@ -19,9 +19,9 @@ do
 	fi
 done
 
-if [ -f ${LFS_PKG}/${name}-${version}*.pkg.tar.xz ]; then
+if [ -f ${LFS_PKG}/${BOOK}/${name}-${version}*.pkg.tar.xz ]; then
 	install -d ${LOG_DIR}/${1}
-	yes | pacman -U ${_pacman_flags} ${LFS_PKG}/${name}-${version}*.pkg.tar.xz || ERR_FLAG=${?}
+	yes | pacman -U ${_pacman_flags} ${LFS_PKG}/${BOOK}/${name}-${version}*.pkg.tar.xz || ERR_FLAG=${?}
 	if [ ${ERR_FLAG} -gt 0 ]; then
 		color-echo "error pacman: ${1}" ${RED}
 		return ${ERR_FLAG}

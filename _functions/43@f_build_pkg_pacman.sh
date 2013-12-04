@@ -14,6 +14,9 @@ local BOOK=`echo ${1} | cut -d. -f1`
 local CHAPTER=`echo ${1} | cut -d. -f2`
 local PACKAGE_NAME=`echo ${1} | cut -d. -f3`
 
+local LOG_DIR="${LFS_LOG}/${BOOK}/${CHAPTER}"
+install -d ${LOG_DIR}
+
 if [ -n "$(pacman -Q ${PACKAGE_NAME})" ]; then
 #if [ -n "$(grep -rl "name='${PACKAGE_NAME}'" ${LFS_LOG})" ]; then
 	color-echo "Уже установлен пакет: `pacman -Q ${PACKAGE_NAME}`" ${WHITE}
@@ -29,8 +32,9 @@ fi
 
 # Назначение директории пакета
 case "${BOOK}" in
-	'blfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/*.${PACKAGE_NAME} ;;
+#	'blfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/*.${PACKAGE_NAME} ;;
 	'lfs') local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/[6-8].[0-9][0-9]_${PACKAGE_NAME} ;;
+	*) local PACKAGE_DIR=${BOOK_DIR}/${CHAPTER}_*/*.${PACKAGE_NAME} ;;
 esac
 
 local _group=`basename ${PACKAGE_DIR} | cut -d. -f1`
@@ -145,7 +149,9 @@ if [ "${blfs_bootscripts}" = '02' ]; then
 		case `echo ${blfs_bootscripts_per} | cut -d= -f1` in
 			'md5')
 				local _md5blfs="$(echo ${blfs_bootscripts_per} | cut -d= -f2)"
-				md5="${md5}"$'\n'"${_md5blfs}"
+				[ -n "${_md5blfs}" ] && \
+					md5="${md5}"$'\n'"${_md5blfs}" || \
+					unset md5
 			;;
 			'url') 
 				local _urlblfs="$(echo ${blfs_bootscripts_per} | cut -d= -f2)"
@@ -173,7 +179,7 @@ pushd ${PACKAGE_DIR} || error-popd
 popd
 
 # Очистка переменных
-clear_per ${_pack_var}
+clear_per "${_pack_var}"
 unset name version _url md5 _depends _makedepends
 }
 
