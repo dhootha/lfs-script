@@ -39,8 +39,8 @@ esac
 
 local _group=`basename ${PACKAGE_DIR} | cut -d. -f1`
 
-local depends=''
-local makedepends=''
+local depends='' depends_book="depends_${BOOK}"
+local makedepends='' makedepends_book="makedepends_${BOOK}"
 local blfs_bootscripts=''
 
 # Назначаем переменные пакета
@@ -62,43 +62,64 @@ do
 done
 }
 
+# Функция для Компоновки переменной зависимостей пакета
+_f_depends_pkg_var ()
+{
+local _c=1
+while [ -n "$(echo ${1}: | cut -d: -f${_c})" ]
+do
+	[ "${c}" -gt 1 ] \
+		&& echo -n ' '`echo ${1}: | cut -d: -f${_c} | cut -d. -f3` \
+		|| echo -n `echo ${1}: | cut -d: -f${_c} | cut -d. -f3`
+	(( _c++ ))
+done
+}
+
 # Проверяем зависимые пакеты для установки
-_f_depends_pkg "${depends}" "${_pack_var}"
+#_f_depends_pkg "${depends}" "${_pack_var}"
+_f_depends_pkg "${!depends_book}" "${_pack_var}"
 
 # Назначаем переменные пакета
 local ${_pack_var}
 local name="${PACKAGE_NAME}"
 
 # Проверяем зависимые пакеты для сборки
-_f_depends_pkg "${makedepends}" "${_pack_var}"
+#_f_depends_pkg "${makedepends}" "${_pack_var}"
+_f_depends_pkg "${!makedepends_book}" "${_pack_var}"
 
 # Назначаем переменные пакета
 local ${_pack_var}
 local name="${PACKAGE_NAME}"
 
 # Компоновка переменной зависимостей пакета
-local _depends=''
-local _c=1
-while [ -n "$(echo ${depends}: | cut -d: -f${_c})" ]
-do
-	if [ "${_c}" -gt 1 ]
-	then    _depends="${_depends} $(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
-	else    _depends="$(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
-	fi
-	(( _c++ ))
-done
+#local _depends=''
+#local _c=1
+#while [ -n "$(echo ${depends}: | cut -d: -f${_c})" ]
+#do
+#	if [ "${_c}" -gt 1 ]
+#	then    _depends="${_depends} $(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
+#	else    _depends="$(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
+#	fi
+#	(( _c++ ))
+#done
+
+#local _depends=`_f_depends_pkg_var "${depends}"`
+local _depends=`_f_depends_pkg_var "${!depends_book}"`
 
 # Компоновка переменной зависимостей сборки пакета
-local _makedepends=''
-local _c=1
-while [ -n "$(echo ${makedepends}: | cut -d: -f${_c})" ]
-do
-        if [ "${_c}" -gt 1 ]
-        then    _makedepends="${_makedepends} $(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
-        else    _makedepends="$(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
-        fi
-        (( _c++ ))
-done
+#local _makedepends=''
+#local _c=1
+#while [ -n "$(echo ${makedepends}: | cut -d: -f${_c})" ]
+#do
+#	if [ "${_c}" -gt 1 ]
+#	then	_makedepends="${_makedepends} $(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
+#	else	_makedepends="$(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
+#	fi
+#	(( _c++ ))
+#done
+
+#local _makedepends=`_f_depends_pkg_var "${makedepends}"`
+local _makedepends=`_f_depends_pkg_var "${!makedepends_book}"`
 
 if [ "$url" != 'NONE' ] && [ -n "${url}" ]; then
 	local _url=`echo ${url} | sed -e "s/_version/${version}/g"`

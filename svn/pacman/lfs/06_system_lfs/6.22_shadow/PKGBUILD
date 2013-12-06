@@ -34,7 +34,7 @@ package() {
   install -dv ${pkgdir}/bin
   mv -v ${pkgdir}/usr/bin/passwd ${pkgdir}/bin
 
-  sed -i 's/yes/no/' ${pkgdir}/etc/default/useradd
+#  sed -i 's/yes/no/' ${pkgdir}/etc/default/useradd
 }
 
 # vim:set ts=2 sw=2 et:

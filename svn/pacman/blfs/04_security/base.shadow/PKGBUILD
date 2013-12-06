@@ -38,7 +38,7 @@ package() {
   install -dv ${pkgdir}/bin
   mv -v ${pkgdir}/usr/bin/passwd ${pkgdir}/bin
 
-  sed -i 's/yes/no/' ${pkgdir}/etc/default/useradd
+#  sed -i 's/yes/no/' ${pkgdir}/etc/default/useradd
 
   install -v -m644 ${pkgdir}/etc/login.defs ${pkgdir}/etc/login.defs.orig &&
   for FUNCTION in FAIL_DELAY FAILLOG_ENAB \

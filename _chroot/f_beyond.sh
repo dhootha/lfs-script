@@ -34,12 +34,12 @@ env >> "${LFS_LOG}/blfs.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/blfs.log"
 
 if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
-        f_build_book "blfs.pm.${PACKAGE_MANAGER}" '--log'
+        f_build_book "notlfs.pm.${PACKAGE_MANAGER}" '--log'
 fi
 
 [ -d /tools ] && rm -Rf /tools
 
-f_build_book 'blfs.my.base'    '--log'
+f_build_book 'notlfs.my.base'    '--log'
 f_build_book 'blfs.03.base'    '--log'
 f_build_book 'blfs.12.base'    '--log'
 f_build_book 'blfs.04.openssh' '--log'

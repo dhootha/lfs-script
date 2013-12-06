@@ -33,7 +33,7 @@ echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system.log"
 env >> "${LFS_LOG}/system.log"
 echo '+++++++++++++++++++++++++++++++++++++++' >> "${LFS_LOG}/system.log"
 
-f_build_book 'lfs.06.base-core' '--log'
+f_build_book 'notlfs.my.base-core' '--log'
 
 echo ${ERR_FLAG} > "${LFS_LOG}/system_base-flag"
 

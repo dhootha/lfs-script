@@ -16,7 +16,7 @@ echo _depends=\'${_depends}\'
 echo _makedepends=\'${_makedepends}\'
 echo ++++++++++++++++++++++++++++
 
-if [ ! -f ${LFS_PKG}/${name}-${version}*.pkg.tar.xz ]; then
+if [ ! -f ${LFS_PKG}/${BOOK}/${name}-${version}*.pkg.tar.xz ]; then
 	rm -Rf ${LOG_DIR}/${1}
 	rm -Rf ./{pkg,src} *.log
 	makepkg --asroot --clean ${2} -f || ERR_FLAG=${?}
