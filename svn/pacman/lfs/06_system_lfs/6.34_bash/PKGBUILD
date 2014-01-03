@@ -34,16 +34,6 @@ package() {
   make DESTDIR=${pkgdir} install
 
   ln -sv bash ${pkgdir}/bin/sh
-
-#  install -d ${pkgdir}/etc
-#  cat > ${pkgdir}/etc/shells << "EOF"
-## Begin /etc/shells
-#
-#/bin/sh
-#/bin/bash
-#
-## End /etc/shells
-#EOF
 }
 
 # vim:set ts=2 sw=2 et:

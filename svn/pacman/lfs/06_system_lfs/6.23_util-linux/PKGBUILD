@@ -20,21 +20,24 @@ build() {
 
   mkdir -pv /var/lib/hwclock
 
-  ./configure --disable-su      \
-              --disable-sulogin \
-              --disable-login   \
-              --disable-nologin \
-              --disable-last    \
-              --disable-lastb   \
-              --disable-mesg
+  ./configure
+#  ./configure --disable-su      \
+#              --disable-sulogin \
+#              --disable-login   \
+#              --disable-nologin \
+#              --disable-last    \
+#              --disable-lastb   \
+#              --disable-mesg
   make
 }
 
 check() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-#  chown -Rv nobody .
-#  su nobody -s /bin/bash -c "PATH=$PATH make -k check"
+#  bash tests/run.sh --srcdir="$PWD" --builddir="$PWD"
+
+  chown -Rv nobody .
+  su nobody -s /bin/bash -c "PATH=$PATH make -k check"
 }
 
 package() {

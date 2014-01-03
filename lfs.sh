@@ -30,6 +30,7 @@ if [ "$#" -eq 0 ]; then
 		"8. Making the LFS System Bootable" книги LFS.
 -b | --blfs	Сборка пакетов из книги BLFS.
 
+-u | --update	Обновление пакетов.
 -m | --mount	Смонтировать разделы из файла ./disk для новой системы.
 -d | --download	Загрузка пакетов.
 -c | --chroot	По завершению установки войти в систему с chroot.
@@ -44,6 +45,9 @@ fi
 for _ARG in $*
 do
 	case "${_ARG}" in
+		-u | --update)
+			PACKAGES_PATCHES_LFS_FLAG=1
+		;;
 		-m | --mount)
 			MOUNT_LFS_FLAG=1
 		;;
@@ -91,6 +95,9 @@ eval $restoretrap
 
 # Подготовка и монтирование разделов.
 mount_lfs
+
+# Обновление пакетов
+f_packages_patches
 
 # Назначение переменных (массивов) хроняших информацию о пакетах.
 array_packages

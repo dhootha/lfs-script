@@ -17,14 +17,14 @@ local PACKAGE_NAME=`echo ${1} | cut -d. -f3`
 local LOG_DIR="${LFS_LOG}/${BOOK}/${CHAPTER}"
 install -d ${LOG_DIR}
 
-if [ -n "$(pacman -Q ${PACKAGE_NAME})" ]; then
+if [ -n "$(pacman -Q ${PACKAGE_NAME} 2> /dev/null)" ]; then
 #if [ -n "$(grep -rl "name='${PACKAGE_NAME}'" ${LFS_LOG})" ]; then
 	color-echo "Уже установлен пакет: `pacman -Q ${PACKAGE_NAME}`" ${WHITE}
 	return 0
 fi
 
 # Назначаем дирикторию книги
-if [ ${PACKAGE_MANAGER_FLAG} -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
+if [ "${PACKAGE_MANAGER_FLAG}" -gt 0 ] && [ "${PACKAGE_MANAGER}" != '' ]; then
 	local BOOK_DIR="${LFS_PWD}/${PREFIX_LFS}/${PACKAGE_MANAGER}/${BOOK}"
 else
 	local BOOK_DIR="${LFS_PWD}/${PREFIX_LFS}/${BOOK}"
@@ -39,8 +39,8 @@ esac
 
 local _group=`basename ${PACKAGE_DIR} | cut -d. -f1`
 
-local depends='' depends_book="depends_${BOOK}"
-local makedepends='' makedepends_book="makedepends_${BOOK}"
+local depends_book="depends_${BOOK}"
+local makedepends_book="makedepends_${BOOK}"
 local blfs_bootscripts=''
 
 # Назначаем переменные пакета
@@ -51,8 +51,6 @@ local name="${PACKAGE_NAME}"
 # Функция для проверки зависимостей пакета
 _f_depends_pkg ()
 {
-#clear_per "${2}"
-
 local _c=1
 while [ -n "$(echo ${1}: | cut -d: -f${_c})" ]
 do
@@ -68,7 +66,7 @@ _f_depends_pkg_var ()
 local _c=1
 while [ -n "$(echo ${1}: | cut -d: -f${_c})" ]
 do
-	[ "${c}" -gt 1 ] \
+	[ "${_c}" -gt 1 ] \
 		&& echo -n ' '`echo ${1}: | cut -d: -f${_c} | cut -d. -f3` \
 		|| echo -n `echo ${1}: | cut -d: -f${_c} | cut -d. -f3`
 	(( _c++ ))
@@ -76,7 +74,6 @@ done
 }
 
 # Проверяем зависимые пакеты для установки
-#_f_depends_pkg "${depends}" "${_pack_var}"
 _f_depends_pkg "${!depends_book}" "${_pack_var}"
 
 # Назначаем переменные пакета
@@ -84,7 +81,6 @@ local ${_pack_var}
 local name="${PACKAGE_NAME}"
 
 # Проверяем зависимые пакеты для сборки
-#_f_depends_pkg "${makedepends}" "${_pack_var}"
 _f_depends_pkg "${!makedepends_book}" "${_pack_var}"
 
 # Назначаем переменные пакета
@@ -92,33 +88,9 @@ local ${_pack_var}
 local name="${PACKAGE_NAME}"
 
 # Компоновка переменной зависимостей пакета
-#local _depends=''
-#local _c=1
-#while [ -n "$(echo ${depends}: | cut -d: -f${_c})" ]
-#do
-#	if [ "${_c}" -gt 1 ]
-#	then    _depends="${_depends} $(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
-#	else    _depends="$(echo ${depends}: | cut -d: -f${_c} | cut -d. -f3)"
-#	fi
-#	(( _c++ ))
-#done
-
-#local _depends=`_f_depends_pkg_var "${depends}"`
 local _depends=`_f_depends_pkg_var "${!depends_book}"`
 
 # Компоновка переменной зависимостей сборки пакета
-#local _makedepends=''
-#local _c=1
-#while [ -n "$(echo ${makedepends}: | cut -d: -f${_c})" ]
-#do
-#	if [ "${_c}" -gt 1 ]
-#	then	_makedepends="${_makedepends} $(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
-#	else	_makedepends="$(echo ${makedepends}: | cut -d: -f${_c} | cut -d. -f3)"
-#	fi
-#	(( _c++ ))
-#done
-
-#local _makedepends=`_f_depends_pkg_var "${makedepends}"`
 local _makedepends=`_f_depends_pkg_var "${!makedepends_book}"`
 
 if [ "$url" != 'NONE' ] && [ -n "${url}" ]; then
@@ -194,7 +166,6 @@ pushd ${PACKAGE_DIR} || error-popd
 		# Подсчет md5 суммы
 		makepkg --asroot -g
 	fi
-	[ "${name}" = 'test-ld' ] && return 0
 	# Установка пакета
 	f_pacman ${PACKAGE_NAME}
 popd

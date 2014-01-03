@@ -19,8 +19,8 @@ build() {
     i?86) sed -e 's/^T_CFLAGS =$/& -fomit-frame-pointer/' -i gcc/Makefile.in ;;
   esac
 
-  sed -e 's/install_to_$(INSTALL_DEST) //' \
-      -i libiberty/Makefile.in
+#  sed -e 's/install_to_$(INSTALL_DEST) //' \
+#      -i libiberty/Makefile.in
 
   sed -e /autogen/d \
       -e /check.sh/d \
@@ -38,8 +38,8 @@ build() {
                                     --enable-languages=c,c++    \
                                     --disable-multilib          \
                                     --disable-bootstrap         \
-                                    --disable-install-libiberty \
                                     --with-system-zlib
+#                                    --disable-install-libiberty \
 #                                    --with-mpc=/usr             \
 #                                    --with-mpfr=/usr            \
 #                                    --with-gmc=/usr

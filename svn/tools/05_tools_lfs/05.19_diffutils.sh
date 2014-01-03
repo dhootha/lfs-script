@@ -6,7 +6,7 @@ pushd ${BUILD_DIR}
 unarch || return ${?}
 cd ./${PACK}
 
-sed -i -e '/gets is a/d' lib/stdio.in.h
+#sed -i -e '/gets is a/d' lib/stdio.in.h
 ./configure --prefix=/tools || return ${?}
 make || return ${?}
 make check || return ${?}

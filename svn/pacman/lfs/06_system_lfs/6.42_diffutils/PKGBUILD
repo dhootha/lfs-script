@@ -14,7 +14,8 @@ md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  sed -i -e '/gets is a/d' lib/stdio.in.h
+#  sed -i -e '/gets is a/d' lib/stdio.in.h
+  sed -i 's:= @mkdir_p@:= /bin/mkdir -p:' po/Makefile.in.in
   ./configure --prefix=/usr
   make
 }

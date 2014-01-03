@@ -44,6 +44,7 @@ f_build_book 'blfs.03.base'    '--log'
 f_build_book 'blfs.12.base'    '--log'
 f_build_book 'blfs.04.openssh' '--log'
 f_build_book 'blfs.14.base'    '--log'
+f_build_book 'blfs.04.shadow'    '--log'
 #scripts_blfs '04_gnupg'  '--log'
 #scripts_blfs '04_gnupg2' '--log'
 

@@ -15,12 +15,7 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  sed -e 's@Sending processes@& configured via /etc/inittab@g' \
-      -i src/init.c
-
-  sed -e '/utmpdump/d' \
-      -e '/mountpoint/d' \
-      -i src/Makefile
+  patch -Np1 -i ../${pkgname}-${pkgver}-consolidated-1.patch
 
   make -C src
 }

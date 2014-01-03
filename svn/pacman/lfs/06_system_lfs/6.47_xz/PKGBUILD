@@ -25,7 +25,13 @@ check() {
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} pkgconfigdir=/usr/lib/pkgconfig install
+#  make DESTDIR=${pkgdir} pkgconfigdir=/usr/lib/pkgconfig install
+  make DESTDIR=${pkgdir} install
+
+  install -d ${pkgdir}/{bin,lib}
+  mv -v /usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} ${pkgdir}/bin
+  mv -v /usr/lib/liblzma.so.* ${pkgdir}/lib
+  ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) ${pkgdir}/usr/lib/liblzma.so
 }
 
 # vim:set ts=2 sw=2 et:

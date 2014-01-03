@@ -1,5 +1,5 @@
-pkgname=base-core
-pkgver=0.1
+pkgname=${name}
+pkgver=${version}
 pkgrel=1
 pkgdesc=""
 arch=('any')
@@ -26,6 +26,7 @@ package() {
   bash ../inputrc.sh ${pkgdir}
 #  bash ../fstab.sh ${pkgdir}
   bash ../skel.sh ${pkgdir}
+  bash ../shells.sh ${pkgdir}
 }
 
 # vim:set ts=2 sw=2 et:

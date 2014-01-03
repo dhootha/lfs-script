@@ -1,5 +1,5 @@
-pkgname=test-ld
-pkgver=0.0
+pkgname=${name}
+pkgver=${version}
 pkgrel=1
 pkgdesc=""
 arch=('any')

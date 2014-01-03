@@ -33,7 +33,7 @@ package() {
 
   mv -v ${pkgdir}/usr/lib/libncursesw.so.5* ${pkgdir}/lib
 
-  ln -sfv ../../lib/libncursesw.so.5 ${pkgdir}/usr/lib/libncursesw.so
+  ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libncursesw.so` ${pkgdir}/usr/lib/libncursesw.so
 
   for lib in ncurses form panel menu ; do
     rm -vf                    ${pkgdir}/usr/lib/lib${lib}.so

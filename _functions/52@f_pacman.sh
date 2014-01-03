@@ -9,6 +9,8 @@ f_pacman ()
 
 local PACKAGE_FORCE=( ${PACKAGE_FORCE[*]} )
 
+[ "${name}" = 'test-ld' ] && return 0
+
 for (( y=0; ${y} < ${#PACKAGE_FORCE[@]}; y++ ))
 do
 	if [ "${PACKAGE_FORCE[${y}]}" = "${name}" ]; then

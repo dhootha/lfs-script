@@ -16,19 +16,19 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   sed -i '/MV.*old/d' Makefile.in
   sed -i '/{OLDSUFF}/c:' support/shlib-install
-  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-1.patch
-  ./configure --prefix=/usr --libdir=/lib
+  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-2.patch
+  ./configure --prefix=/usr
   make SHLIB_LIBS=-lncurses
 }
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
-  install -d ${pkgdir}/usr/lib
-  mv -v ${pkgdir}/lib/lib{readline,history}.a ${pkgdir}/usr/lib
-  rm -v ${pkgdir}/lib/lib{readline,history}.so
-  ln -sfv ../../lib/libreadline.so.6 ${pkgdir}/usr/lib/libreadline.so
-  ln -sfv ../../lib/libhistory.so.6 ${pkgdir}/usr/lib/libhistory.so
+
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/lib/lib{readline,history}.so ${pkgdir}/lib
+  ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libreadline.so` ${pkgdir}/usr/lib/libreadline.so
+  ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libhistory.so` ${pkgdir}/usr/lib/libhistory.so
 
   install -d ${pkgdir}/etc/profile.d
   cat > ${pkgdir}/etc/profile.d/readline.sh << "EOF"

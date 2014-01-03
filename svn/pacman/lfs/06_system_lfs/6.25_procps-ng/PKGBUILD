@@ -27,8 +27,8 @@ build() {
 check() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  sed -i -e 's|exec which sleep|exec echo /tools/bin/sleep|' \
-         -e 's|&9|9999999|'             testsuite/config/unix.exp
+#  sed -i -e 's|exec which sleep|exec echo /tools/bin/sleep|' \
+#         -e 's|&9|9999999|'             testsuite/config/unix.exp
   sed -i -r 's|(pmap_initname)\\\$|\1|' testsuite/pmap.test/pmap.exp
 
   make check
@@ -39,10 +39,10 @@ package() {
 
   make DESTDIR=${pkgdir} install
 
-  install -d ${pkgdir}/lib
+  install -d ${pkgdir}/{bin,lib}
+  mv -v /usr/bin/pidof ${pkgdir}/bin
   mv -v ${pkgdir}/usr/lib/libprocps.so.* ${pkgdir}/lib
-  local _libver=`ls ${pkgdir}/lib/libprocps.so.1.* | cut -d. -f4-6`
-  ln -sfv ../../lib/libprocps.so.${_libver} ${pkgdir}/usr/lib/libprocps.so
+  ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libprocps.so` ${pkgdir}/usr/lib/libprocps.so
 }
 
 # vim:set ts=2 sw=2 et:
