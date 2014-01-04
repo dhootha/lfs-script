@@ -33,13 +33,13 @@ if [ "${#}" -ne 0 ]; then
 
 	for _NAME_UNARCH in ${*}
 	do
-		_pack_var_unarch=$(pack_var "lfs.${_ID}.${_NAME_UNARCH}")
+		_pack_var_unarch=`pack_var "lfs.${ID}.${_NAME_UNARCH}"`
 		local ${_pack_var_unarch}
 
 		echo "${name} ${version}"
 		date
 
-		url=$(echo ${url} | sed -e "s@_version@${version}@g")
+		url=`echo ${url} | sed -e "s@_version@${version}@g"`
 		local _archname=`basename ${url}`
 
 #		[ ! -f ${LFS_SRC}/${_archname} ] && download

@@ -11,6 +11,9 @@ color-echo "2: ${2}" ${MAGENTA}
 color-echo "3: ${3}" ${MAGENTA}
 
 local ID=${1:0:2}
+[ "${ID}" = 0[5,6,7] ] && \
+local BOOK='lfs' || \
+local BOOK='notlfs'
 local archive="${ID}_$(uname -m)_lfs.tar.bz2"
 local LOG_FILE="${LOG_DIR}/${ID}/${ID}_lfs.log"
 
@@ -20,6 +23,7 @@ if [ -n "${2}" ]; then
 fi
 
 if [ -f ${LFS_OUT}/${archive} ] && [ $(cat ${LOG_DIR}/${ID}/${ID}_flag) -eq 0 ]; then
+	color-echo "untar: ${1}" ${MAGENTA}
 	echo "untar: ${1}" >> "${LOG_FILE}"
 	date >> "${LOG_FILE}"
 	echo '+++++++++++++++++env+++++++++++++++++++' >> "${LOG_FILE}"
@@ -56,6 +60,7 @@ fi
 rm -Rf ${LOG_DIR}/${ID} ${LFS_SRC}/${archive}
 install -dv ${LOG_DIR}/${ID}
 
+color-echo "scripts_build: ${1}" ${MAGENTA}
 echo "scripts_build: ${1}" >> ${LOG_FILE}
 date >> ${LOG_FILE}
 echo '+++++++++++++++++env+++++++++++++++++++' >> ${LOG_FILE}
@@ -73,17 +78,17 @@ do
 	local _file=`basename "${_script}"`
 	local _NAME=`echo ${_file} | cut -d_ -f2 | cut -d. -f1`
 
-	local _log="${LOG_DIR}/${ID}/${file}.log"
+	local _log="${LOG_DIR}/${ID}/${_file}.log"
 	if [[ -f ${_log} ]]; then
 		rm -vf ${_log}
 	fi
-	local logpipe=$(mktemp -u "${LOG_DIR}/${ID}/logpipe.XXXXXXXX")
+	local logpipe=`mktemp -u "${LOG_DIR}/${ID}/logpipe.XXXXXXXX"`
 	mkfifo "${logpipe}"
 	tee "${_log}" < "${logpipe}" &
 	local teepid=${!}
 
 	# Назначаем переменные пакета
-	_pack_var=`pack_var "lfs.${ID}.${_NAME}"`
+	_pack_var=`pack_var "${BOOK}.${ID}.${_NAME}"`
 	local ${_pack_var}
 	local name="${_NAME}"
 

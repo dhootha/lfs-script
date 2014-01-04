@@ -6,8 +6,8 @@ cd ./${PACK}
 
 #patch -Np1 -i ${LFS_SRC}/${name}-${version}-build_fix-1.patch || return ${?}
 
-sed -i -e 's/@colophon/@@colophon/' \
-       -e 's/doc@cygnus.com/doc@@cygnus.com/' bfd/doc/bfd.texinfo || return ${?}
+#sed -i -e 's/@colophon/@@colophon/' \
+#       -e 's/doc@cygnus.com/doc@@cygnus.com/' bfd/doc/bfd.texinfo || return ${?}
 
 mkdir -v ../${name}-build; cd ../${name}-build
 CC=$LFS_TGT-gcc                    \

@@ -20,8 +20,8 @@ build() {
 
 #  patch -Np1 -i ../${pkgname}-${pkgver}-testsuite_fix-1.patch
 
-  sed -i -e 's/@colophon/@@colophon/' \
-         -e 's/doc@cygnus.com/doc@@cygnus.com/' bfd/doc/bfd.texinfo
+#  sed -i -e 's/@colophon/@@colophon/' \
+#         -e 's/doc@cygnus.com/doc@@cygnus.com/' bfd/doc/bfd.texinfo
 
   mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
   ../${pkgname}-${pkgver}/configure --prefix=/usr --enable-shared
