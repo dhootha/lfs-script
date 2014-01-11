@@ -13,8 +13,7 @@ md5sums=(${md5})
 timezones=('africa' 'antarctica' 'asia' 'australasia'
            'europe' 'northamerica' 'southamerica'
            'pacificnew' 'etcetera' 'backward'
-           'systemv' 'factory'
-           'solar87' 'solar88' 'solar89')
+           'systemv' 'factory')
 
 package() {
   cd ${srcdir}

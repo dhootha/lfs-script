@@ -161,13 +161,13 @@ pushd ${PACKAGE_DIR} || error-popd
 		[ "${_url}" = 'NONE' ] && export _url=''
 		[ "${md5}" = 'NONE' ] && export md5=''
 		# Сборка пакета
-		f_makepkg ${PACKAGE_NAME} ${2}
+		f_makepkg ${PACKAGE_NAME} ${2} || return ${?}
 	else
 		# Подсчет md5 суммы
-		makepkg --asroot -g
+		makepkg --asroot -g || return ${?}
 	fi
 	# Установка пакета
-	f_pacman ${PACKAGE_NAME}
+	f_pacman ${PACKAGE_NAME} || return ${?}
 popd
 
 # Очистка переменных

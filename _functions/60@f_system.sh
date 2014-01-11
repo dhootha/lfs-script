@@ -37,11 +37,6 @@ if [ "$(mount | grep ${LFS}${BUILD_DIR})" ]; then
 	umount -v ${BUILD_DIR}
 fi
 
-#if [ "$(cat ${LFS_LOG}/tools_lfs-flag)" -gt 0 ]; then
-#	color-echo "ERROR: 0p_flag" ${RED}
-#	return `cat ${LFS_LOG}/tools_lfs-flag`
-#fi
-
 date > "${LFS_LOG}/system.log"
 
 rm -Rf ${BUILD_DIR}
@@ -71,7 +66,6 @@ mkdir -pv ${LFS}/bin ${LFS}/usr/{bin,lib}
 ln -sv /tools/bin/{bash,cat,echo,pwd,stty} ${LFS}/bin
 ln -sv /tools/bin/{perl,du,strip} ${LFS}/usr/bin
 ln -sv /tools/lib/{libgcc_s.so{,.1},libstdc++.so{,.6}} ${LFS}/usr/lib
-#ln -sv /tools/lib/libstdc++.so{,.6} ${LFS}/usr/lib
 sed 's/tools/usr/' /tools/lib/libstdc++.la > ${LFS}/usr/lib/libstdc++.la
 ln -sv bash ${LFS}/bin/sh
 
@@ -127,6 +121,8 @@ else
 fi
 
 [[ `cat "${LFS_LOG}/system-flag"` -eq 0 ]] || return `cat "${LFS_LOG}/system-flag"`
+
+#yes 'toor' | ${LFS}/bin/passwd --root ${LFS} root
 
 color-echo 'Завершение работы: f_system ()' ${GREEN}
 date >> "${LFS_LOG}/system.log"

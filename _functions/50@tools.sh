@@ -47,7 +47,7 @@ else
 	usermod -s /bin/bash -g lfs -m -d /home/lfs lfs
 fi
 
-yes 'lfs' | passwd lfs
+yes lfs | passwd lfs
 
 chown -v lfs "${LFS}/tools" "${LFS_SRC}" "${LFS_LOG}"
 chmod -R a+wt "${LFS_SRC}"

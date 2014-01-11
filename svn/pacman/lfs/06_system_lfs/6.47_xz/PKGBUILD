@@ -14,7 +14,7 @@ md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  ./configure --prefix=/usr --libdir=/lib
+  ./configure --prefix=/usr
   make
 }
 
@@ -29,9 +29,9 @@ package() {
   make DESTDIR=${pkgdir} install
 
   install -d ${pkgdir}/{bin,lib}
-  mv -v /usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} ${pkgdir}/bin
-  mv -v /usr/lib/liblzma.so.* ${pkgdir}/lib
-  ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) ${pkgdir}/usr/lib/liblzma.so
+  mv -v ${pkgdir}/usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} ${pkgdir}/bin
+  mv -v ${pkgdir}/usr/lib/liblzma.so.* ${pkgdir}/lib
+  ln -svf ../../lib/`readlink ${pkgdir}/usr/lib/liblzma.so` ${pkgdir}/usr/lib/liblzma.so
 }
 
 # vim:set ts=2 sw=2 et:

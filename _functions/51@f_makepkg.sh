@@ -24,6 +24,7 @@ if [ ! -f ${LFS_PKG}/${BOOK}/${name}-${version}*.pkg.tar.xz ]; then
 		color-echo "error makepkg: ${1}" ${RED}
 		return ${ERR_FLAG}
 	fi
+	install -d ${LFS_PKG}/${BOOK}
 	[ "${name}" != 'test-ld' ] \
 		&& mv ${LFS_PKG}/${name}-${version}*.pkg.tar.xz ${LFS_PKG}/${BOOK}/
 	install -d ${LOG_DIR}/${1}

@@ -26,7 +26,7 @@ package() {
   make DESTDIR=${pkgdir} install
 
   install -d ${pkgdir}/lib
-  mv -v ${pkgdir}/lib/lib{readline,history}.so ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/lib{readline,history}.so.* ${pkgdir}/lib
   ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libreadline.so` ${pkgdir}/usr/lib/libreadline.so
   ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libhistory.so` ${pkgdir}/usr/lib/libhistory.so
 

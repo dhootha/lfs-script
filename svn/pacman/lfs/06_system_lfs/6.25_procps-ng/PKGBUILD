@@ -14,12 +14,11 @@ md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  ./configure --prefix=/usr                           \
-              --exec-prefix=                          \
-              --libdir=/usr/lib                       \
-              --docdir=/usr/share/doc/procps-ng-3.3.6 \
-              --disable-static                        \
-              --disable-skill                         \
+  ./configure --prefix=/usr                                \
+              --exec-prefix=                               \
+              --libdir=/usr/lib                            \
+              --docdir=/usr/share/doc/${pkgname}-${pkgver} \
+              --disable-static                             \
               --disable-kill
   make
 }
@@ -40,7 +39,7 @@ package() {
   make DESTDIR=${pkgdir} install
 
   install -d ${pkgdir}/{bin,lib}
-  mv -v /usr/bin/pidof ${pkgdir}/bin
+#  mv -v ${pkgdir}/usr/bin/pidof ${pkgdir}/bin
   mv -v ${pkgdir}/usr/lib/libprocps.so.* ${pkgdir}/lib
   ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libprocps.so` ${pkgdir}/usr/lib/libprocps.so
 }

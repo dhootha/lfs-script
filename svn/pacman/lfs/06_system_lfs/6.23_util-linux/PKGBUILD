@@ -20,7 +20,7 @@ build() {
 
   mkdir -pv /var/lib/hwclock
 
-  ./configure
+  ./configure --disable-nologin
 #  ./configure --disable-su      \
 #              --disable-sulogin \
 #              --disable-login   \
