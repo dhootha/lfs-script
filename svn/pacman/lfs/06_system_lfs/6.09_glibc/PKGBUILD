@@ -93,7 +93,11 @@ EOF
   #cp -v --remove-destination /usr/share/zoneinfo/${_localtime} /etc/localtime
 #  cp -v --remove-destination ${pkgdir}/usr/share/zoneinfo/Europe/Moscow ${pkgdir}/etc/localtime
   rm -f ${pkgdir}/etc/localtime
-  ln -s /usr/share/zoneinfo/Europe/Moscow ${pkgdir}/etc/localtime
+  ln -sv /usr/share/zoneinfo/Europe/Moscow ${pkgdir}/etc/localtime
+
+  cat > ${pkgdir}/etc/locale.conf << "EOF"
+LANG=ru_RU.UTF-8
+EOF
 
   cat > ${pkgdir}/etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf

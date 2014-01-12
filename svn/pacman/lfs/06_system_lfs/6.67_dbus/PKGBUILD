@@ -1,0 +1,41 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Freedesktop.org message bus system"
+arch=('i686' 'x86_64')
+url="http://www.freedesktop.org/Software/dbus"
+license=('GPL' 'custom')
+groups=()
+options=()
+makedepends=()
+install=''
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --localstatedir=/var \
+              --libexecdir=/usr/lib/dbus-1.0 \
+              --disable-static \
+              --enable-systemd \
+              --docdir=/usr/share/doc/dbus-${pkgver} \
+              --with-console-auth-dir=/run/console/ \
+              --with-systemdsystemunitdir=/lib/systemd/system
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+
+  install -d ${pkgdir}/{lib,usr/lib,var/lib/dbus}
+
+  mv -v ${pkgdir}/usr/lib/libdbus-1.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libdbus-1.so` ${pkgdir}/usr/lib/libdbus-1.so
+
+  ln -sv ${pkgdir}/etc/machine-id ${pkgdir}/var/lib/dbus
+}
+
+# vim:set ts=2 sw=2 et:

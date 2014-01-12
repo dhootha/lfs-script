@@ -44,17 +44,21 @@ rm -Rf ${BUILD_DIR}
 install -dv "${LFS}${LFS_PWD}"
 mount --bind ${LFS_PWD} "${LFS}${LFS_PWD}"
 # --------------------------------
+# 6.2. Preparing Virtual Kernel File Systems
 mkdir -pv ${LFS}/{dev,proc,sys}
+# 6.2.1. Creating Initial Device Nodes
 mknod -m 600 "${LFS}/dev/console" c 5 1
 mknod -m 666 "${LFS}/dev/null" c 1 3
+# 6.2.2. Mounting and Populating /dev
 mount -v --bind /dev "${LFS}/dev"
+# 6.2.3. Mounting Virtual Kernel File Systems
 mount -vt devpts devpts "${LFS}/dev/pts" -o gid=5,mode=620
 mount -vt proc proc "${LFS}/proc"
 mount -vt sysfs sysfs "${LFS}/sys"
 
 if [ -h $LFS/dev/shm ]; then
-   link=$(readlink $LFS/dev/shm)
-   mkdir -p $LFS/$link
+   link=`readlink $LFS/dev/shm`
+   mkdir -pv $LFS/$link
    mount -vt tmpfs shm $LFS/$link
    unset link
 else
@@ -62,14 +66,15 @@ else
 fi
 
 # ++++++++++++++++++++++++++++++++
-mkdir -pv ${LFS}/bin ${LFS}/usr/{bin,lib}
+# 6.6. Creating Essential Files and Symlinks
+install -dv ${LFS}/{bin,usr/{bin,lib}}
 ln -sv /tools/bin/{bash,cat,echo,pwd,stty} ${LFS}/bin
 ln -sv /tools/bin/{perl,du,strip} ${LFS}/usr/bin
 ln -sv /tools/lib/{libgcc_s.so{,.1},libstdc++.so{,.6}} ${LFS}/usr/lib
 sed 's/tools/usr/' /tools/lib/libstdc++.la > ${LFS}/usr/lib/libstdc++.la
 ln -sv bash ${LFS}/bin/sh
 
-install -d ${LFS}/etc
+install -dv ${LFS}/etc
 ln -sv /proc/self/mounts ${LFS}/etc/mtab
 # ++++++++++++++++++++++++++++++++
 install -d ${LFS_PKG}

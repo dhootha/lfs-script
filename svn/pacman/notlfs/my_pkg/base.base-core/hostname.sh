@@ -1,3 +1,4 @@
 #!/bin/bash
 
-echo 'HOSTNAME='${HOSTNAME} > ${1}/etc/sysconfig/network
+install -dv ${1}/etc
+echo ${HOSTNAME} > ${1}/etc/hostname

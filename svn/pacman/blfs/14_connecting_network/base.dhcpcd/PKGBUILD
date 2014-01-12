@@ -31,7 +31,7 @@ package() {
   install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat ${pkgdir}/lib/dhcpcd/dhcpcd-hooks/
 
   cd ../blfs-bootscripts-*
-  make DESTDIR=${pkgdir} install-service-dhcpcd
+  make -f Makefile.systemd DESTDIR=${pkgdir} install-service-dhcpcd
 }
 
 # vim:set ts=2 sw=2 et:

@@ -1,22 +1,22 @@
 #!/bin/bash
 
-install -d ${1}/{bin,usr/{bin,lib}}
-ln -sv /tools/bin/{bash,cat,echo,pwd,stty} ${1}/bin
-ln -sv /tools/bin/perl ${1}/usr/bin
-ln -sv /tools/lib/libgcc_s.so{,.1} ${1}/usr/lib
-ln -sv /tools/lib/libstdc++.so{,.6} ${1}/usr/lib
-sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la
-ln -sv bash ${1}/bin/sh
+#install -d ${1}/{bin,usr/{bin,lib}}
+#ln -sv /tools/bin/{bash,cat,echo,pwd,stty} ${1}/bin
+#ln -sv /tools/bin/perl ${1}/usr/bin
+#ln -sv /tools/lib/libgcc_s.so{,.1} ${1}/usr/lib
+#ln -sv /tools/lib/libstdc++.so{,.6} ${1}/usr/lib
+#sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la
+#ln -sv bash ${1}/bin/sh
 
-ln -sv /proc/self/mounts ${1}/etc/mtab
+#ln -sv /proc/self/mounts ${1}/etc/mtab
 
-install -d ${1}/etc
-#touch ${1}/etc/mtab
-#cat /etc/mtab | grep /mnt/lfs | sed -e 's/\/mnt\/lfs//g' > ${1}/etc/mtab
+install -dv ${1}/etc
 
 cat > ${1}/etc/passwd << "EOF"
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/dev/null:/bin/false
+daemon:x:6:6:daemon:/dev/null:/bin/false
+messagebus:x:18:18:D-Bus Message Daemon User:/var/run/dbus:/bin/false
 nobody:x:99:99:Unprivileged User:/dev/null:/bin/false
 EOF
 
@@ -37,11 +37,14 @@ video:x:12:
 utmp:x:13:
 usb:x:14:
 cdrom:x:15:
+adm:x:16:
+messagebus:x:18:
+systemd-journal:x:23:
 mail:x:34:
 nogroup:x:99:
 EOF
 
-install -d ${1}/var/log
+install -dv ${1}/var/log
 touch ${1}/var/log/{btmp,lastlog,wtmp}
 chgrp -v utmp ${1}/var/log/lastlog
 chmod -v 664  ${1}/var/log/lastlog

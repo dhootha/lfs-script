@@ -36,15 +36,15 @@ package() {
 #  install -d ${pkgdir}/bin
 #  mv -v ${pkgdir}/usr/bin/{kbd_mode,loadkeys,openvt,setfont} ${pkgdir}/bin
 
-  install -d ${pkgdir}/etc/sysconfig
-  cat > ${pkgdir}/etc/sysconfig/console << EOF
-# Begin /etc/sysconfig/console
+  install -dv ${pkgdir}/etc
+  cat > ${pkgdir}/etc/vconsole.conf << EOF
+# Begin /etc/vconsole.conf
 
 UNICODE="1"
 KEYMAP="ruwin_ct_sh-UTF-8"
 FONT="cyr-sun16"
 
-# End /etc/sysconfig/console
+# End /etc/vconsole.conf
 EOF
 }
 

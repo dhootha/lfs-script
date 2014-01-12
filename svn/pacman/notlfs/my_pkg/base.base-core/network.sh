@@ -1,6 +1,6 @@
 #!/bin/bash
 
-install -d ${1}/etc/sysconfig
+install -dv ${1}/etc/sysconfig
 #cat > ${1}/etc/sysconfig/ifconfig.eth0 << EOF
 #ONBOOT=yes
 #IFACE=eth0

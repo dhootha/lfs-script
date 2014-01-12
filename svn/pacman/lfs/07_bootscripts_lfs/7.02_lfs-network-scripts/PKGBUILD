@@ -1,0 +1,21 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc=""
+arch=('any')
+url="http://www.linuxfromscratch.org/lfs"
+license=('MIT')
+groups=('base')
+depends=()
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

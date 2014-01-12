@@ -1,0 +1,32 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="POSIX 1003.1e capabilities"
+arch=('i686' 'x86_64')
+url="http://sites.google.com/site/fullycapable/"
+license=('GPL2')
+groups=()
+depends=('glibc' 'attr')
+makedepends=()
+options=('!staticlibs')
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make RAISE_SETFCAP=no prefix=/usr DESTDIR=${pkgdir} install
+  chmod -v 755 ${pkgdir}/usr/lib/libcap.so
+
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libcap.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/libcap.so.2 ${pkgdir}/usr/lib/libcap.so
+}
+
+# vim:set ts=2 sw=2 et:

@@ -31,11 +31,11 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make INSTALL_MOD_PATH=${pkgdir} modules_install
   install -d ${pkgdir}/boot
-  cp -v arch/x86/boot/bzImage ${pkgdir}/boot/vmlinux-${pkgver}
+  cp -v arch/x86/boot/bzImage ${pkgdir}/boot/vmlinux-${pkgver}-lfs-SYSTEMD
   cp -v System.map ${pkgdir}/boot/System.map-${pkgver}
   cp -v .config ${pkgdir}/boot/config-${pkgver}
 
-  ln -s vmlinux-${pkgver} ${pkgdir}/boot/vmlinux
+  ln -s vmlinux-${pkgver}-lfs-SYSTEMD ${pkgdir}/boot/vmlinux
   ln -s System.map-${pkgver} ${pkgdir}/boot/System.map
   ln -s config-${pkgver} ${pkgdir}/boot/config
 

@@ -1,0 +1,41 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Access control list utilities, libraries and headers"
+arch=('i686' 'x86_64')
+url="http://savannah.nongnu.org/projects/acl"
+license=('LGPL')
+groups=()
+depends=('attr>=2.4.46')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+  ./configure --prefix=/usr --libexecdir=/usr/lib
+
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make -k tests root-tests
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install install-dev install-lib
+  chmod -v 755 ${pkgdir}/usr/lib/libacl.so
+
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libacl.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/libacl.so.1 ${pkgdir}/usr/lib/libacl.so
+}
+
+# vim:set ts=2 sw=2 et:

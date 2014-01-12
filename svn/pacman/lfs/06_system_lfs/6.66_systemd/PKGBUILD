@@ -1,0 +1,75 @@
+pkgname=${name}
+#pkgname_conf=${nconf}
+pkgver=${version}
+#pkgver_conf=${verconf}
+pkgrel=1
+pkgdesc=""
+arch=('i686' 'x86_64')
+url="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+license=('custom')
+groups=('base')
+options=('!makeflags')
+makedepends=()
+install='install'
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+#  mv ../${pkgname_conf}-${pkgver_conf} ./
+#  make -f ${pkgname_conf}-${pkgver_conf}/Makefile.lfs
+
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --localstatedir=/var \
+              --libexecdir=/usr/lib \
+              --docdir=/usr/share/doc/systemd-${pkgver} \
+              --with-rootprefix= \
+              --with-rootlibdir=/lib \
+              --enable-split-usr \
+              --disable-gudev \
+              --without-python
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+#  make -f ${pkgname_conf}-${pkgver_conf}/Makefile.lfs DESTDIR=${pkgdir} install
+
+#  build/udevadm hwdb --update
+
+#  install -d ${pkgdir}/bin
+#  cp ${pkgname_conf}-${pkgver_conf}/init-net-rules.sh ${pkgdir}/bin
+#  chmod +x ${pkgdir}/bin/init-net-rules.sh
+
+#  cat > ${pkgdir}/etc/udev/rules.d/83-duplicate_devs.rules << "EOF"
+#
+## Persistent symlinks for webcam and tuner
+#KERNEL=="video*", ATTRS{idProduct}=="1910", ATTRS{idVendor}=="0d81", \
+#    SYMLINK+="webcam"
+#KERNEL=="video*", ATTRS{device}=="0x036f", ATTRS{vendor}=="0x109e", \
+#    SYMLINK+="tvtuner"
+#
+#EOF
+
+  make DESTDIR=${pkgdir} install
+
+  for cat in 1 3 5 7 8
+  do
+    install -v -m644 man/*.${cat} ${pkgdir}/usr/share/man/man${cat}
+  done
+
+  install -dv ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libnss_myhostname.so.2 ${pkgdir}/lib
+
+  install -dv ${pkgdir}/sbin
+  for tool in runlevel reboot shutdown poweroff halt telinit; do
+       ln -sfv ../bin/systemctl ${pkgdir}/sbin/${tool}
+  done
+  ln -sfv ../lib/systemd/systemd ${pkgdir}/sbin/init
+
+  install -dv ${pkgdir}/usr/lib/tmpfiles.d
+  sed -i "s@0775 root lock@0755 root root@g" ${pkgdir}/usr/lib/tmpfiles.d/legacy.conf
+}
+
+# vim:set ts=2 sw=2 et:

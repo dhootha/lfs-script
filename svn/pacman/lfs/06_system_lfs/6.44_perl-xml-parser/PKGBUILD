@@ -1,0 +1,35 @@
+pkgname=${name}
+_realname='XML-Parser'
+pkgver=${version}
+pkgrel=1
+pkgdesc="Expat-based XML parser module for perl"
+arch=('i686' 'x86_64')
+url="http://search.cpan.org/dist/${_realname}/"
+license=('GPL' 'PerlArtistic')
+groups=()
+depends=('perl' 'expat')
+makedepends=()
+options=(!makeflags)
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${_realname}-${pkgver}
+
+  perl Makefile.PL
+  make
+}
+
+check() {
+  cd ${srcdir}/${_realname}-${pkgver}
+
+  make test
+}
+
+package() {
+  cd ${srcdir}/${_realname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}
+
+# vim:set ts=2 sw=2 et:

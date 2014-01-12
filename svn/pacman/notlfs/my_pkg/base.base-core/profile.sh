@@ -123,7 +123,7 @@ fi
 EOF
 
 # /etc/profile.d/i18n.sh
-cat > ${1}/etc/profile.d/i18n.sh << "EOF"
-# Set up i18n variables
-export LANG=ru_RU.UTF-8
-EOF
+#cat > ${1}/etc/profile.d/i18n.sh << "EOF"
+## Set up i18n variables
+#export LANG=ru_RU.UTF-8
+#EOF

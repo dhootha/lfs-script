@@ -63,7 +63,7 @@ package() {
 #  echo "UsePAM yes" >> ${pkgdir}/etc/ssh/sshd_config
 
   cd ../blfs-bootscripts-*
-  make DESTDIR=${pkgdir} install-sshd
+  make -f Makefile.systemd DESTDIR=${pkgdir} install-sshd
 
   install -v -m700 -d ${pkgdir}/var/lib/sshd
   chown   -v root:sys ${pkgdir}/var/lib/sshd

@@ -1,0 +1,42 @@
+pkgname=${name}
+pkgver=${version}
+pkgrel=1
+pkgdesc="Extended attribute support library for ACL support"
+arch=('i686' 'x86_64')
+url="http://savannah.nongnu.org/projects/attr"
+license=('LGPL')
+groups=()
+depends=('glibc')
+makedepends=()
+options=()
+source=(${_url})
+md5sums=(${md5})
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+  sed -i -e "/SUBDIRS/s|man2||" man/Makefile
+  ./configure --prefix=/usr
+
+  make
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make -k tests root-tests
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install install-dev install-lib
+  chmod -v 755 ${pkgdir}/usr/lib/libattr.so
+
+  install -d ${pkgdir}/lib
+  mv -v ${pkgdir}/usr/lib/libattr.so.* ${pkgdir}/lib
+  ln -sfv ../../lib/libattr.so.1 ${pkgdir}/usr/lib/libattr.so
+}
+
+# vim:set ts=2 sw=2 et:
