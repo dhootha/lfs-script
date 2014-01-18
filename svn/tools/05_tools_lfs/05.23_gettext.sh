@@ -11,7 +11,9 @@ cd gettext-tools
 EMACS="no" ./configure --prefix=/tools --disable-shared || return ${?}
 make -C gnulib-lib || return ${?}
 make -C src msgfmt || return ${?}
-cp -v src/msgfmt /tools/bin
+make -C src msgmerge
+make -C src xgettext
+cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin
 popd
 
 #######################################

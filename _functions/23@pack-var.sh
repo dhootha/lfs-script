@@ -43,6 +43,7 @@ do
 	clear_per "${!pak}"
 done
 
+echo 'NOPACKAGE'
 return 1
 }
 

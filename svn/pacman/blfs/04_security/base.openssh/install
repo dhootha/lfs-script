@@ -31,6 +31,9 @@ post_install() {
 #  public_key="$(cat ~/.ssh/id_rsa.pub)"
 #  ssh REMOTE_HOSTNAME "echo ${public_key} >> ~/.ssh/authorized_keys"
 #  unset public_key
+
+  systemd-tmpfiles --create sshd.conf
+  systemctl enable sshd.service
 }
 
 ## arg 1:  the new package version

@@ -25,7 +25,7 @@ package() {
   bash ../profile.sh ${pkgdir}
   bash ../inputrc.sh ${pkgdir}
 #  bash ../fstab.sh ${pkgdir}
-#  bash ../skel.sh ${pkgdir}
+  bash ../skel.sh ${pkgdir}
   bash ../shells.sh ${pkgdir}
 }
 

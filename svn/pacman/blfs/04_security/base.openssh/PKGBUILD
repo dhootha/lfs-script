@@ -13,7 +13,7 @@ install='install'
 source=(${_url}
 	'install')
 md5sums=(${md5}
-	'56d8b69785ba4581a4f072b699bf0c16')
+	'607ede149b6522b8ec6ea1ccaa10b867')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -63,6 +63,7 @@ package() {
 #  echo "UsePAM yes" >> ${pkgdir}/etc/ssh/sshd_config
 
   cd ../blfs-bootscripts-*
+  sed -e '130,131d' -i Makefile.systemd
   make -f Makefile.systemd DESTDIR=${pkgdir} install-sshd
 
   install -v -m700 -d ${pkgdir}/var/lib/sshd

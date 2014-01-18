@@ -22,11 +22,18 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   make RAISE_SETFCAP=no prefix=/usr DESTDIR=${pkgdir} install
-  chmod -v 755 ${pkgdir}/usr/lib/libcap.so
 
-  install -d ${pkgdir}/lib
-  mv -v ${pkgdir}/usr/lib/libcap.so.* ${pkgdir}/lib
-  ln -sfv ../../lib/libcap.so.2 ${pkgdir}/usr/lib/libcap.so
+  if [ -f ${pkgdir}/usr/lib/libcap.so ]; then
+    chmod -v 755 ${pkgdir}/usr/lib/libcap.so
+    install -d ${pkgdir}/lib
+    mv -v ${pkgdir}/usr/lib/libcap.so.* ${pkgdir}/lib
+    ln -sfv ../../lib/libcap.so.2 ${pkgdir}/usr/lib/libcap.so
+  else
+    chmod -v 755 ${pkgdir}/usr/lib64/libcap.so
+    install -d ${pkgdir}/lib64
+    mv -v ${pkgdir}/usr/lib64/libcap.so.* ${pkgdir}/lib64
+    ln -sfv ../../lib64/libcap.so.2 ${pkgdir}/usr/lib64/libcap.so
+  fi
 }
 
 # vim:set ts=2 sw=2 et:

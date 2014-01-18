@@ -1,4 +1,5 @@
 pkgname=${name}
+pkgreal='dbus'
 pkgver=${version}
 pkgrel=1
 pkgdesc="Freedesktop.org message bus system"
@@ -13,7 +14,7 @@ source=(${_url})
 md5sums=(${md5})
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd ${srcdir}/${pkgreal}-${pkgver}
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --localstatedir=/var \
@@ -23,7 +24,7 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd ${srcdir}/${pkgreal}-${pkgver}
 
   make -C dbus lib_LTLIBRARIES=libdbus-1.la \
        install-libLTLIBRARIES \

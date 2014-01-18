@@ -15,7 +15,7 @@ local BUILD_DIR="${LFS_PWD}/build"
 local PACKAGE_MANAGER='pacman'
 
 local PACKAGE_GROUPS=('base' 'base-devel')
-local PACKAGE_FORCE=('base-core' 'glibc' 'binutils' 'gcc' 'shadow' 'coreutils' 'bash' 'perl' 'bash-completion')
+local PACKAGE_FORCE=('base-core' 'glibc' 'binutils' 'gcc' 'shadow' 'coreutils' 'bash' 'perl' 'bash-completion' 'dbus')
 
 local HOSTNAME='inet'
 local ns1_IP='8.8.4.4'

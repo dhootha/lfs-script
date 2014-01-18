@@ -15,10 +15,10 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   sed -i -e '/gets is a/d' lib/stdio.in.h
+  echo '#define PATH_PROCNET_DEV "/proc/net/dev"' >> ifconfig/system/linux.h
   ./configure --prefix=/usr          \
               --libexecdir=/usr/sbin \
               --localstatedir=/var   \
-              --disable-ifconfig     \
               --disable-logger       \
               --disable-syslogd      \
               --disable-whois        \
@@ -35,8 +35,8 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
   install -d ${pkgdir}/{bin,sbin}
-  mv -v ${pkgdir}/usr/bin/{hostname,ping,ping6} ${pkgdir}/bin
-  mv -v ${pkgdir}/usr/bin/traceroute ${pkgdir}/sbin
+  mv -v ${pkgdir}/usr/bin/{hostname,ping,ping6,traceroute} ${pkgdir}/bin
+  mv -v ${pkgdir}/usr/bin/ifconfig ${pkgdir}/sbin
 }
 
 # vim:set ts=2 sw=2 et:

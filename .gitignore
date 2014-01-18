@@ -2,8 +2,8 @@ build/
 output/
 svn/pacman/blfs/??_*/*.*/pkg/
 svn/pacman/blfs/??_*/*.*/src/
-svn/pacman/lfs/??_*/{?.*,_?.*}/pkg/
-svn/pacman/lfs/??_*/{?.*,_?.*}/src/
+svn/pacman/lfs/??_*/?.*/pkg/
+svn/pacman/lfs/??_*/?.*/src/
 svn/sources/
 *.log
 test.sh

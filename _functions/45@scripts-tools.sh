@@ -11,7 +11,7 @@ color-echo "2: ${2}" ${MAGENTA}
 color-echo "3: ${3}" ${MAGENTA}
 
 local ID=${1:0:2}
-[ "${ID}" = 0[5,6,7] ] && \
+[ "${ID}" = '05' ] && \
 local BOOK='lfs' || \
 local BOOK='notlfs'
 local archive="${ID}_$(uname -m)_lfs.tar.bz2"
@@ -88,7 +88,9 @@ do
 	local teepid=${!}
 
 	# Назначаем переменные пакета
+	echo "${BOOK}.${ID}.${_NAME}"
 	_pack_var=`pack_var "${BOOK}.${ID}.${_NAME}"`
+	[ "${_pack_var}" = 'NOPACKAGE' ] && return 1
 	local ${_pack_var}
 	local name="${_NAME}"
 
