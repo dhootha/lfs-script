@@ -16,13 +16,13 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  [ -f ../../config ] && cp -f ../../config ./.config
+  [ -f ../../config ] && cat ../../config > ./.config
 
   make mrproper
   make LANG=ru_RU.UTF-8 LC_ALL= menuconfig
 
-  rm -f ../../config
-  cp -f ./.config ../../config
+  rm -f ../../config.new
+  cp -f ./.config ../../config.new
 
   make
 }
@@ -48,8 +48,6 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 
 # End /etc/modprobe.d/usb.conf
 EOF
-
-read
 }
 
 # vim:set ts=2 sw=2 et:

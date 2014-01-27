@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 3.12.6 Kernel Configuration
+# Linux/x86 3.12.8 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1245,14 +1245,14 @@ CONFIG_NET_CORE=y
 # CONFIG_IFB is not set
 # CONFIG_NET_TEAM is not set
 # CONFIG_MACVLAN is not set
-# CONFIG_VXLAN is not set
+CONFIG_VXLAN=y
 CONFIG_NETCONSOLE=y
 CONFIG_NETPOLL=y
 # CONFIG_NETPOLL_TRAP is not set
 CONFIG_NET_POLL_CONTROLLER=y
 # CONFIG_TUN is not set
-# CONFIG_VETH is not set
-# CONFIG_NLMON is not set
+CONFIG_VETH=y
+CONFIG_NLMON=y
 # CONFIG_ARCNET is not set
 
 #

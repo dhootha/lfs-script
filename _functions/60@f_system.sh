@@ -55,14 +55,16 @@ mount -v --bind /dev "${LFS}/dev"
 mount -vt devpts devpts "${LFS}/dev/pts" -o gid=5,mode=620
 mount -vt proc proc "${LFS}/proc"
 mount -vt sysfs sysfs "${LFS}/sys"
+mount -vt tmpfs tmpfs $LFS/run
 
 if [ -h $LFS/dev/shm ]; then
-   link=`readlink $LFS/dev/shm`
-   mkdir -pv $LFS/$link
-   mount -vt tmpfs shm $LFS/$link
-   unset link
-else
-   mount -vt tmpfs shm $LFS/dev/shm
+   mkdir -pv $LFS/`readlink $LFS/dev/shm`
+#   link=`readlink $LFS/dev/shm`
+#   mkdir -pv $LFS/$link
+#   mount -vt tmpfs shm $LFS/$link
+#   unset link
+#else
+#   mount -vt tmpfs shm $LFS/dev/shm
 fi
 
 # ++++++++++++++++++++++++++++++++

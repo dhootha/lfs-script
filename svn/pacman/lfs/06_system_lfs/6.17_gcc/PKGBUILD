@@ -19,9 +19,6 @@ build() {
     i?86) sed -e 's/^T_CFLAGS =$/& -fomit-frame-pointer/' -i gcc/Makefile.in ;;
   esac
 
-#  sed -e 's/install_to_$(INSTALL_DEST) //' \
-#      -i libiberty/Makefile.in
-
   sed -e /autogen/d \
       -e /check.sh/d \
       -i fixincludes/Makefile.in
@@ -29,6 +26,7 @@ build() {
 
   mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
 
+  SED=sed                                                       \
   ../${pkgname}-${pkgver}/configure --prefix=/usr               \
                                     --libexecdir=/usr/lib       \
                                     --enable-shared             \
@@ -39,10 +37,6 @@ build() {
                                     --disable-multilib          \
                                     --disable-bootstrap         \
                                     --with-system-zlib
-#                                    --disable-install-libiberty \
-#                                    --with-mpc=/usr             \
-#                                    --with-mpfr=/usr            \
-#                                    --with-gmc=/usr
   make
 }
 
@@ -94,10 +88,6 @@ package() {
 
   install -d ${pkgdir}/usr/share/gdb/auto-load/usr/lib
   mv -v ${pkgdir}/usr/{lib,lib64}/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib/ || true
-#  case `uname -m` in
-#    x86_64 | amd64) mv -v ${pkgdir}/usr/lib64/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib ;;
-#    *) mv -v ${pkgdir}/usr/lib/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib ;;
-#  esac
 }
 
 # vim:set ts=2 sw=2 et:
