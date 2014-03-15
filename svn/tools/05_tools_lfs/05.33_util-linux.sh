@@ -8,7 +8,8 @@ cd ./${PACK}
 
 ./configure --prefix=/tools             \
             --disable-makeinstall-chown \
-            --without-systemdsystemunitdir || return ${?}
+            --without-systemdsystemunitdir \
+            PKG_CONFIG="" || return ${?}
 make || return ${?}
 make install || return ${?}
 popd

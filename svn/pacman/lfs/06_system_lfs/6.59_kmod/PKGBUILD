@@ -35,7 +35,8 @@ check() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  make DESTDIR=${pkgdir} pkgconfigdir=/usr/lib/pkgconfig install
+  make DESTDIR=${pkgdir} install
+  make -C man DESTDIR=${pkgdir} install
 
   install -d ${pkgdir}/sbin
   for target in depmod insmod modinfo modprobe rmmod; do

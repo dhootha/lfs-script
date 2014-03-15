@@ -1,20 +1,21 @@
 pkgname=${name}
 pkgver=${version}
 pkgrel=1
-pkgdesc="Gnu version of awk"
+pkgdesc="GNU utilities to locate files"
 arch=('i686' 'x86_64')
-url="http://www.gnu.org/directory/GNU/gawk.html"
-license=('GPL')
+url="http://www.gnu.org/software/findutils"
+license=('GPL3')
 groups=('base')
-depends=()
+depends=('glibc')
 makedepends=()
-options=(!makeflags)
+options=()
 source=(${_url})
 md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  ./configure --prefix=/usr --libexecdir=/usr/lib
+  ./configure --prefix=/usr \
+              --localstatedir=/var/lib/locate
   make
 }
 
@@ -26,6 +27,9 @@ check() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
+  install -d ${pkgdir}/bin
+  mv -v ${pkgdir}/usr/bin/find ${pkgdir}/bin
+  sed -i 's/find:=${BINDIR}/find:=\/bin/' ${pkgdir}/usr/bin/updatedb
 }
 
 # vim:set ts=2 sw=2 et:

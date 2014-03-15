@@ -15,7 +15,6 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   ./configure --prefix=/usr			\
-	      --libexecdir=/usr/lib		\
 	      --sysconfdir=/etc			\
 	      --disable-setuid			\
 	      --with-browser=/usr/bin/lynx	\

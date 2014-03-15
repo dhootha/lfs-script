@@ -16,8 +16,8 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   sed -i '/MV.*old/d' Makefile.in
   sed -i '/{OLDSUFF}/c:' support/shlib-install
-  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-2.patch
-  ./configure --prefix=/usr
+#  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-2.patch
+  ./configure --prefix=/usr --docdir=/usr/share/doc/${pkgname}-${pkgver}
   make SHLIB_LIBS=-lncurses
 }
 

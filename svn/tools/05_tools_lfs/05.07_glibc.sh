@@ -9,10 +9,6 @@ if [ ! -r /usr/include/rpc/types.h ]; then
   su -c 'cp -v sunrpc/rpc/*.h /usr/include/rpc' || return ${?}
 fi
 
-sed -i -e 's/static __m128i/inline &/' sysdeps/x86_64/multiarch/strstr.c
-
-sed -r -i 's/(3..89..)/\1 | 4.*/' configure
-
 mkdir -v ../${name}-build; cd ../${name}-build
 
 ../${PACK}/configure                               \

@@ -15,9 +15,10 @@ md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-12.patch
+#  patch -Np1 -i ../${pkgname}-${pkgver}-fixes-12.patch
   ./configure --prefix=/usr		\
 	      --bindir=/bin		\
+	      --docdir=/usr/share/doc/${pkgname}-${pkgver} \
 	      --without-bash-malloc	\
 	      --with-installed-readline
   make

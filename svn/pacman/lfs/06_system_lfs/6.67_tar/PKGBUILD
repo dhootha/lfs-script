@@ -14,12 +14,11 @@ md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
+
   patch -Np1 -i ../${pkgname}-${pkgver}-manpage-1.patch
-  sed -i -e '/gets is a/d' gnu/stdio.in.h
-  FORCE_UNSAFE_CONFIGURE=1 \
+  FORCE_UNSAFE_CONFIGURE=1  \
   ./configure --prefix=/usr \
-              --bindir=/bin \
-              --libexecdir=/usr/sbin
+              --bindir=/bin
   make
 }
 
@@ -31,7 +30,7 @@ check() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
-#  make -C doc install-html docdir=${pkgdir}/usr/share/doc/tar-1.26
+  make -C doc install-html docdir=${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
   install -d ${pkgdir}/usr/share/man/man1
   perl tarman > ${pkgdir}/usr/share/man/man1/tar.1
 }

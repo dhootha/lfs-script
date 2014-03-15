@@ -14,15 +14,14 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  sed -i -e 's/static __m128i/inline &/' sysdeps/x86_64/multiarch/strstr.c
-  sed -r -i 's/(3..89..)/\1 | 4.*/' configure
+  sed -i 's/\\$$(pwd)/`pwd`/' timezone/Makefile
   patch -Np1 -i ../${pkgname}-${pkgver}-fhs-1.patch
   mkdir -v ../${pkgname}-build; cd ../${pkgname}-build
   ../${pkgname}-${pkgver}/configure	\
 	    --prefix=/usr               \
 	    --disable-profile		\
 	    --enable-kernel=2.6.32      \
-	    --libexecdir=/usr/lib/glibc
+	    --enable-obsolete-rpc
   make
 }
 
@@ -42,13 +41,14 @@ package() {
 
   make install_root=${pkgdir} install
 
-  install -d ${pkgdir}/usr/include/{rpc,rpcsvc}
-  cp -v ../${pkgname}-${pkgver}/sunrpc/rpc/*.h ${pkgdir}/usr/include/rpc
-  cp -v ../${pkgname}-${pkgver}/sunrpc/rpcsvc/*.h ${pkgdir}/usr/include/rpcsvc
-  cp -v ../${pkgname}-${pkgver}/nis/rpcsvc/*.h ${pkgdir}/usr/include/rpcsvc
+  install -d ${pkgdir}/etc ${pkgdir}/var/cache/nscd
+  cp -v ../${pkgname}-${pkgver}/nscd/nscd.conf ${pkgdir}/etc/nscd.conf
 
-#  rm ${pkgdir}/etc/ld.so.{cache,conf}
-#  install -d ${pkgdir}/usr/lib/locale
+  install -d ${pkgdir}/usr/lib/tmpfiles.d ${pkgdir}/lib/systemd/system
+
+  install -v -Dm644 ../${pkgname}-${pkgver}/nscd/nscd.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/nscd.conf
+  install -v -Dm644 ../${pkgname}-${pkgver}/nscd/nscd.service ${pkgdir}/lib/systemd/system/nscd.service
+
   install -m755 ${srcdir}/../locale-gen ${pkgdir}/usr/sbin
   install -m644 ${srcdir}/../locale.gen.txt ${pkgdir}/etc/locale.gen
   
@@ -59,7 +59,7 @@ passwd: files
 group: files
 shadow: files
 
-hosts: files dns
+hosts: files dns myhostname
 networks: files
 
 protocols: files

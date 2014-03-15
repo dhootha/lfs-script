@@ -1,27 +1,21 @@
 pkgname=${name}
 pkgver=${version}
 pkgrel=1
-pkgdesc="GNU stream editor"
+pkgdesc="Gnu version of awk"
 arch=('i686' 'x86_64')
-url="http://www.gnu.org/software/sed"
-license=('GPL3')
+url="http://www.gnu.org/directory/GNU/gawk.html"
+license=('GPL')
 groups=('base')
 depends=()
 makedepends=()
-options=(!libtool)
+options=(!makeflags)
 source=(${_url})
 md5sums=(${md5})
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-
-#  patch -Np1 -i ../${pkgname}-${pkgver}-testsuite_fixes-1.patch
-
-  ./configure --prefix=/usr \
-              --bindir=/bin \
-              --htmldir=/usr/share/doc/${pkgname}-${pkgver}
+  ./configure --prefix=/usr
   make
-  make html
 }
 
 check() {
@@ -32,7 +26,6 @@ check() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
-  make -C doc DESTDIR=${pkgdir} install-html
 }
 
 # vim:set ts=2 sw=2 et:
