@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://gcc.gnu.org"
 license=('GPL' 'LGPL' 'custom')
 groups=('base')
-depends=()
+depends=(${_depends})
 makedepends=('binutils>=2.21')
 options=(!libtool)
 source=(${_url})

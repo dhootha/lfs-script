@@ -6,7 +6,7 @@ arch=('any')
 url="http://www.kernel.org/doc/man-pages/"
 license=('GPL')
 groups=('base')
-depends=()
+depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})
 

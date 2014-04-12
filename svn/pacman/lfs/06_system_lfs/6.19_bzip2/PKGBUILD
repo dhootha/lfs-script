@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://sources.redhat.com/bzip2"
 license=('custom')
 groups=('base')
-depends=('glibc')
+depends=(${_depends})
 makedepends=('binutils>=2.21')
 options=()
 source=(${_url})

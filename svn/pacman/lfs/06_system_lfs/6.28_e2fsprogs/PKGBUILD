@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://e2fsprogs.sourceforge.net"
 license=('GPL' 'LGPL' 'MIT')
 groups=('base-devel')
-depends=('util-linux')
+depends=(${_depends})
 makedepends=()
 options=()
 source=(${_url})
@@ -17,13 +17,18 @@ build() {
 
 #  sed -i -e 's/mke2fs/$MKE2FS/' -e 's/debugfs/$DEBUGFS/' tests/f_extent_oobounds/script
 
+  sed -i -e 's|^LD_LIBRARY_PATH.*|&:/tools/lib|' tests/test_config
+
   mkdir -v build; cd build
-  ../configure --prefix=/usr          \
-               --with-root-prefix=""  \
-               --enable-elf-shlibs    \
-               --disable-libblkid     \
-               --disable-libuuid      \
-               --disable-uuidd        \
+  LIBS=-L/tools/lib                    \
+  CFLAGS=-I/tools/include              \
+  PKG_CONFIG_PATH=/tools/lib/pkgconfig \
+  ../configure --prefix=/usr           \
+               --with-root-prefix=""   \
+               --enable-elf-shlibs     \
+               --disable-libblkid      \
+               --disable-libuuid       \
+               --disable-uuidd         \
                --disable-fsck
   make
 }

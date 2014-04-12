@@ -23,20 +23,19 @@ do
 	local ${!pak}
 
 	# Проверка пакета на включение
-	if [ "${status}" -eq 0 ] || \
-	   [ -z "${lfs}" ] && [ -n "${blfs}" ] && [ "${blfs}" != '' ]; then
+	if [ "${status}" -eq 0 ] || [[ -z "${lfs}" && -n "${blfs}" ]]; then
 		# Очистка переменных
 		clear_per "${!pak}"
 		# Продолжаем
 		continue
 	fi
 
-	if [ "${url}" ] && [ "${url}" != 'NONE' ] ; then
+	if [ -n "${url}" ] && [ "${url}" != 'NONE' ] ; then
 		local url=$(echo ${url} | sed -e "s@_version@${version}@g")
 		f_download
 	fi
 	unset url md5
-	if [ "${urlconf}" ]; then
+	if [ -n "${urlconf}" ]; then
 		local urlconf=$(echo ${urlconf} | sed -e "s@_version@${verconf}@g")
 		f_download "${urlconf}" "${md5conf}"
 	fi

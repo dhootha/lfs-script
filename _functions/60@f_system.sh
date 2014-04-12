@@ -45,7 +45,7 @@ install -dv "${LFS}${LFS_PWD}"
 mount --bind ${LFS_PWD} "${LFS}${LFS_PWD}"
 # --------------------------------
 # 6.2. Preparing Virtual Kernel File Systems
-mkdir -pv ${LFS}/{dev,proc,sys}
+mkdir -pv ${LFS}/{dev,proc,sys,run}
 # 6.2.1. Creating Initial Device Nodes
 mknod -m 600 "${LFS}/dev/console" c 5 1
 mknod -m 666 "${LFS}/dev/null" c 1 3
@@ -55,16 +55,10 @@ mount -v --bind /dev "${LFS}/dev"
 mount -vt devpts devpts "${LFS}/dev/pts" -o gid=5,mode=620
 mount -vt proc proc "${LFS}/proc"
 mount -vt sysfs sysfs "${LFS}/sys"
-mount -vt tmpfs tmpfs $LFS/run
+mount -vt tmpfs tmpfs "${LFS}/run"
 
 if [ -h $LFS/dev/shm ]; then
    mkdir -pv $LFS/`readlink $LFS/dev/shm`
-#   link=`readlink $LFS/dev/shm`
-#   mkdir -pv $LFS/$link
-#   mount -vt tmpfs shm $LFS/$link
-#   unset link
-#else
-#   mount -vt tmpfs shm $LFS/dev/shm
 fi
 
 # ++++++++++++++++++++++++++++++++
@@ -126,6 +120,8 @@ if [ "${SYSTEM_FLAG}" -gt 0 ] || [ "${BLFS_FLAG}" -gt 0 ]; then
 else
 	echo ${SYSTEM_FLAG} > "${LFS_LOG}/system-flag"
 fi
+
+rm -fv /tools
 
 [[ `cat "${LFS_LOG}/system-flag"` -eq 0 ]] || return `cat "${LFS_LOG}/system-flag"`
 

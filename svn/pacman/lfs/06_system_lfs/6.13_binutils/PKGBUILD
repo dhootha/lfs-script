@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/binutils/"
 license=('GPL')
 groups=('base')
-depends=('glibc>=2.13' 'zlib')
+depends=(${_depends})
 options=('!libtool' '!distcc' '!ccache')
 source=(${_url})
 md5sums=(${md5})

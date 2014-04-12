@@ -22,17 +22,17 @@ fi
 if [ -n "$( mount | grep ${LFS}/dev )" ]; then
 	color-echo "Размонтирование: ${LFS}/dev/pts" ${CYAN}
 	umount -v "${LFS}/dev/pts" > ${_log}
-	if [ -h $LFS/dev/shm ]; then
-		link=$(readlink $LFS/dev/shm)
-		color-echo "		 ${LFS}/$link" ${CYAN}
-		umount -v $LFS/$link >> ${_log}
-		unset link
-	else
-		color-echo "		 ${LFS}/dev/shm" ${CYAN}
-		umount -v $LFS/dev/shm >> ${_log}
-	fi
-#	color-echo "		 ${LFS}/dev/shm" ${CYAN}
-#	umount -v "${LFS}/dev/shm" >> ${_log} || return ${?}
+#	if [ -h $LFS/dev/shm ]; then
+#		link=$(readlink $LFS/dev/shm)
+#		color-echo "		 ${LFS}/$link" ${CYAN}
+#		umount -v $LFS/$link >> ${_log}
+#		unset link
+#	else
+#		color-echo "		 ${LFS}/dev/shm" ${CYAN}
+#		umount -v $LFS/dev/shm >> ${_log}
+#	fi
+	color-echo "		 ${LFS}/run" ${CYAN}
+	umount -v "${LFS}/run" >> ${_log} || return ${?}
 	color-echo "		 ${LFS}/dev" ${CYAN}
 	umount -v "${LFS}/dev" >> ${_log}
 	color-echo "		 ${LFS}/sys" ${CYAN}

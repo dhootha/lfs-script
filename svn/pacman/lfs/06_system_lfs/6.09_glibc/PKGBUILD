@@ -7,7 +7,7 @@ url="http://www.gnu.org/software/libc"
 license=('GPL' 'LGPL')
 groups=('base')
 install="install"
-depends=('linux-headers')
+depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})
 

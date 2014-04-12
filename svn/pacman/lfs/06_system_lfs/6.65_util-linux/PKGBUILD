@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://userweb.kernel.org/~kzak/util-linux-ng/"
 license=('GPL2')
 groups=('base')
-depends=('ncurses>=5.7')
+depends=(${_depends})
 makedepends=()
 options=('strip')
 source=(${_url})
@@ -20,8 +20,8 @@ build() {
 
   mkdir -pv /var/lib/hwclock
 
-  ./configure
-#  ./configure --disable-nologin
+#  ./configure
+  ./configure --disable-nologin
 #  ./configure --disable-su      \
 #              --disable-sulogin \
 #              --disable-login   \
@@ -44,6 +44,13 @@ check() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
+
+  install -d ${pkgdir}/etc
+  cat > ${pkgdir}/etc/adjtime << EOF
+0.0 0 0.0
+0
+LOCAL
+EOF
 }
 
 # vim:set ts=2 sw=2 et:

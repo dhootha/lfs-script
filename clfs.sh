@@ -114,6 +114,11 @@ f_system
 # Сборка BLFS.
 f_beyond
 
+# system configure
+if [ "${SYSTEM_LFS_FLAG}" -ne 0 ] || [ "${BLFS_FLAG}" -ne 0 ]; then
+	f_chroot "${LFS_PWD}/_chroot/f_system_configure.sh"
+fi
+
 # Входим в chroot
 f_chroot
 

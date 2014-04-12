@@ -7,7 +7,7 @@ arch=('i686' 'x86_64')
 url="http://www.kernel.org"
 license=('GPL2')
 groups=('base')
-depends=()
+depends=(${_depends})
 source=(${_url})
 md5sums=(${md5})
 

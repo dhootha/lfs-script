@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://www.mpfr.org/"
 license=('LGPL')
 groups=('base')
-depends=('gmp>=5.0')
+depends=(${_depends})
 options=(!libtool)
 source=(${_url})
 md5sums=(${md5})

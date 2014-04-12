@@ -17,12 +17,8 @@ build() {
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --localstatedir=/var \
-              --libexecdir=/usr/lib/dbus-1.0 \
-              --disable-static \
-              --enable-systemd \
               --docdir=/usr/share/doc/dbus-${pkgver} \
-              --with-console-auth-dir=/run/console/ \
-              --with-systemdsystemunitdir=/lib/systemd/system
+              --with-console-auth-dir=/run/console/
   make
 }
 
@@ -30,12 +26,12 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
 
-  install -d ${pkgdir}/{lib,usr/lib,var/lib/dbus}
+  install -d ${pkgdir}/{lib,usr/lib,var/lib}
 
   mv -v ${pkgdir}/usr/lib/libdbus-1.so.* ${pkgdir}/lib
   ln -sfv ../../lib/`readlink ${pkgdir}/usr/lib/libdbus-1.so` ${pkgdir}/usr/lib/libdbus-1.so
 
-  ln -sv ${pkgdir}/etc/machine-id ${pkgdir}/var/lib/dbus
+  ln -sv /etc/machine-id ${pkgdir}/var/lib/dbus
 }
 
 # vim:set ts=2 sw=2 et:

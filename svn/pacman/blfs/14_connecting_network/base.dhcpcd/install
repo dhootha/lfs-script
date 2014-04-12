@@ -11,6 +11,7 @@
 post_install() {
   for interface in `ip a | fgrep BROADCAST | cut -d: -f2`
   do
+    echo ${interface}
     cat > /etc/sysconfig/ifconfig.${interface} << EOF
 ONBOOT="yes"
 IFACE="${interface}"
@@ -18,6 +19,8 @@ SERVICE="dhcpcd"
 #DHCP_START="-b -q <insert appropriate start options here>"
 #DHCP_STOP="-k <insert additional stop options here>"
 EOF
+
+    systemctl enable ifupdown@${interface}
   done
 }
 

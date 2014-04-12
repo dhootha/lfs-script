@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://www.gnu.org/software/libtool"
 license=('GPL')
 groups=('base-devel')
-depends=('gcc>=4.6.1')
+depends=(${_depends})
 makedepends=()
 options=('!libtool')
 source=(${_url})

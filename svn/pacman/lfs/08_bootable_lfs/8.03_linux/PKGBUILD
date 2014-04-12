@@ -7,7 +7,7 @@ arch=('i686' 'x86_64')
 url="http://www.kernel.org"
 license=('GPL2')
 groups=('base')
-depends=()
+depends=(${_depends})
 makedepends=()
 options=('!strip')
 source=(${_url})
@@ -16,10 +16,13 @@ md5sums=(${md5})
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  [ -f ../../config ] && cat ../../config > ./.config
+#  [ -f ../../config ] && cat ../../config > ./.config
+
+#  gunzip -c /proc/config.gz > .config
 
   make mrproper
   make LANG=ru_RU.UTF-8 LC_ALL= menuconfig
+#  make LANG=ru_RU.UTF-8 LC_ALL= oldconfig
 
   rm -f ../../config.new
   cp -f ./.config ../../config.new

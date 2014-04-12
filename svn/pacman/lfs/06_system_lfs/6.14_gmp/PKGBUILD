@@ -6,7 +6,7 @@ arch=('i686' 'x86_64')
 url="http://gmplib.org/"
 license=('LGPL3')
 groups=('base')
-depends=('glibc>=2.13')
+depends=(${_depends})
 options=(!libtool)
 source=(${_url})
 md5sums=(${md5})
